@@ -14,6 +14,7 @@ function syncFocus() {
     const allIcons = Array.from(track.querySelectorAll(".icon-item"));
     
     allIcons.forEach(icon => {
+        icon.classList.remove("active-focus");
         const img = icon.querySelector(".icon-img");
         if (img) img.classList.remove("bounce");
     });
@@ -21,6 +22,14 @@ function syncFocus() {
     const target = allIcons[centerIndex];
     if (target) {
         target.focus();
+        target.classList.add("active-focus");
+        
+        // Save the focused label to localStorage to restore it on Back navigation
+        const label = target.querySelector(".icon-label")?.innerText;
+        if (label) {
+            localStorage.setItem("lastFocusedLabel", label);
+        }
+        
         const img = target.querySelector(".icon-img");
         if (img) {
             void img.offsetWidth; 
@@ -110,7 +119,40 @@ async function initLanguage() {
         updateDateTime();
         updateWeather(); 
         fetchGuestData();
-        updateCarouselPosition();
+        
+        // Restore last focused item from localStorage before updating positions
+        const lastLabel = localStorage.getItem("lastFocusedLabel");
+        if (lastLabel && track) {
+            // Disable transition temporarily to prevent sliding animation on page load
+            const originalTransition = track.style.transition;
+            track.style.transition = 'none';
+            
+            const allIcons = Array.from(track.querySelectorAll(".icon-item"));
+            const targetIndex = allIcons.findIndex(icon => icon.querySelector(".icon-label")?.innerText === lastLabel);
+            if (targetIndex !== -1) {
+                let diff = targetIndex - centerIndex;
+                if (diff > 0) {
+                    for (let i = 0; i < diff; i++) {
+                        track.appendChild(track.firstElementChild);
+                    }
+                } else if (diff < 0) {
+                    for (let i = 0; i < Math.abs(diff); i++) {
+                        track.insertBefore(track.lastElementChild, track.firstElementChild);
+                    }
+                }
+            }
+            
+            updateCarouselPosition();
+            
+            // Force a DOM reflow to make the positioning instant before re-enabling transition
+            void track.offsetHeight;
+            
+            // Restore transition for D-pad navigation
+            track.style.transition = originalTransition;
+        } else {
+            updateCarouselPosition();
+        }
+        
         setTimeout(syncFocus, 300);
     }
 }

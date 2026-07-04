@@ -113,6 +113,25 @@
         const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.split('/').pop() === '';
         const keyCode = e.keyCode || e.which;
         
+        // Global Back Navigation Handler for Android TV D-pad Back (4/8/461/Backspace)
+        if (keyCode === 8 || keyCode === 461 || keyCode === 4 || e.key === 'Backspace' || e.key === 'Escape') {
+            if (!isIndex) {
+                e.preventDefault();
+                const isSubfolder = window.location.pathname.includes('/travel/') || 
+                                    window.location.pathname.includes('/amenities/') || 
+                                    window.location.pathname.includes('/city/') || 
+                                    window.location.pathname.includes('/hotel_info/') || 
+                                    window.location.pathname.includes('/weather/') || 
+                                    window.location.pathname.includes('/flights/');
+                if (isSubfolder) {
+                    window.location.href = "../index.html";
+                } else {
+                    window.location.href = "index.html";
+                }
+                return;
+            }
+        }
+        
         let direction = null;
 
         // Map D-pad and arrow key events

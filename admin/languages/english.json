@@ -31,6 +31,7 @@
   "previous": "PREV",
   "refresh": "UPDATE NOW",
   "last_updated": "LAST UPDATED",
+  "greetings": {
     "morning": "Good Morning",
     "afternoon": "Good Afternoon",
     "evening": "Good Evening",
@@ -45,15 +46,15 @@
     "thu": "Thursday",
     "fri": "Friday",
     "sat": "Saturday"
+  },
   "days_short": {
-    "sun": "SUN,
+    "sun": "SUN",
     "mon": "MON",
     "tue": "TUE",
     "wed": "WED",
-    "thu": "THU,
+    "thu": "THU",
     "fri": "FRI",
     "sat": "SAT"
-  },
   },
   "months": {
     "jan": "January",
