@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hotel UI</title>
+    <script>
+        (function() {
+            const time = Date.now();
+            
+            // Dynamic CSS Injection
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'css/home.css?v=' + time;
+            document.head.appendChild(link);
+
+            // Dynamic JS Injection (Spatial Navigation)
+            const spatialNav = document.createElement('script');
+            spatialNav.src = 'js/spatial-navigation.js?v=' + time;
+            spatialNav.defer = true;
+            document.head.appendChild(spatialNav);
+
+            // Dynamic JS Injection (Home logic)
+            const homeJs = document.createElement('script');
+            homeJs.src = 'js/home.js?v=' + time;
+            homeJs.defer = true;
+            document.head.appendChild(homeJs);
+        })();
+    </script>
+    <style>
+        #subPageOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: black;
+            z-index: 9999;
+        }
+        #subFrame { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+<div class="top-header">
+    <div id="header-left">
+        <div id="time"></div>
+        <div id="date"></div>
+    </div>
+    <div id="header-right">
+        <div id="room"></div>
+        <div id="temp"></div>
+    </div>
+</div>
+<div id="greeting"></div>
+
+<div id="mainUI">
+    <div class="menu-container">
+        <div id="menuTrack">
+            <div class="icon-item" tabindex="0" data-action="apps"><img src="images/icons/apps.png" class="icon-img" /><div class="icon-label">Applications</div></div>
+            <div class="icon-item" tabindex="0" data-action="livetv"><img src="images/icons/livetv.png" class="icon-img" /><div class="icon-label">Live TV</div></div>
+            <div class="icon-item" tabindex="0" data-link="languages.html"><img src="images/icons/languages.png" class="icon-img" /><div class="icon-label">Languages</div></div>
+            <div class="icon-item" tabindex="0" data-link="./hotel_info/hotel_info.html"><img src="images/icons/hotelinfo.png" class="icon-img" /><div class="icon-label">Hotel Info</div></div>
+            <div class="icon-item" tabindex="0" data-link="./amenities/amenities.html"><img src="images/icons/amenities.png" class="icon-img" /><div class="icon-label">Amenities</div></div>
+            <div class="icon-item" tabindex="0" data-link="./travel/travel.html"><img src="images/icons/travel.png" class="icon-img" /><div class="icon-label">Travel</div></div>
+            <div class="icon-item" tabindex="0" data-link="./flights/flights.html"><img src="images/icons/flights.png" class="icon-img" /><div class="icon-label">Flights</div></div>
+            <div class="icon-item" tabindex="0" data-link="./city/city.html"><img src="images/icons/ourcity.png" class="icon-img" /><div class="icon-label">Our City</div></div>
+            <div class="icon-item" tabindex="0" data-link="./weather/weather.html"><img src="images/icons/weather.png" class="icon-img" /><div class="icon-label">Weather</div></div>
+            <div class="icon-item" tabindex="0" data-link="./settings.html"><img src="images/icons/settings.png" class="icon-img" /><div class="icon-label">Settings</div></div>
+        </div>
+    </div>
+</div>
+
+<div id="subPageOverlay">
+    <iframe id="subFrame" src=""></iframe>
+</div>
+
+<script>
+    // --- 1. PREVENT ANDROID EXIT (Original Logic) ---
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function() {
+        const overlay = document.getElementById('subPageOverlay');
+        if (overlay.style.display === 'block') {
+            closeSubPage();
+            window.history.pushState(null, "", window.location.href);
+        } else {
+            window.history.pushState(null, "", window.location.href);
+        }
+    };
+
+    function closeSubPage() {
+        document.getElementById('subPageOverlay').style.display = 'none';
+        document.getElementById('subFrame').src = "";
+        document.getElementById('mainUI').style.display = 'block';
+        const items = document.querySelectorAll('.icon-item');
+        if(items[3]) items[3].focus();
+    }
+
+    document.querySelectorAll('.icon-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const link = this.dataset.link || this.getAttribute('href');
+            if (link) {
+                window.location.href = link;
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>City</title>
+    <style>
+        :root { --gold: #b38a2d; }
+        body {
+            margin: 0; padding: 0;
+            background: #000 url('../images/main.jpg') no-repeat center center;
+            background-size: 100% 100%; 
+            font-family: sans-serif;
+            overflow: hidden;
+            display: flex; 
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Page Title adjusted to sit below the background logo */
+        #headerTitle {
+            color: var(--gold);
+            font-size: 1.8rem; /* Reduced to match APPLICATIONS header size */
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 62px; /* Increased distance from top to clear logo */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            letter-spacing: 2px;
+        }
+
+        /* Container for the gallery */
+        .content-box {
+            position: relative;
+            width: 80vw; 
+            height: 70vh; /* Proportionally matched to the apps grid height */
+            border: 3px solid var(--gold);
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center; 
+            align-items: center;     
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .slide-img {
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Navigation Arrows */
+        .nav-icon { 
+            position: absolute; 
+            width: 50px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            z-index: 10; 
+            opacity: 0.8;
+        }
+        .prev { left: 20px; }
+        .next { right: 20px; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            25% { transform: translateY(-50%) translateX(-10px); }
+            75% { transform: translateY(-50%) translateX(10px); }
+        }
+        .vibrate { animation: shake 0.2s 2; }
+    </style>
+</head>
+<body>
+
+    <div id="headerTitle">Our City</div>
+
+    <div class="content-box">
+        <img src="" id="displayImage" class="slide-img">
+        
+        <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
+        <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
+    </div>
+
+    <script>
+        let images = []; 
+        let currentIndex = 0;
+        let autoTimer;
+
+        function initGallery() {
+            if (window.AndroidBridge && window.AndroidBridge.getPictureList) {
+                const listString = window.AndroidBridge.getPictureList();
+                images = JSON.parse(listString);
+            } else {
+                images = ["pics/slide1.jpg", "pics/slide2.jpg"];
+            }
+            
+            if (images.length > 0) {
+                updateDisplay();
+                startAutoSlide();
+            }
+
+            let langFile = localStorage.getItem('selectedLangFile') || 'english.json';
+            
+            if (window.AndroidBridge && window.AndroidBridge.getSelectedLanguageFile) {
+                langFile = window.AndroidBridge.getSelectedLanguageFile();
+            }
+
+            fetch(`../admin/${langFile}?t=${Date.now()}`)
+                .then(res => res.json())
+                .then(data => {
+                    const titleKey = 'city'; 
+                    const titleEl = document.getElementById('headerTitle');
+                    if (data.icons && data.icons[titleKey]) {
+                        titleEl.innerText = data.icons[titleKey];
+                    } else if (data[titleKey]) {
+                        titleEl.innerText = data[titleKey];
+                    }
+                })
+                .catch(err => console.error("Language load error:", err));
+        }
+
+        function updateDisplay() {
+            if (images[currentIndex]) {
+                const imgEl = document.getElementById('displayImage');
+                imgEl.style.opacity = 0;
+                setTimeout(() => {
+                    imgEl.src = images[currentIndex];
+                    imgEl.style.opacity = 1;
+                }, 100);
+            }
+        }
+
+        function changeSlide(dir) {
+            let next = currentIndex + dir;
+            if (next < 0) { trigger('btnPrev'); return; }
+            if (next >= images.length) { trigger('btnNext'); return; }
+            
+            currentIndex = next;
+            updateDisplay();
+            startAutoSlide(); 
+        }
+
+        function startAutoSlide() {
+            clearInterval(autoTimer);
+            autoTimer = setInterval(() => {
+                if (images.length > 1) {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    updateDisplay();
+                }
+            }, 10000);
+        }
+
+        function trigger(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('vibrate');
+                setTimeout(() => el.classList.remove('vibrate'), 400);
+            }
+        }
+
+        function goBack() {
+            window.location.href = "../index.html";
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+            if (e.key === "Backspace" || e.key === "Escape") goBack();
+        });
+
+        window.onload = initGallery;
+    </script>
+</body>
+</html>

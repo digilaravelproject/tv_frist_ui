@@ -1,0 +1,56 @@
+{
+  "language_name": "Tamil",
+  "room_label": "அறை",
+  "city_name": "மும்பை",
+  "feels_like": "உணர்வு",
+  "humidity": "ஈரப்பதம்",
+  "pressure": "காற்றழுத்தம்",
+  "wind": "காற்று",
+  "sunrise": "சூரிய உதயம்",
+  "sunset": "சூரிய அஸ்தமனம்",
+  "aqi": "AQI",
+  "good": "நல்லது",
+  "satisfactory": "திருப்திகரம்",
+  "moderate": "மிதமானது",
+  "poor": "மோசம்",
+  "very_poor": "மிக மோசம்",
+  "severe": "கடுமையானது",
+  "time": "நேரம்",
+  "flight": "விமானம்",
+  "terminal": "முனையம்",
+  "airline": "ஏர்லைன்",
+  "destination": "சேருமிடம்",
+  "origin": "புறப்படுமிடம்",
+  "status": "நிலை",
+  "on_time": "சரியான நேரம்",
+  "delayed": "தாமதம்",
+  "cancelled": "ரத்து",
+  "departures": "புறப்பாடு",
+  "arrivals": "வருகை",
+  "next": "அடுத்து",
+  "previous": "முன்பு",
+  "refresh": "இப்போது புதுப்பி",
+  "last_updated": "கடைசி புதுப்பிப்பு",
+  "greetings": {
+    "morning": "காலை வணக்கம்",
+    "afternoon": "மதிய வணக்கம்",
+    "evening": "மாலை வணக்கம்",
+    "night": "இரவு வணக்கம்",
+    "welcome": "எங்கள் ஹோட்டலுக்கு உங்களை வரவேற்கிறோம்"
+  },
+  "days": {
+    "sun": "ஞாயிறு", "mon": "திங்கள்", "tue": "செவ்வாய்", "wed": "புதன்", "thu": "வியாழன்", "fri": "வெள்ளி", "sat": "சனி"
+  },
+  "days_short": {
+    "sun": "ஞாயி", "mon": "திங்", "tue": "செவ்", "wed": "புத", "thu": "வியா", "fri": "வெள்", "sat": "சனி"
+  },
+  "months": {
+    "jan": "ஜனவரி", "feb": "பிப்ரவரி", "mar": "மார்ச்", "apr": "ஏப்ரல்", "may": "மே", "jun": "ஜூன்", "jul": "ஜூலை", "aug": "ஆகஸ்ட்", "sep": "செப்டம்பர்", "oct": "அக்டோபர்", "nov": "நவம்பர்", "dec": "டிசம்பர்"
+  },
+  "icons": {
+    "live_tv": "நேரடி டிவி", "room_service": "அறை சேவை", "house_keeping": "தூய்மைப் பணி", "amenities": "வசதிகள்", "settings": "அமைப்புகள்", "languages": "மொழிகள்", "applications": "ஆப்ஸ்", "weather": "வானிலை", "travel": "பயணம்", "hotel_info": "தகவல்", "wifi": "வைஃபை", "parking": "பார்க்கிங்", "metro": "மெட்ரோ", "railway": "ரயில்வே", "taxi": "டாக்சி", "rooms": "அறைகள்", "language": "மொழி", "restaurant": "உணவகம்", "coffee_shop": "காபி ஷாப்", "bar": "பார்", "pool": "நீச்சல் குளம்", "gym": "ஜிம்", "spa": "ஸ்பா", "events": "நிகழ்ச்சிகள்", "weddings": "திருமணங்கள்", "conferences": "மாநாடுகள்", "attractions": "ஈர்ப்புகள்", "sightseeing": "சுற்றுலா", "car_hire": "கார் வாடகை", "bike_hire": "பைக் வாடகை", "medical": "மருத்துவம்", "forex": "அந்நிய செலாவணி", "flights": "விமானங்கள்", "our_city": "எங்கள் நகரம்"
+  },
+  "messages": {
+    "no_internet": "இணையத்தை சரிபார்க்கவும்", "loading": "ஏற்றப்படுகிறது...", "emergency": "அவசரம்", "fire_alert": "தீ எச்சரிக்கை"
+  }
+}

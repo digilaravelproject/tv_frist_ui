@@ -1,0 +1,56 @@
+{
+  "language_name": "Konkani",
+  "room_label": "कूड",
+  "city_name": "मुंबय",
+  "feels_like": "जाणवता",
+  "humidity": "दमटसाण",
+  "pressure": "वायूदाब",
+  "wind": "वारो",
+  "sunrise": "सूर्योदय",
+  "sunset": "सूर्यास्त",
+  "aqi": "AQI",
+  "good": "बरें",
+  "satisfactory": "समाधानकारक",
+  "moderate": "मध्यम",
+  "poor": "इबाडिल्लें",
+  "very_poor": "खूब इबाडिल्लें",
+  "severe": "गंभीर",
+  "time": "वेळ",
+  "flight": "विमान",
+  "terminal": "टर्मिनल",
+  "airline": "एअरलाइन",
+  "destination": "पावपाचें थळ",
+  "origin": "सुरुवातेचें थळ",
+  "status": "स्थिती",
+  "on_time": "वेळाचेर",
+  "delayed": "विळंब",
+  "cancelled": "रद्द",
+  "departures": "प्रस्थान",
+  "arrivals": "आगमन",
+  "next": "फुडलें",
+  "previous": "फाटलें",
+  "refresh": "अपडेट करा",
+  "last_updated": "निमाणें अपडेट",
+  "greetings": {
+    "morning": "देव बरें सकाळ",
+    "afternoon": "देव बरें दनपार",
+    "evening": "देव बरें सांज",
+    "night": "देव बरें रात",
+    "welcome": "आमच्या हॉटेलान तुमचें स्वागत आसा"
+  },
+  "days": {
+    "sun": "आयतार", "mon": "सोमार", "tue": "मंगळार", "wed": "बुधवार", "thu": "बिरेस्तार", "fri": "शुक्रार", "sat": "शेनवार"
+  },
+  "days_short": {
+    "sun": "आय", "mon": "सोम", "tue": "मंग", "wed": "बुध", "thu": "बिरे", "fri": "शुक्र", "sat": "शेन"
+  },
+  "months": {
+    "jan": "जानेवारी", "feb": "फेब्रुवारी", "mar": "मार्च", "apr": "एप्रिल", "may": "मे", "jun": "जून", "jul": "जुलै", "aug": "ऑगस्ट", "sep": "सप्टेंबर", "oct": "ऑक्टोबर", "nov": "नोव्हेंबर", "dec": "डिसेंबर"
+  },
+  "icons": {
+    "live_tv": "लाईव्ह टीव्ही", "room_service": "रूंम सर्विस", "house_keeping": "हाऊस कीपिंग", "amenities": "सोयी", "settings": "सेटिंग्स", "languages": "भासो", "applications": "ॲप्स", "weather": "हवामान", "travel": "भोंवडी", "hotel_info": "हॉटेलची माहिती", "wifi": "वायफाय", "parking": "पार्किंग", "metro": "मेट्रो", "railway": "रेल्वे", "taxi": "टॅक्सी", "rooms": "कुडां", "language": "भास", "restaurant": "रेस्टॉरंट", "coffee_shop": "कॉफी शॉप", "bar": "बार", "pool": "पूल", "gym": "जिम", "spa": "स्पा", "events": "सुवाळो", "weddings": "काजारां", "conferences": "परिषद", "attractions": "आकर्शणां", "sightseeing": "पर्यटन", "car_hire": "कार भाड्यार", "bike_hire": "बायकी भाड्यार", "medical": "वैजकी", "forex": "परकीय चलन", "flights": "विमानां", "our_city": "आमचें शहर"
+  },
+  "messages": {
+    "no_internet": "इंटरनेट कनेक्शन तपासात", "loading": "लोड जाता...", "emergency": "आणीबाणी", "fire_alert": "उज्याचो धोको"
+  }
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Weather</title>
+    <style>
+        :root { 
+            --house-brown: #896013; 
+            --glass-black: rgba(0, 0, 0, 0.6); 
+        }
+        body {
+            margin: 0; padding: 0; color: white;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: url('images/mumbai.png') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh; width: 100vw; overflow: hidden;
+            display: flex; flex-direction: column;
+            padding: 4vh 5vw;
+            box-sizing: border-box;
+        }
+        body.rtl-mode { direction: rtl; }
+        .top-row { display: flex; justify-content: space-between; align-items: flex-start; flex: 0 0 auto; }
+        .left-branding { display: flex; flex-direction: column; }
+        .city { font-size: 8vh; color: var(--house-brown); font-weight: 900; margin: 0; letter-spacing: 2px; text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.6); }
+        .time-date { font-size: 4.2vh; font-weight: bold; margin: 2px 0; }
+        .figure-large { font-size: 11vh; font-weight: 200; line-height: 1; margin: 5px 0; }
+        .aqi-label { font-size: 4.2vh; font-weight: bold; margin: 15px 0 2px 0; text-transform: uppercase; }
+        .hero-rect {
+            background-color: var(--glass-black);
+            border: 4px solid var(--house-brown);
+            border-radius: 20px;
+            padding: 2.5vh 2.5vw;
+            backdrop-filter: blur(12px);
+            width: 38vw;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2vh 2.5vw;
+            margin-top: 1vh;
+        }
+        .param-name { font-size: 2.8vh; color: #cbd5e1; font-weight: bold; text-transform: uppercase; } 
+        .param-value { font-size: 4vh; font-weight: 600; margin-top: 2px; }
+        .spacer { flex: 1; }
+        .forecast-row { display: flex; gap: 12px; height: 28vh; align-items: flex-end; padding-bottom: 2vh; }
+        .day-card {
+            flex: 1; height: 100%;
+            background-color: var(--glass-black);
+            border: 3.5px solid var(--house-brown);
+            border-radius: 12px;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-evenly;
+            backdrop-filter: blur(8px);
+        }
+        .day-title { font-size: 3.5vh; font-weight: bold; text-transform: uppercase; }
+        .day-img { width: 5.5vw; height: auto; }
+        .day-temp { font-size: 3.5vh; font-weight: bold; }
+        
+        /* Offline banner styles */
+        #offline-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #ff9900;
+            color: #000;
+            text-align: center;
+            padding: 8px;
+            font-weight: bold;
+            z-index: 9999;
+            font-size: 14px;
+        }
+    </style>
+<script>
+    (function() {
+        const time = Date.now();
+        
+        // Spatial Navigation
+        const spatialNav = document.createElement('script');
+        spatialNav.src = '../js/spatial-navigation.js?v=' + time;
+        spatialNav.defer = true;
+        document.head.appendChild(spatialNav);
+
+        // Weather Module
+        const weatherJs = document.createElement('script');
+        weatherJs.src = '../js/weather.js?v=' + time;
+        weatherJs.defer = true;
+        document.head.appendChild(weatherJs);
+    })();
+</script>
+</head>
+<body>
+
+    <div class="top-row">
+        <div class="left-branding">
+            <h1 class="city" id="city-name">MUMBAI</h1>
+            <div class="time-date" id="live-clock">LOADING...</div>
+            <div class="figure-large" id="cur-temp">--°C</div>
+            <div class="aqi-label" id="aqi-text">AQI: --</div>
+            <div class="figure-large" id="cur-aqi">--</div>
+        </div>
+
+        <div class="hero-rect">
+            <div class="item"><div class="param-name" id="label-feels">Feels Like</div><div class="param-value" id="h-feels">--°C</div></div>
+            <div class="item"><div class="param-name" id="label-humidity">Humidity</div><div class="param-value" id="h-hum">--%</div></div>
+            <div class="item"><div class="param-name" id="label-pressure">Pressure</div><div class="param-value" id="h-press">-- MB</div></div>
+            <div class="item"><div class="param-name" id="label-wind">Wind</div><div class="param-value" id="h-wind">-- KM/H</div></div>
+            <div class="item"><div class="param-name" id="label-sunrise">Sunrise</div><div class="param-value" id="h-rise">--:-- AM</div></div>
+            <div class="item"><div class="param-name" id="label-sunset">Sunset</div><div class="param-value" id="h-set">--:-- PM</div></div>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="forecast-row" id="forecast-row"></div>
+
+<script>
+    // Initialize the weather module
+    window.onload = function() {
+        if (window.WeatherModule) {
+            window.WeatherModule.init();
+        }
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Select Language</title>
+
+<style>
+:root { --house-gold: #b38a2d; }
+
+body {
+    background: #000 url('images/main.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.lang-card {
+    background: rgba(0,0,0,0.9);
+    padding: 30px;
+    border: 2px solid var(--house-gold);
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
+}
+
+.header-title {
+    color: var(--house-gold);
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.lang-list {
+    height: 250px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid rgba(179,138,45,0.3);
+    border-radius: 5px;
+}
+.lang-list::-webkit-scrollbar { display:none; }
+
+.lang-item {
+    background: rgba(179,138,45,0.1);
+    padding: 12px;
+    margin: 2px;
+    border-radius: 5px;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.lang-item:focus {
+    background: var(--house-gold);
+    color: white;
+    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
+    transform: scale(1.02);
+}
+
+.tick { visibility: hidden; }
+.lang-item.selected .tick { visibility: visible; }
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    flex:1;
+    background: rgba(179, 138, 45, 0.1);
+    border: 1px solid var(--house-gold);
+    color: white;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:focus {
+    background: var(--house-gold);
+    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
+    transform: scale(1.05);
+}
+</style>
+<script>
+    (function() {
+        const time = Date.now();
+        const spatialNav = document.createElement('script');
+        spatialNav.src = 'js/spatial-navigation.js?v=' + time;
+        spatialNav.defer = true;
+        document.head.appendChild(spatialNav);
+    })();
+</script>
+</head>
+
+<body>
+
+<div class="lang-card">
+    <div class="header-title" id="titleText">Select Language</div>
+
+    <div class="lang-list" id="langList"></div>
+
+    <div class="controls">
+        <button class="btn" id="applyBtn">Apply</button>
+        <button class="btn" id="cancelBtn">Cancel</button>
+    </div>
+</div>
+
+<script>
+const langList = document.getElementById('langList');
+const applyBtn = document.getElementById('applyBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const current = localStorage.getItem('selectedLangFile') || 'english.json';
+
+fetch('admin/languages.json?t=' + Date.now())
+.then(res => res.json())
+.then(data => {
+    data.available_languages.forEach(lang => {
+        const div = document.createElement('div');
+        div.className = 'lang-item';
+        div.tabIndex = 0;
+        div.dataset.file = lang.file;
+        div.innerHTML = `${lang.name} <span class="tick">✓</span>`;
+
+        if (lang.file === current) div.classList.add('selected');
+
+        // Navigation and Selection
+        div.onkeydown = e => {
+            const items = [...document.querySelectorAll('.lang-item')];
+            const i = items.indexOf(div);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (i < items.length - 1) {
+                    items[i+1].focus();
+                } else {
+                    applyBtn.focus();
+                }
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (i > 0) items[i-1].focus();
+            }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // Just mark as selected visually, do NOT exit
+                items.forEach(x => x.classList.remove('selected'));
+                div.classList.add('selected');
+                
+                // Optional: move focus to apply button to show next step
+                setTimeout(() => applyBtn.focus(), 200);
+            }
+        };
+
+        // Touch/Mouse support
+        div.onclick = () => {
+            const items = [...document.querySelectorAll('.lang-item')];
+            items.forEach(x => x.classList.remove('selected'));
+            div.classList.add('selected');
+        };
+
+        langList.appendChild(div);
+    });
+
+    // Auto-focus the current selection
+    setTimeout(() => {
+        const first = document.querySelector('.lang-item.selected') || langList.firstChild;
+        if (first) first.focus();
+    }, 100);
+});
+
+// CRITICAL: Strictly wait for Apply button click/Enter to exit
+applyBtn.onclick = () => {
+    const sel = document.querySelector('.lang-item.selected');
+    if (sel) {
+        const file = sel.dataset.file;
+        
+        // 1. Keep your existing localStorage logic
+        localStorage.setItem('selectedLangFile', file);
+        
+        // 2. Sync with Android so other folders (like hotel_info) can see it
+        if (window.AndroidBridge && window.AndroidBridge.setLanguage) {
+            window.AndroidBridge.setLanguage(file);
+        }
+        
+        window.location.href = 'index.html';
+    }
+};
+applyBtn.onkeydown = e => {
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const items = document.querySelectorAll('.lang-item');
+        if (items.length > 0) items[items.length - 1].focus();
+    }
+    if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        cancelBtn.focus();
+    }
+};
+
+cancelBtn.onclick = () => window.location.href = 'index.html';
+
+cancelBtn.onkeydown = e => {
+    if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        applyBtn.focus();
+    }
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const items = document.querySelectorAll('.lang-item');
+        if (items.length > 0) items[items.length - 1].focus();
+    }
+};
+</script>
+
+</body>
+</html>

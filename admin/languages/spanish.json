@@ -1,0 +1,56 @@
+{
+  "language_name": "Spanish",
+  "room_label": "Habitación",
+  "city_name": "Mumbai",
+  "feels_like": "Sensación",
+  "humidity": "Humedad",
+  "pressure": "Presión",
+  "wind": "Viento",
+  "sunrise": "Amanecer",
+  "sunset": "Atardecer",
+  "aqi": "ICA",
+  "good": "Bueno",
+  "satisfactory": "Satisfactorio",
+  "moderate": "Moderado",
+  "poor": "Deficiente",
+  "very_poor": "Muy deficiente",
+  "severe": "Grave",
+  "time": "Hora",
+  "flight": "Vuelo",
+  "terminal": "Terminal",
+  "airline": "Aerolínea",
+  "destination": "Destino",
+  "origin": "Origen",
+  "status": "Estado",
+  "on_time": "A tiempo",
+  "delayed": "Retrasado",
+  "cancelled": "Cancelado",
+  "departures": "Salidas",
+  "arrivals": "Llegadas",
+  "next": "Siguiente",
+  "previous": "Anterior",
+  "refresh": "Actualizar",
+  "last_updated": "Última actualización",
+  "greetings": {
+    "morning": "Buenos días",
+    "afternoon": "Buenas tardes",
+    "evening": "Buenas noches",
+    "night": "Buenas noches",
+    "welcome": "Bienvenido a nuestro hotel"
+  },
+  "days": {
+    "sun": "Domingo", "mon": "Lunes", "tue": "Martes", "wed": "Miércoles", "thu": "Jueves", "fri": "Viernes", "sat": "Sábado"
+  },
+  "days_short": {
+    "sun": "Dom", "mon": "Lun", "tue": "Mar", "wed": "Mié", "thu": "Jue", "fri": "Vie", "sat": "Sáb"
+  },
+  "months": {
+    "jan": "Enero", "feb": "Febrero", "mar": "Marzo", "apr": "Abril", "may": "Mayo", "jun": "Junio", "jul": "Julio", "aug": "Agosto", "sep": "Septiembre", "oct": "Octubre", "nov": "Noviembre", "dec": "Diciembre"
+  },
+  "icons": {
+    "live_tv": "TV en vivo", "room_service": "Servicio de cuarto", "house_keeping": "Limpieza", "amenities": "Servicios", "settings": "Ajustes", "languages": "Idiomas", "applications": "Apps", "weather": "Clima", "travel": "Viajes", "hotel_info": "Información", "wifi": "Wifi", "parking": "Parking", "metro": "Metro", "railway": "Tren", "taxi": "Taxi", "rooms": "Habitaciones", "language": "Idioma", "restaurant": "Restaurante", "coffee_shop": "Cafetería", "bar": "Bar", "pool": "Piscina", "gym": "Gimnasio", "spa": "Spa", "events": "Eventos", "weddings": "Bodas", "conferences": "Conferencias", "attractions": "Atracciones", "sightseeing": "Turismo", "car_hire": "Coches", "bike_hire": "Bicicletas", "medical": "Médico", "forex": "Cambio", "flights": "Vuelos", "our_city": "Nuestra ciudad"
+  },
+  "messages": {
+    "no_internet": "Verifique conexión", "loading": "Cargando...", "emergency": "Emergencia", "fire_alert": "Alerta fuego"
+  }
+}

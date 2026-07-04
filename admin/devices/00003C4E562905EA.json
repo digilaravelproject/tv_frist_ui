@@ -1,0 +1,15 @@
+{
+    "room": "103",
+    "serial": "00003C4E562905EA",
+    "ip": "192.168.1.27",
+    "gateway": "192.168.1.1",
+    "mac": "3c:4e:56:29:05:ea",
+    "subnet": "255.255.255.0",
+    "DNS": "8.8.8.8",
+    "model": "4KTV-0SU",
+    "android": "10",
+    "tv_source": "IPTV",
+    "package": "fta.json",
+    "date_installed": "28/02/26 16:30",
+    "last_modified": "18/04/26 18:34"
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "YouTube",
+    "package": "com.google.android.youtube.tv",
+    "icon_url": "applications/ic_youtube.png"
+  },
+  {
+    "name": "Netflix",
+    "package": "com.netflix.ninja",
+    "icon_url": "applications/ic_netflix.png"
+  },
+  {
+    "name": "Prime Video",
+    "package": "com.amazon.amazonvideo.livingroom",
+    "icon_url": "applications/ic_primevideo.png"
+  },
+  {
+    "name": "Jio Hotstar",
+    "package": "in.startv.hotstar", 
+    "icon_url": "applications/ic_hotstar.png"
+  },
+  {
+    "name": "Zee 5",
+    "package": "com.graymatrix.did",
+    "icon_url": "applications/ic_zee5.png"
+  },
+  {
+    "name": "Movie Player",
+    "package": "com.rtl.mediabrowser",
+    "icon_url": "applications/ic_movie_player.png"
+  },
+  {
+    "name": "Google Cast",
+    "package": "com.google.android.apps.mediashell",
+    "icon_url": "applications/ic_googlecast.png"
+  },
+  {
+    "name": "AirPlay",
+    "package": "com.neoyantra.airplaymirror.airplaymirrorappdemo",
+    "icon_url": "applications/ic_airplay.png"
+  }
+]

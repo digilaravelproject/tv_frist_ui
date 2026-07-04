@@ -1,0 +1,56 @@
+{
+  "language_name": "Português",
+  "room_label": "Quarto",
+  "city_name": "Mumbai",
+  "feels_like": "Sensação",
+  "humidity": "Umidade",
+  "pressure": "Pressão",
+  "wind": "Vento",
+  "sunrise": "Nascer do sol",
+  "sunset": "Pôr do sol",
+  "aqi": "IQA",
+  "good": "Bom",
+  "satisfactory": "Satisfatório",
+  "moderate": "Moderado",
+  "poor": "Ruim",
+  "very_poor": "Muito ruim",
+  "severe": "Grave",
+  "time": "Hora",
+  "flight": "Voo",
+  "terminal": "Terminal",
+  "airline": "Companhia aérea",
+  "destination": "Destino",
+  "origin": "Origem",
+  "status": "Status",
+  "on_time": "No horário",
+  "delayed": "Atrasado",
+  "cancelled": "Cancelado",
+  "departures": "Partidas",
+  "arrivals": "Chegadas",
+  "next": "Próximo",
+  "previous": "Anterior",
+  "refresh": "Atualizar",
+  "last_updated": "Última atualização",
+  "greetings": {
+    "morning": "Bom dia",
+    "afternoon": "Boa tarde",
+    "evening": "Boa noite",
+    "night": "Boa noite",
+    "welcome": "Bem-vindo ao nosso hotel"
+  },
+  "days": {
+    "sun": "Domingo", "mon": "Segunda", "tue": "Terça", "wed": "Quarta", "thu": "Quinta", "fri": "Sexta", "sat": "Sábado"
+  },
+  "days_short": {
+    "sun": "Dom", "mon": "Seg", "tue": "Ter", "wed": "Qua", "thu": "Qui", "fri": "Sex", "sat": "Sáb"
+  },
+  "months": {
+    "jan": "Janeiro", "feb": "Fevereiro", "mar": "Março", "apr": "Abril", "may": "Maio", "jun": "Junho", "jul": "Julho", "aug": "Agosto", "sep": "Setembro", "oct": "Outubro", "nov": "Novembro", "dec": "Dezembro"
+  },
+  "icons": {
+    "live_tv": "TV ao vivo", "room_service": "Serviço de quarto", "house_keeping": "Limpeza", "amenities": "Comodidades", "settings": "Ajustes", "languages": "Idiomas", "applications": "Apps", "weather": "Clima", "travel": "Viagem", "hotel_info": "Info hotel", "wifi": "Wifi", "parking": "Estacionamento", "metro": "Metrô", "railway": "Comboio", "taxi": "Táxi", "rooms": "Quartos", "language": "Idioma", "restaurant": "Restaurante", "coffee_shop": "Cafetaria", "bar": "Bar", "pool": "Piscina", "gym": "Ginásio", "spa": "Spa", "events": "Eventos", "weddings": "Casamentos", "conferences": "Conferências", "attractions": "Atrações", "sightseeing": "Turismo", "car_hire": "Aluguel carros", "bike_hire": "Aluguel bikes", "medical": "Médico", "forex": "Câmbio", "flights": "Voos", "our_city": "Nossa cidade"
+  },
+  "messages": {
+    "no_internet": "Verifique a conexão", "loading": "Carregando...", "emergency": "Emergência", "fire_alert": "Alerta de fogo"
+  }
+}

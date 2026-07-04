@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSMIA Mumbai Live Flight Board</title>
+    <link rel="preload" href="images/updating.mp4" as="video" type="video/mp4">
+    <script>
+        (function() {
+            const time = Date.now();
+            
+            // Dynamic CSS
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'css/flights.css?v=' + time;
+            document.head.appendChild(link);
+
+            // Spatial Navigation JS
+            const spatialNav = document.createElement('script');
+            spatialNav.src = '../js/spatial-navigation.js?v=' + time;
+            spatialNav.defer = true;
+            document.head.appendChild(spatialNav);
+
+            // Flights Logic JS
+            const flightJs = document.createElement('script');
+            flightJs.src = 'js/flightdata.js?v=' + time;
+            flightJs.defer = true;
+            document.head.appendChild(flightJs);
+        })();
+    </script>
+</head>
+<body>
+    <h1 id="airportTitle">Chhatrapati Shivaji Maharaj International Airport</h1>
+    
+    <div class="tabs">
+        <button id="depBtn" class="flight-tab active" tabindex="0">DEPARTURES</button>
+        <button id="arrBtn" class="flight-tab" tabindex="0">ARRIVALS</button>
+    </div>
+
+    <div class="table-container" id="mainBox">
+        <div id="videoOverlay">
+            <div class="sync-content">
+                <video id="syncVideo" 
+                       width="200" 
+                       height="200" 
+                       loop 
+                       muted 
+                       playsinline 
+                       poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                    <source src="images/updating.mp4" type="video/mp4">
+                </video>
+                <div class="sync-text" id="sync-text">Updating Flights Data...</div>
+            </div>
+        </div>
+
+        <table id="flightTable">
+            <thead>
+                <tr>
+                    <th id="th-time">TIME</th>
+                    <th id="th-flight">FLIGHT</th>
+                    <th id="th-terminal">TERMINAL</th> 
+                    <th id="th-airline">AIRLINE</th>
+                    <th id="headerLabel">DESTINATION</th>
+                    <th id="th-status">STATUS</th>
+                </tr>
+            </thead>
+            <tbody id="flightBody"></tbody>
+        </table>
+    </div>
+
+    <div class="footer-info">
+        <div id="lastUpdated">Last Refreshed: --:--</div>
+        <div class="center-controls">
+            <button id="prevBtn" class="flight-tab" tabindex="0">PREV</button>
+            <button id="nextBtn" class="flight-tab" tabindex="0">NEXT</button>
+        </div>
+        <button id="refreshBtn" class="flight-tab" tabindex="0">REFRESH NOW</button>
+    </div>
+</body>
+</html>

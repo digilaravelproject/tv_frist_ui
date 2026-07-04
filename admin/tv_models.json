@@ -1,0 +1,15 @@
+{
+  "available_models": {
+    "Panasonic": {
+      "4KTV-0SU": "com.smartdevice.livetv",
+      "HU43-QL": "com.smartdevice.livetv"
+    },
+    "WorldTech": {
+      "JSHRASHD": "com.android.tv",
+      "SHG43-HS": "com.smartdevice.livetv"
+    },
+    "SEI": {
+      "SEI530": "com.droidlogic.videoplayer"
+    }
+  }
+}

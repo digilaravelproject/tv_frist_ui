@@ -1,0 +1,56 @@
+{
+  "language_name": "Hindi",
+  "room_label": "कमरा",
+  "city_name": "मुंबई",
+  "feels_like": "महसूस",
+  "humidity": "नमी",
+  "pressure": "वायुदाब",
+  "wind": "हवा",
+  "sunrise": "सूर्योदय",
+  "sunset": "सूर्यास्त",
+  "aqi": "AQI",
+  "good": "अच्छा",
+  "satisfactory": "संतोषजनक",
+  "moderate": "मध्यम",
+  "poor": "खराब",
+  "very_poor": "बहुत खराब",
+  "severe": "गंभीर",
+  "time": "समय",
+  "flight": "उड़ान",
+  "terminal": "टर्मिनल",
+  "airline": "एयरलाइन",
+  "destination": "गंतव्य स्थान",
+  "origin": "आरंभ स्थान",
+  "status": "स्थिति",
+  "on_time": "समय पर",
+  "delayed": "विलंबित",
+  "cancelled": "रद्द",
+  "departures": "प्रस्थान",
+  "arrivals": "आगमन",
+  "next": "आगे",
+  "previous": "पीछे",
+  "refresh": "अभी अपडेट करें",
+  "last_updated": "अंतिम अपडेट",
+  "greetings": {
+    "morning": "सुप्रभात",
+    "afternoon": "नमस्कार",
+    "evening": "शुभ संध्या",
+    "night": "शुभ रात्रि",
+    "welcome": "हमारे होटल में आपका स्वागत है"
+  },
+  "days": {
+    "sun": "रविवार", "mon": "सोमवार", "tue": "मंगलवार", "wed": "बुधवार", "thu": "गुरुवार", "fri": "शुक्रवार", "sat": "शनिवार"
+  },
+  "days_short": {
+    "sun": "रवि", "mon": "सोम", "tue": "मंगल", "wed": "बुध", "thu": "गुरु", "fri": "शुक्र", "sat": "शनि"
+  },
+  "months": {
+    "jan": "जनवरी", "feb": "फरवरी", "mar": "मार्च", "apr": "अप्रैल", "may": "मई", "jun": "जून", "jul": "जुलाई", "aug": "अगस्त", "sep": "सितंबर", "oct": "अक्टूबर", "nov": "नवंबर", "dec": "दिसंबर"
+  },
+  "icons": {
+    "live_tv": "लाइव टीवी", "room_service": "रूम सर्विस", "house_keeping": "हाउस कीपिंग", "amenities": "सुविधाएं", "settings": "सेटिंग्स", "languages": "भाषाएँ", "applications": "ॲप्स", "weather": "मौसम", "travel": "यात्रा", "hotel_info": "होटल जानकारी", "wifi": "वाईफाई", "parking": "पार्किंग", "metro": "मेट्रो", "railway": "रेलवे", "taxi": "टैक्सी", "rooms": "कमरे", "language": "भाषा", "restaurant": "रेस्तरां", "coffee_shop": "कॉफी शॉप", "bar": "बार", "pool": "पूल", "gym": "जिम", "spa": "स्पा", "events": "आयोजन", "weddings": "शादियाँ", "conferences": "सम्मेलन", "attractions": "आकर्षण", "sightseeing": "पर्यटन", "car_hire": "कार किराए पर", "bike_hire": "बाइक किराए पर", "medical": "चिकित्सा", "forex": "विदेशी मुद्रा", "flights": "उड़ानें", "our_city": "हमारा शहर"
+  },
+  "messages": {
+    "no_internet": "कृपया अपना इंटरनेट कनेक्शन जांचें", "loading": "लोड हो रहा है...", "emergency": "आपातकालीन", "fire_alert": "अग्नि चेतावनी"
+  }
+}

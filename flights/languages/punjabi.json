@@ -1,0 +1,56 @@
+{
+  "language_name": "Punjabi",
+  "room_label": "ਕਮਰਾ",
+  "city_name": "ਮੁੰਬਈ",
+  "feels_like": "ਮਹਿਸੂਸ",
+  "humidity": "ਨਮੀ",
+  "pressure": "ਹਵਾ ਦਾ ਦਬਾਅ",
+  "wind": "ਹਵਾ",
+  "sunrise": "ਸੂਰਜ ਚੜ੍ਹਨਾ",
+  "sunset": "ਸੂਰਜ ਡੁੱਬਣਾ",
+  "aqi": "AQI",
+  "good": "ਵਧੀਆ",
+  "satisfactory": "ਸੰਤੋਖਜਨਕ",
+  "moderate": "ਦਰਮਿਆਨਾ",
+  "poor": "ਮਾੜਾ",
+  "very_poor": "ਬਹੁਤ ਮਾੜਾ",
+  "severe": "ਗੰਭੀਰ",
+  "time": "ਸਮਾਂ",
+  "flight": "ਉਡਾਣ",
+  "terminal": "ਟਰਮੀਨਲ",
+  "airline": "ਏਅਰਲਾਈਨ",
+  "destination": "ਮੰਜ਼ਿਲ",
+  "origin": "ਸ਼ੁਰੂਆਤੀ ਸਥਾਨ",
+  "status": "ਸਥਿਤੀ",
+  "on_time": "ਸਮੇਂ ਸਿਰ",
+  "delayed": "ਦੇਰੀ",
+  "cancelled": "ਰੱਦ",
+  "departures": "ਰਵਾਨਗੀ",
+  "arrivals": "ਆਗਮਨ",
+  "next": "ਅੱਗੇ",
+  "previous": "ਪਿੱਛੇ",
+  "refresh": "ਹੁਣੇ ਅਪਡੇਟ ਕਰੋ",
+  "last_updated": "ਆਖਰੀ ਅਪਡੇਟ",
+  "greetings": {
+    "morning": "ਸ਼ੁਭ ਸਵੇਰ",
+    "afternoon": "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ",
+    "evening": "ਸ਼ੁਭ ਸ਼ਾਮ",
+    "night": "ਸ਼ੁਭ ਰਾਤ",
+    "welcome": "ਸਾਡੇ ਹੋਟਲ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ"
+  },
+  "days": {
+    "sun": "ਐਤਵਾਰ", "mon": "ਸੋਮਵਾਰ", "tue": "ਮੰਗਲਵਾਰ", "wed": "ਬੁੱਧਵਾਰ", "thu": "ਵੀਰਵਾਰ", "fri": "ਸ਼ੁੱਕਰਵਾਰ", "sat": "ਸ਼ਨੀਵਾਰ"
+  },
+  "days_short": {
+    "sun": "ਐਤ", "mon": "ਸੋਮ", "tue": "ਮੰਗਲ", "wed": "ਬੁੱਧ", "thu": "ਵੀਰ", "fri": "ਸ਼ੁੱਕਰ", "sat": "ਸ਼ਨੀ"
+  },
+  "months": {
+    "jan": "ਜਨਵਰੀ", "feb": "ਫ਼ਰਵਰੀ", "mar": "ਮਾਰਚ", "apr": "ਅਪ੍ਰੈਲ", "may": "ਮਈ", "jun": "ਜੂਨ", "jul": "ਜੁਲਾਈ", "aug": "ਅਗਸਤ", "sep": "ਸਤੰਬਰ", "oct": "ਅਕਤੂਬਰ", "nov": "ਨਵੰਬਰ", "dec": "ਦਸੰਬਰ"
+  },
+  "icons": {
+    "live_tv": "ਲਾਈਵ ਟੀਵੀ", "room_service": "ਰੂਮ ਸਰਵਿਸ", "house_keeping": "ਹਾਊਸ ਕੀਪਿੰਗ", "amenities": "ਸਹੂਲਤਾਂ", "settings": "ਸੈਟਿੰਗਾਂ", "languages": "ਭਾਸ਼ਾਵਾਂ", "applications": "ਐਪਸ", "weather": "ਮੌਸਮ", "travel": "ਯਾਤਰਾ", "hotel_info": "ਹੋਟਲ ਜਾਣਕਾਰੀ", "wifi": "ਵਾਈਫਾਈ", "parking": "ਪਾਰਕਿੰਗ", "metro": "ਮੈਟਰੋ", "railway": "ਰੇਲਵੇ", "taxi": "ਟੈਕਸੀ", "rooms": "ਕਮਰੇ", "language": "ਭਾਸ਼ਾ", "restaurant": "ਰੈਸਟੋਰੈਂਟ", "coffee_shop": "ਕੌਫੀ ਸ਼ਾਪ", "bar": "ਬਾਰ", "pool": "ਪੂਲ", "gym": "ਜਿਮ", "spa": "ਸਪਾ", "events": "ਸਮਾਗਮ", "weddings": "ਵਿਆਹ", "conferences": "ਕਾਨਫਰੰਸ", "attractions": "ਖਿੱਚ", "sightseeing": "ਸੈਰ-ਸਪਾਟਾ", "car_hire": "ਕਾਰ ਕਿਰਾਏ 'ਤੇ", "bike_hire": "ਬਾਈਕ ਕਿਰਾਏ 'ਤੇ", "medical": "ਡਾਕਟਰੀ", "forex": "ਵਿਦੇਸ਼ੀ ਮੁਦਰਾ", "flights": "ਉਡਾਣਾਂ", "our_city": "ਸਾਡਾ ਸ਼ਹਿਰ"
+  },
+  "messages": {
+    "no_internet": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਇੰਟਰਨੈਟ ਚੈੱਕ ਕਰੋ", "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...", "emergency": "ਐਮਰਜੈਂਸੀ", "fire_alert": "ਅੱਗ ਦੀ ਚੇਤਾਵਨੀ"
+  }
+}

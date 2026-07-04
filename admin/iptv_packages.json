@@ -1,0 +1,8 @@
+{
+    "available_packages": [
+        { "name": "FTA Only", "file": "fta.json" },
+        { "name": "All Channels", "file": "all.json" },
+        { "name": "All + Sports", "file": "sports.json" },
+        { "name": "Flight Info", "file": "fids.json" }
+    ]
+}

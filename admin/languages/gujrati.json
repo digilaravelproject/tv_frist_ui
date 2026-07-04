@@ -1,0 +1,56 @@
+{
+  "language_name": "Gujrati",
+  "room_label": "રૂમ",
+  "city_name": "મુંબઈ",
+  "feels_like": "અનુભવાય છે",
+  "humidity": "ભેજ",
+  "pressure": "હવાનું દબાણ",
+  "wind": "પવન",
+  "sunrise": "સૂર્યોદય",
+  "sunset": "સૂર્યાસ્ત",
+  "aqi": "AQI",
+  "good": "સારું",
+  "satisfactory": "સંતોષકારક",
+  "moderate": "મધ્યમ",
+  "poor": "ખરાબ",
+  "very_poor": "ખૂબ જ ખરાબ",
+  "severe": "ગંભીર",
+  "time": "સમય",
+  "flight": "ફ્લાઇટ",
+  "terminal": "ટર્મિનલ",
+  "airline": "એરલાઇન",
+  "destination": "ગંતવ્ય સ્થાન",
+  "origin": "આરંભ સ્થાન",
+  "status": "સ્થિતિ",
+  "on_time": "સમયસર",
+  "delayed": "મોડું",
+  "cancelled": "રદ",
+  "departures": "પ્રસ્થાન",
+  "arrivals": "આગમન",
+  "next": "આગળ",
+  "previous": "પાછળ",
+  "refresh": "અત્યારે અપડેટ કરો",
+  "last_updated": "છેલ્લું અપડેટ",
+  "greetings": {
+    "morning": "સુપ્રભાત",
+    "afternoon": "નમસ્કાર",
+    "evening": "શુભ સંધ્યા",
+    "night": "શુભ રાત્રિ",
+    "welcome": "અમારી હોટલમાં તમારું સ્વાગત છે"
+  },
+  "days": {
+    "sun": "રવિવાર", "mon": "સોમવાર", "tue": "મંગળવાર", "wed": "બુધવાર", "thu": "ગુરુવાર", "fri": "શુક્રવાર", "sat": "શનિવાર"
+  },
+  "days_short": {
+    "sun": "રવિ", "mon": "સોમ", "tue": "મંગળ", "wed": "બુધ", "thu": "ગુરુ", "fri": "શુક્ર", "sat": "શનિ"
+  },
+  "months": {
+    "jan": "જાન્યુઆરી", "feb": "ફેબ્રુઆરી", "mar": "માર્ચ", "apr": "એપ્રિલ", "may": "મે", "jun": "જૂન", "jul": "જુલાઈ", "aug": "ઓગસ્ટ", "sep": "સપ્ટેમ્બર", "oct": "ઓક્ટોબર", "nov": "નવેમ્બર", "dec": "ડિસેમ્બર"
+  },
+  "icons": {
+    "live_tv": "લાઇવ ટીવી", "room_service": "રૂમ સર્વિસ", "house_keeping": "હાઉસ કીપિંગ", "amenities": "સુવિધાઓ", "settings": "સેટિંગ્સ", "languages": "ભાષાઓ", "applications": "એપ્સ", "weather": "હવામાન", "travel": "યાત્રા", "hotel_info": "હોટલ માહિતી", "wifi": "વાઇફાઇ", "parking": "પાર્કિંગ", "metro": "મેટ્રો", "railway": "રેલ્વે", "taxi": "ટેક્સી", "rooms": "રૂમ", "language": "ભાષા", "restaurant": "રેસ્ટોરન્ટ", "coffee_shop": "કોફી શોપ", "bar": "બાર", "pool": "પુલ", "gym": "જીમ", "spa": "સ્પા", "events": "કાર્યક્રમો", "weddings": "લગ્ન", "conferences": "કોન્ફરન્સ", "attractions": "આકર્ષણ", "sightseeing": "પર્યટન", "car_hire": "કાર ભાડે", "bike_hire": "બાઇક ભાડે", "medical": "તબીબી", "forex": "વિદેશી મુદ્રા", "flights": "ફ્લાઇટ્સ", "our_city": "અમારું શહેર"
+  },
+  "messages": {
+    "no_internet": "કૃપા કરીને ઇન્ટરનેટ તપાસો", "loading": "લોડ થઈ રહ્યું છે...", "emergency": "કટોકટી", "fire_alert": "ફાયર એલર્ટ"
+  }
+}

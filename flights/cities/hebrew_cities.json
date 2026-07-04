@@ -1,0 +1,582 @@
+[
+    {
+        "english_name": "Delhi",
+        "local_name": "דלה"
+    },
+    {
+        "english_name": "Bengaluru",
+        "local_name": "בנגלורו"
+    },
+    {
+        "english_name": "Ahmedabad",
+        "local_name": "אחמדאבד"
+    },
+    {
+        "english_name": "Hyderabad",
+        "local_name": "הידראבד"
+    },
+    {
+        "english_name": "Chennai",
+        "local_name": "כנעי"
+    },
+    {
+        "english_name": "Kolkata",
+        "local_name": "קולקטה"
+    },
+    {
+        "english_name": "Ghaziabad",
+        "local_name": "ע׳יזיעבד"
+    },
+    {
+        "english_name": "Indore",
+        "local_name": "אינור"
+    },
+    {
+        "english_name": "Jaipur",
+        "local_name": "ג׳ייפור"
+    },
+    {
+        "english_name": "Lucknow",
+        "local_name": "לאקנאו"
+    },
+    {
+        "english_name": "Varanasi",
+        "local_name": "ורנאסי"
+    },
+    {
+        "english_name": "Goa Dabolim",
+        "local_name": "רגוע דבולים"
+    },
+    {
+        "english_name": "Goa Mopa",
+        "local_name": "רגוע מופע"
+    },
+    {
+        "english_name": "Nagpur",
+        "local_name": "נאגפור"
+    },
+    {
+        "english_name": "Pune",
+        "local_name": "פונה"
+    },
+    {
+        "english_name": "Surat",
+        "local_name": "שורת"
+    },
+    {
+        "english_name": "Vadodara",
+        "local_name": "ודודרה"
+    },
+    {
+        "english_name": "Rajkot",
+        "local_name": "רגקות"
+    },
+    {
+        "english_name": "Bhopal",
+        "local_name": "בהופעל"
+    },
+    {
+        "english_name": "Amritsar",
+        "local_name": "אמריצר"
+    },
+    {
+        "english_name": "Chandigarh",
+        "local_name": "צ׳אנדיגרה"
+    },
+    {
+        "english_name": "Srinagar",
+        "local_name": "סרינאגאר"
+    },
+    {
+        "english_name": "Jammu",
+        "local_name": "זממו"
+    },
+    {
+        "english_name": "Dehradun",
+        "local_name": "דחרדאן"
+    },
+    {
+        "english_name": "Udaipur",
+        "local_name": "אודאיפור"
+    },
+    {
+        "english_name": "Jodhpur",
+        "local_name": "גודחפור"
+    },
+    {
+        "english_name": "Cochin",
+        "local_name": "כוכין"
+    },
+    {
+        "english_name": "Thiruvananthapuram",
+        "local_name": "תחרובננתאפארם"
+    },
+    {
+        "english_name": "Coimbatore",
+        "local_name": "כוימבאטורי"
+    },
+    {
+        "english_name": "Mangaluru",
+        "local_name": "מאנגאלורו"
+    },
+    {
+        "english_name": "Kozhikode",
+        "local_name": "קוזחיקודה"
+    },
+    {
+        "english_name": "Visakhapatnam",
+        "local_name": "וישכעפאטנם"
+    },
+    {
+        "english_name": "Bhubaneswar",
+        "local_name": "בחובניסור"
+    },
+    {
+        "english_name": "Patna",
+        "local_name": "פטינה"
+    },
+    {
+        "english_name": "Ranchi",
+        "local_name": "ראנצ׳י"
+    },
+    {
+        "english_name": "Guwahati",
+        "local_name": "גווהאטי"
+    },
+    {
+        "english_name": "Bagdogra",
+        "local_name": "בגדוגרה"
+    },
+    {
+        "english_name": "Port Blair",
+        "local_name": "פורט בלייר"
+    },
+    {
+        "english_name": "Agartala",
+        "local_name": "אגרטלה"
+    },
+    {
+        "english_name": "Shirdi",
+        "local_name": "שירדי"
+    },
+    {
+        "english_name": "Nashik",
+        "local_name": "נשק"
+    },
+    {
+        "english_name": "Aurangabad",
+        "local_name": "אורנגאבד"
+    },
+    {
+        "english_name": "Kolhapur",
+        "local_name": "קולחפור"
+    },
+    {
+        "english_name": "Nanded",
+        "local_name": "ננדוד"
+    },
+    {
+        "english_name": "Jalgaon",
+        "local_name": "גילגוון"
+    },
+    {
+        "english_name": "Akola",
+        "local_name": "יכולה"
+    },
+    {
+        "english_name": "Amravati",
+        "local_name": "אמרהבתי"
+    },
+    {
+        "english_name": "Gwalior",
+        "local_name": "גואליאור"
+    },
+    {
+        "english_name": "Jabalpur",
+        "local_name": "ג׳בלפור"
+    },
+    {
+        "english_name": "Raipur",
+        "local_name": "ריפור"
+    },
+    {
+        "english_name": "Jharsuguda",
+        "local_name": "גחרסוגודה"
+    },
+    {
+        "english_name": "Durgapur",
+        "local_name": "דרגפור"
+    },
+    {
+        "english_name": "Darbhanga",
+        "local_name": "דרבחנגה"
+    },
+    {
+        "english_name": "Gorakhpur",
+        "local_name": "גורכפור"
+    },
+    {
+        "english_name": "Ayodhya",
+        "local_name": "איודהיה"
+    },
+    {
+        "english_name": "Prayagraj",
+        "local_name": "פראיאגראז"
+    },
+    {
+        "english_name": "Bareilly",
+        "local_name": "ברעלי"
+    },
+    {
+        "english_name": "Jaisalmer",
+        "local_name": "ג׳איסלמר"
+    },
+    {
+        "english_name": "Bhuj",
+        "local_name": "בהאג"
+    },
+    {
+        "english_name": "Kandla",
+        "local_name": "קנדלה"
+    },
+    {
+        "english_name": "Diu",
+        "local_name": "דעו"
+    },
+    {
+        "english_name": "Jamnagar",
+        "local_name": "גמנאגאר"
+    },
+    {
+        "english_name": "Bhavnagar",
+        "local_name": "בהונאגאר"
+    },
+    {
+        "english_name": "Porbandar",
+        "local_name": "פרובאנדער"
+    },
+    {
+        "english_name": "Tirupati",
+        "local_name": "תרופתי"
+    },
+    {
+        "english_name": "Vijayawada",
+        "local_name": "ויגהועדה"
+    },
+    {
+        "english_name": "Hubli",
+        "local_name": "הבל"
+    },
+    {
+        "english_name": "Belgaum",
+        "local_name": "בלגום"
+    },
+    {
+        "english_name": "Kannur",
+        "local_name": "קנור"
+    },
+    {
+        "english_name": "Tiruchirappalli",
+        "local_name": "תרוכיראפעלי"
+    },
+    {
+        "english_name": "Madurai",
+        "local_name": "מדוראי"
+    },
+    {
+        "english_name": "Agatti",
+        "local_name": "אגאטי"
+    },
+    {
+        "english_name": "Imphal",
+        "local_name": "אימפהל"
+    },
+    {
+        "english_name": "Dibrugarh",
+        "local_name": "דבראגרה"
+    },
+    {
+        "english_name": "Silchar",
+        "local_name": "סיכחר"
+    },
+    {
+        "english_name": "Itanagar",
+        "local_name": "יטנאגאר"
+    },
+    {
+        "english_name": "Deoghar",
+        "local_name": "דגחר"
+    },
+    {
+        "english_name": "Dubai",
+        "local_name": "דובאי"
+    },
+    {
+        "english_name": "Abu Dhabi",
+        "local_name": "אבו דחב"
+    },
+    {
+        "english_name": "Doha",
+        "local_name": "דוחה"
+    },
+    {
+        "english_name": "Muscat",
+        "local_name": "מושקעת"
+    },
+    {
+        "english_name": "Kuwait",
+        "local_name": "קוואית"
+    },
+    {
+        "english_name": "Riyadh",
+        "local_name": "רייעדה"
+    },
+    {
+        "english_name": "Jeddah",
+        "local_name": "ג׳דח"
+    },
+    {
+        "english_name": "Dammam",
+        "local_name": "דאמממ"
+    },
+    {
+        "english_name": "Bahrain",
+        "local_name": "בחריין"
+    },
+    {
+        "english_name": "Sharjah",
+        "local_name": "שהרגיעה"
+    },
+    {
+        "english_name": "Ras Al Khaimah",
+        "local_name": "ראס אל כחמאה"
+    },
+    {
+        "english_name": "Amman",
+        "local_name": "אמן"
+    },
+    {
+        "english_name": "Medina",
+        "local_name": "מדינה"
+    },
+    {
+        "english_name": "Najaf",
+        "local_name": "נגף"
+    },
+    {
+        "english_name": "Vienna",
+        "local_name": "וינה"
+    },
+    {
+        "english_name": "London Heathrow",
+        "local_name": "לונדון התחרו"
+    },
+    {
+        "english_name": "London Gatwick",
+        "local_name": "לונדון געטוייק"
+    },
+    {
+        "english_name": "London Stansted",
+        "local_name": "לונדון סטנסטד"
+    },
+    {
+        "english_name": "Manchester",
+        "local_name": "מנצ׳סטר"
+    },
+    {
+        "english_name": "Paris",
+        "local_name": "פאריס"
+    },
+    {
+        "english_name": "Frankfurt",
+        "local_name": "פרנקפורט"
+    },
+    {
+        "english_name": "Munich",
+        "local_name": "מניח"
+    },
+    {
+        "english_name": "Mauritius",
+        "local_name": "מאוריטיוס"
+    },
+    {
+        "english_name": "Zurich",
+        "local_name": "צריך"
+    },
+    {
+        "english_name": "Amsterdam",
+        "local_name": "אמסטרדם"
+    },
+    {
+        "english_name": "Warsaw",
+        "local_name": "וזהו"
+    },
+    {
+        "english_name": "Istanbul",
+        "local_name": "איסטנבול"
+    },
+    {
+        "english_name": "Tehran",
+        "local_name": "טהרן"
+    },
+    {
+        "english_name": "Baku",
+        "local_name": "בקו"
+    },
+    {
+        "english_name": "Tbilisi",
+        "local_name": "טביליסי"
+    },
+    {
+        "english_name": "Copenhagen",
+        "local_name": "קופנהגן"
+    },
+    {
+        "english_name": "Singapore",
+        "local_name": "סינגפור"
+    },
+    {
+        "english_name": "Bangkok Suvarnabhumi",
+        "local_name": "בנגקוק סוברנבהומי"
+    },
+    {
+        "english_name": "Bangkok Don Mueang",
+        "local_name": "בנגקוק דון מויאנג"
+    },
+    {
+        "english_name": "Phuket",
+        "local_name": "פוקט"
+    },
+    {
+        "english_name": "Kuala Lumpur",
+        "local_name": "קואלה לומפור"
+    },
+    {
+        "english_name": "Jakarta",
+        "local_name": "ג׳קרטה"
+    },
+    {
+        "english_name": "Ho Chi Minh City",
+        "local_name": "הו קח מנה ציטי"
+    },
+    {
+        "english_name": "Hanoi",
+        "local_name": "האנוי"
+    },
+    {
+        "english_name": "Hong Kong",
+        "local_name": "הונג קונג"
+    },
+    {
+        "english_name": "Tokyo Narita",
+        "local_name": "טוקיו נראתה"
+    },
+    {
+        "english_name": "Seoul",
+        "local_name": "שיעול"
+    },
+    {
+        "english_name": "Denpasar Bali",
+        "local_name": "דנפסר בעלי"
+    },
+    {
+        "english_name": "New York",
+        "local_name": "ניו יורק"
+    },
+    {
+        "english_name": "Newark",
+        "local_name": "ניוארק"
+    },
+    {
+        "english_name": "San Francisco",
+        "local_name": "סן פרנציסקו"
+    },
+    {
+        "english_name": "Toronto",
+        "local_name": "טורונטו"
+    },
+    {
+        "english_name": "Sydney",
+        "local_name": "סידני"
+    },
+    {
+        "english_name": "Melbourne",
+        "local_name": "מלבורנא"
+    },
+    {
+        "english_name": "Colombo",
+        "local_name": "קולומבו"
+    },
+    {
+        "english_name": "Male",
+        "local_name": "מלא"
+    },
+    {
+        "english_name": "Kathmandu",
+        "local_name": "קתהמאנדו"
+    },
+    {
+        "english_name": "Dhaka",
+        "local_name": "דחקה"
+    },
+    {
+        "english_name": "Nairobi",
+        "local_name": "נאירובי"
+    },
+    {
+        "english_name": "Addis Ababa",
+        "local_name": "אדיס אבבה"
+    },
+    {
+        "english_name": "Cairo",
+        "local_name": "כאירוע"
+    },
+    {
+        "english_name": "Casablanca",
+        "local_name": "כשהבלינקה"
+    },
+    {
+        "english_name": "Port Louis",
+        "local_name": "פורט לואיס"
+    },
+    {
+        "english_name": "Seychelles",
+        "local_name": "שעיכלעס"
+    },
+    {
+        "english_name": "Entebbe",
+        "local_name": "אנטבה"
+    },
+    {
+        "english_name": "Dar es Salaam",
+        "local_name": "דארף עס סלאם"
+    },
+    {
+        "english_name": "Tashkent",
+        "local_name": "טשקנט"
+    },
+    {
+        "english_name": "Almaty",
+        "local_name": "עלמתי"
+    },
+    {
+        "english_name": "Krabi",
+        "local_name": "קראבי"
+    },
+    {
+        "english_name": "Fujairah",
+        "local_name": "פוג׳ירח"
+    },
+    {
+        "english_name": "Nanning",
+        "local_name": "נננינג"
+    },
+    {
+        "english_name": "Chengdu",
+        "local_name": "כנגדו"
+    },
+    {
+        "english_name": "Tel Aviv",
+        "local_name": "תל אביב"
+    }
+]

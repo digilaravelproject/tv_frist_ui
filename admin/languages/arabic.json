@@ -1,0 +1,57 @@
+{
+  "direction": "rtl",
+  "language_name": "Arabic",
+  "room_label": "الغرفة",
+  "city_name": "مومباي",
+  "feels_like": "المحسوسة",
+  "humidity": "الرطوبة",
+  "pressure": "الضغط",
+  "wind": "الرياح",
+  "sunrise": "الشروق",
+  "sunset": "الغروب",
+  "aqi": "مؤشر جودة الهواء",
+  "good": "جيد",
+  "satisfactory": "مقبول",
+  "moderate": "متوسط",
+  "poor": "سيء",
+  "very_poor": "سيء جداً",
+  "severe": "خطير",
+  "time": "الوقت",
+  "flight": "رحلة",
+  "terminal": "المبنى",
+  "airline": "الخطوط",
+  "destination": "الوجهة",
+  "origin": "المصدر",
+  "status": "الحالة",
+  "on_time": "في الموعد",
+  "delayed": "متأخر",
+  "cancelled": "ملغي",
+  "departures": "المغادرون",
+  "arrivals": "القادمون",
+  "next": "التالي",
+  "previous": "السابق",
+  "refresh": "تحديث الآن",
+  "last_updated": "آخر تحديث",
+  "greetings": {
+    "morning": "صباح الخير",
+    "afternoon": "طاب يومك",
+    "evening": "مساء الخير",
+    "night": "تصبح على خير",
+    "welcome": "مرحباً بكم في فندقنا"
+  },
+  "days": {
+    "sun": "الأحد", "mon": "الاثنين", "tue": "الثلاثاء", "wed": "الأربعاء", "thu": "الخميس", "fri": "الجمعة", "sat": "السبت"
+  },
+  "days_short": {
+    "sun": "أحد", "mon": "اثنين", "tue": "ثلاثاء", "wed": "أربعاء", "thu": "خميس", "fri": "جمعة", "sat": "سبت"
+  },
+  "months": {
+    "jan": "يناير", "feb": "فبراير", "mar": "مارس", "apr": "أبريل", "may": "مايو", "jun": "يونيو", "jul": "يوليو", "aug": "أغسطس", "sep": "سبتمبر", "oct": "أكتوبر", "nov": "نوفمبر", "dec": "ديسمبر"
+  },
+  "icons": {
+    "live_tv": "بث مباشر", "room_service": "خدمة الغرف", "house_keeping": "تنظيف", "amenities": "المرافق", "settings": "الإعدادات", "languages": "اللغات", "applications": "تطبيقات", "weather": "الطقس", "travel": "سفر", "hotel_info": "معلومات", "wifi": "واي فاي", "parking": "موقف سيارات", "metro": "مترو", "railway": "قطار", "taxi": "تاكسي", "rooms": "غرف", "language": "لغة", "restaurant": "مطعم", "coffee_shop": "مقهى", "bar": "بار", "pool": "مسبح", "gym": "نادي", "spa": "سبا", "events": "فعاليات", "weddings": "أفراح", "conferences": "مؤتمرات", "attractions": "معالم", "sightseeing": "سياحة", "car_hire": "تأجير سيارات", "bike_hire": "تأجير دراجات", "medical": "طبي", "forex": "صرافة", "flights": "رحلات الجو", "our_city": "مدينتنا"
+  },
+  "messages": {
+    "no_internet": "تحقق من الاتصال", "loading": "جاري التحميل...", "emergency": "طوارئ", "fire_alert": "إنذار حريق"
+  }
+}

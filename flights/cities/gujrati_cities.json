@@ -1,0 +1,582 @@
+[
+    {
+        "english_name": "Delhi",
+        "local_name": "દિલ્હી"
+    },
+    {
+        "english_name": "Bengaluru",
+        "local_name": "બેંગલુરુ"
+    },
+    {
+        "english_name": "Ahmedabad",
+        "local_name": "હમેદાબાદ"
+    },
+    {
+        "english_name": "Hyderabad",
+        "local_name": "હૈદરાબાદ"
+    },
+    {
+        "english_name": "Chennai",
+        "local_name": "ચેન્નાઇ"
+    },
+    {
+        "english_name": "Kolkata",
+        "local_name": "કોલકાતા"
+    },
+    {
+        "english_name": "Ghaziabad",
+        "local_name": "ઘઝીયાબાદ"
+    },
+    {
+        "english_name": "Indore",
+        "local_name": "ઇંડોરે"
+    },
+    {
+        "english_name": "Jaipur",
+        "local_name": "જયપુર"
+    },
+    {
+        "english_name": "Lucknow",
+        "local_name": "લુકનોવ"
+    },
+    {
+        "english_name": "Varanasi",
+        "local_name": "વારાણસી"
+    },
+    {
+        "english_name": "Goa Dabolim",
+        "local_name": "ગોઆ ડાબોલીમ"
+    },
+    {
+        "english_name": "Goa Mopa",
+        "local_name": "ગોઆ મોપ"
+    },
+    {
+        "english_name": "Nagpur",
+        "local_name": "નાગપુર"
+    },
+    {
+        "english_name": "Pune",
+        "local_name": "પુણે"
+    },
+    {
+        "english_name": "Surat",
+        "local_name": "સુરત"
+    },
+    {
+        "english_name": "Vadodara",
+        "local_name": "વડોદરા"
+    },
+    {
+        "english_name": "Rajkot",
+        "local_name": "રાજકોટ"
+    },
+    {
+        "english_name": "Bhopal",
+        "local_name": "ભોપાલ"
+    },
+    {
+        "english_name": "Amritsar",
+        "local_name": "અમૃતસર"
+    },
+    {
+        "english_name": "Chandigarh",
+        "local_name": "ચંદીગર્હ"
+    },
+    {
+        "english_name": "Srinagar",
+        "local_name": "શ્રીનગર"
+    },
+    {
+        "english_name": "Jammu",
+        "local_name": "જમ્મુ"
+    },
+    {
+        "english_name": "Dehradun",
+        "local_name": "દેહરાદૂન"
+    },
+    {
+        "english_name": "Udaipur",
+        "local_name": "ઉદયપુર"
+    },
+    {
+        "english_name": "Jodhpur",
+        "local_name": "જોધપુર"
+    },
+    {
+        "english_name": "Cochin",
+        "local_name": "કોચીન"
+    },
+    {
+        "english_name": "Thiruvananthapuram",
+        "local_name": "થિરુવનંથપુરમ"
+    },
+    {
+        "english_name": "Coimbatore",
+        "local_name": "કોઈમ્બતોરએ"
+    },
+    {
+        "english_name": "Mangaluru",
+        "local_name": "મંગલુરુ"
+    },
+    {
+        "english_name": "Kozhikode",
+        "local_name": "કોઝહીકોડે"
+    },
+    {
+        "english_name": "Visakhapatnam",
+        "local_name": "વિશાખાપટ્ટનમ"
+    },
+    {
+        "english_name": "Bhubaneswar",
+        "local_name": "ભૂબનેશ્વર"
+    },
+    {
+        "english_name": "Patna",
+        "local_name": "પટના"
+    },
+    {
+        "english_name": "Ranchi",
+        "local_name": "રાંચી"
+    },
+    {
+        "english_name": "Guwahati",
+        "local_name": "ગુવાહાટી"
+    },
+    {
+        "english_name": "Bagdogra",
+        "local_name": "બાગડોગરા"
+    },
+    {
+        "english_name": "Port Blair",
+        "local_name": "પોર્ટ બ્લેર"
+    },
+    {
+        "english_name": "Agartala",
+        "local_name": "અગરતાલ"
+    },
+    {
+        "english_name": "Shirdi",
+        "local_name": "શિરડી"
+    },
+    {
+        "english_name": "Nashik",
+        "local_name": "નાસિક"
+    },
+    {
+        "english_name": "Aurangabad",
+        "local_name": "ઔરંગાબાદ"
+    },
+    {
+        "english_name": "Kolhapur",
+        "local_name": "કોલ્હાપુર"
+    },
+    {
+        "english_name": "Nanded",
+        "local_name": "નાંદેડ"
+    },
+    {
+        "english_name": "Jalgaon",
+        "local_name": "જલગાંવ"
+    },
+    {
+        "english_name": "Akola",
+        "local_name": "અકોલા"
+    },
+    {
+        "english_name": "Amravati",
+        "local_name": "અમરાવતી"
+    },
+    {
+        "english_name": "Gwalior",
+        "local_name": "ગ્વાલિયર"
+    },
+    {
+        "english_name": "Jabalpur",
+        "local_name": "જબલપુર"
+    },
+    {
+        "english_name": "Raipur",
+        "local_name": "રાયપુર"
+    },
+    {
+        "english_name": "Jharsuguda",
+        "local_name": "ઝારસુગુડા"
+    },
+    {
+        "english_name": "Durgapur",
+        "local_name": "દુર્ગાપુર"
+    },
+    {
+        "english_name": "Darbhanga",
+        "local_name": "દરભંગા"
+    },
+    {
+        "english_name": "Gorakhpur",
+        "local_name": "ગોરખપુર"
+    },
+    {
+        "english_name": "Ayodhya",
+        "local_name": "અયોધ્યા"
+    },
+    {
+        "english_name": "Prayagraj",
+        "local_name": "પ્રયાગરાજ"
+    },
+    {
+        "english_name": "Bareilly",
+        "local_name": "બરેલી"
+    },
+    {
+        "english_name": "Jaisalmer",
+        "local_name": "જેસલમેર"
+    },
+    {
+        "english_name": "Bhuj",
+        "local_name": "ભુજ"
+    },
+    {
+        "english_name": "Kandla",
+        "local_name": "કંડલા"
+    },
+    {
+        "english_name": "Diu",
+        "local_name": "દિઉ"
+    },
+    {
+        "english_name": "Jamnagar",
+        "local_name": "જામનગર"
+    },
+    {
+        "english_name": "Bhavnagar",
+        "local_name": "ભાવનગર"
+    },
+    {
+        "english_name": "Porbandar",
+        "local_name": "પોરબંદર"
+    },
+    {
+        "english_name": "Tirupati",
+        "local_name": "તિરૂપતિ"
+    },
+    {
+        "english_name": "Vijayawada",
+        "local_name": "વિજયવાડા"
+    },
+    {
+        "english_name": "Hubli",
+        "local_name": "હુબલી"
+    },
+    {
+        "english_name": "Belgaum",
+        "local_name": "બેલગામ"
+    },
+    {
+        "english_name": "Kannur",
+        "local_name": "કન્નુર"
+    },
+    {
+        "english_name": "Tiruchirappalli",
+        "local_name": "તિરુચિરપપલ્લી"
+    },
+    {
+        "english_name": "Madurai",
+        "local_name": "મદુરાઈ"
+    },
+    {
+        "english_name": "Agatti",
+        "local_name": "અગતતી"
+    },
+    {
+        "english_name": "Imphal",
+        "local_name": "ઈમ્ફાલ"
+    },
+    {
+        "english_name": "Dibrugarh",
+        "local_name": "દિબ્રુગર્હ"
+    },
+    {
+        "english_name": "Silchar",
+        "local_name": "સિલચર"
+    },
+    {
+        "english_name": "Itanagar",
+        "local_name": "ઇટાનગર"
+    },
+    {
+        "english_name": "Deoghar",
+        "local_name": "દેઓધર"
+    },
+    {
+        "english_name": "Dubai",
+        "local_name": "દુબઇ"
+    },
+    {
+        "english_name": "Abu Dhabi",
+        "local_name": "અબુ ધાબી"
+    },
+    {
+        "english_name": "Doha",
+        "local_name": "દોહા"
+    },
+    {
+        "english_name": "Muscat",
+        "local_name": "મસકૅટ"
+    },
+    {
+        "english_name": "Kuwait",
+        "local_name": "કુવૈત"
+    },
+    {
+        "english_name": "Riyadh",
+        "local_name": "રિયાધ"
+    },
+    {
+        "english_name": "Jeddah",
+        "local_name": "જેદ્દાહ"
+    },
+    {
+        "english_name": "Dammam",
+        "local_name": "દમમાં"
+    },
+    {
+        "english_name": "Bahrain",
+        "local_name": "બેહરીન"
+    },
+    {
+        "english_name": "Sharjah",
+        "local_name": "શારજાહ"
+    },
+    {
+        "english_name": "Ras Al Khaimah",
+        "local_name": "રસ અલ ખૈમાહ"
+    },
+    {
+        "english_name": "Amman",
+        "local_name": "અમ્મન"
+    },
+    {
+        "english_name": "Medina",
+        "local_name": "મદિના"
+    },
+    {
+        "english_name": "Najaf",
+        "local_name": "નજફ"
+    },
+    {
+        "english_name": "Vienna",
+        "local_name": "વિયેના"
+    },
+    {
+        "english_name": "London Heathrow",
+        "local_name": "લન્ડન હીથરો"
+    },
+    {
+        "english_name": "London Gatwick",
+        "local_name": "લન્ડન ગૈટવિક"
+    },
+    {
+        "english_name": "London Stansted",
+        "local_name": "લન્ડન સ્ટેનસ્ટેડ"
+    },
+    {
+        "english_name": "Manchester",
+        "local_name": "માન્ચેસ્ટર"
+    },
+    {
+        "english_name": "Paris",
+        "local_name": "પોરિસ"
+    },
+    {
+        "english_name": "Frankfurt",
+        "local_name": "ફ્રેન્કફર્ટ"
+    },
+    {
+        "english_name": "Munich",
+        "local_name": "મ્યુનિચ"
+    },
+    {
+        "english_name": "Mauritius",
+        "local_name": "મૌરિટીસ"
+    },
+    {
+        "english_name": "Zurich",
+        "local_name": "ઝુરીચ"
+    },
+    {
+        "english_name": "Amsterdam",
+        "local_name": "એમ્સ્ટર્ડમ"
+    },
+    {
+        "english_name": "Warsaw",
+        "local_name": "વરસવા"
+    },
+    {
+        "english_name": "Istanbul",
+        "local_name": "ઇસ્તંબુલ"
+    },
+    {
+        "english_name": "Tehran",
+        "local_name": "તેહરાન"
+    },
+    {
+        "english_name": "Baku",
+        "local_name": "બાકૂ"
+    },
+    {
+        "english_name": "Tbilisi",
+        "local_name": "ટબાઇલીસી"
+    },
+    {
+        "english_name": "Copenhagen",
+        "local_name": "કોપનહેગન"
+    },
+    {
+        "english_name": "Singapore",
+        "local_name": "સિંગાપોરે"
+    },
+    {
+        "english_name": "Bangkok Suvarnabhumi",
+        "local_name": "બેંગકોક સુવર્ણભૂમિ"
+    },
+    {
+        "english_name": "Bangkok Don Mueang",
+        "local_name": "બેંગકોક ડોન મુખોન્નગ"
+    },
+    {
+        "english_name": "Phuket",
+        "local_name": "ફૂકેટ"
+    },
+    {
+        "english_name": "Kuala Lumpur",
+        "local_name": "કુળ લંપુર"
+    },
+    {
+        "english_name": "Jakarta",
+        "local_name": "જકાર્તા"
+    },
+    {
+        "english_name": "Ho Chi Minh City",
+        "local_name": "હો ચી મિન્હ સિટી"
+    },
+    {
+        "english_name": "Hanoi",
+        "local_name": "હનોઈ"
+    },
+    {
+        "english_name": "Hong Kong",
+        "local_name": "હોંગ કોંગ"
+    },
+    {
+        "english_name": "Tokyo Narita",
+        "local_name": "ટોક્યો નરીટા"
+    },
+    {
+        "english_name": "Seoul",
+        "local_name": "સિઓલ"
+    },
+    {
+        "english_name": "Denpasar Bali",
+        "local_name": "દેણપસાર બાલી"
+    },
+    {
+        "english_name": "New York",
+        "local_name": "ન્યૂ યોર્ક"
+    },
+    {
+        "english_name": "Newark",
+        "local_name": "નેવાર્ક"
+    },
+    {
+        "english_name": "San Francisco",
+        "local_name": "સાન ફ્રાન્સિસ્કો"
+    },
+    {
+        "english_name": "Toronto",
+        "local_name": "ટોરોન્ટો"
+    },
+    {
+        "english_name": "Sydney",
+        "local_name": "સિડની"
+    },
+    {
+        "english_name": "Melbourne",
+        "local_name": "મેલ્બોઉરને"
+    },
+    {
+        "english_name": "Colombo",
+        "local_name": "કોલંબો"
+    },
+    {
+        "english_name": "Male",
+        "local_name": "મળે"
+    },
+    {
+        "english_name": "Kathmandu",
+        "local_name": "કાઠમંડુ"
+    },
+    {
+        "english_name": "Dhaka",
+        "local_name": "ઢાકા"
+    },
+    {
+        "english_name": "Nairobi",
+        "local_name": "નૈરોબી"
+    },
+    {
+        "english_name": "Addis Ababa",
+        "local_name": "આડિસ અબબા"
+    },
+    {
+        "english_name": "Cairo",
+        "local_name": "કૈરો"
+    },
+    {
+        "english_name": "Casablanca",
+        "local_name": "ક્શબળંકા"
+    },
+    {
+        "english_name": "Port Louis",
+        "local_name": "પોર્ટ લૂઇસ"
+    },
+    {
+        "english_name": "Seychelles",
+        "local_name": "સેછેલ્લેસ"
+    },
+    {
+        "english_name": "Entebbe",
+        "local_name": "એન્ટેબ્બે"
+    },
+    {
+        "english_name": "Dar es Salaam",
+        "local_name": "દર એસ સલામ"
+    },
+    {
+        "english_name": "Tashkent",
+        "local_name": "તાશ્કંએન્ટ"
+    },
+    {
+        "english_name": "Almaty",
+        "local_name": "અલમાત્ય"
+    },
+    {
+        "english_name": "Krabi",
+        "local_name": "કરબી"
+    },
+    {
+        "english_name": "Fujairah",
+        "local_name": "ફુજૈર્હ"
+    },
+    {
+        "english_name": "Nanning",
+        "local_name": "નાનનીંગ"
+    },
+    {
+        "english_name": "Chengdu",
+        "local_name": "ચેન્ગડુઃ"
+    },
+    {
+        "english_name": "Tel Aviv",
+        "local_name": "તેલ અવીવ"
+    }
+]

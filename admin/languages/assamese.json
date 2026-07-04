@@ -1,0 +1,56 @@
+{
+  "language_name": "Assamese",
+  "room_label": "কোঠা",
+  "city_name": "মুম্বাই",
+  "feels_like": "অনুভৱ হয়",
+  "humidity": "আৰ্দ্ৰতা",
+  "pressure": "বায়ুৰ চাপ",
+  "wind": "বতাহ",
+  "sunrise": "সূর্যোদয়",
+  "sunset": "সূর্যাস্ত",
+  "aqi": "AQI",
+  "good": "ভাল",
+  "satisfactory": "সন্তোষজনক",
+  "moderate": "মধ্যমীয়া",
+  "poor": "বেয়া",
+  "very_poor": "নথৈ বেয়া",
+  "severe": "গুৰুতৰ",
+  "time": "সময়",
+  "flight": "উৰণ",
+  "terminal": "টার্মিনেল",
+  "airline": "এয়াৰলাইন",
+  "destination": "গন্তব্য স্থান",
+  "origin": "আৰম্ভ স্থান",
+  "status": "স্থিতি",
+  "on_time": "সময়মতে",
+  "delayed": "বিলম্বিত",
+  "cancelled": "বাতিল",
+  "departures": "প্রস্থান",
+  "arrivals": "আগমন",
+  "next": "পিছৰ",
+  "previous": "আগৰ",
+  "refresh": "আপডেট কৰক",
+  "last_updated": "অন্তিম আপডেট",
+  "greetings": {
+    "morning": "সুপ্রভাত",
+    "afternoon": "নমস্কাৰ",
+    "evening": "শুভ সন্ধ্যা",
+    "night": "শুভ রাত্রি",
+    "welcome": "আমাৰ হোটেললৈ আপোনাক স্বাগতম"
+  },
+  "days": {
+    "sun": "দেওবাৰ", "mon": "সোমবাৰ", "tue": "মঙলবাৰ", "wed": "বুধবাৰ", "thu": "বৃহস্পতিবাৰ", "fri": "শুক্রবাৰ", "sat": "শনিবাৰ"
+  },
+  "days_short": {
+    "sun": "দেও", "mon": "সোম", "tue": "মঙল", "wed": "বুধ", "thu": "বৃহ", "fri": "শুক্র", "sat": "শনি"
+  },
+  "months": {
+    "jan": "জানুৱাৰী", "feb": "ফেব্ৰুৱাৰী", "mar": "মার্চ", "apr": "এপ্রিল", "may": "মে’", "jun": "জুন", "jul": "জুলাই", "aug": "আগষ্ট", "sep": "ছেপ্তেম্বৰ", "oct": "অক্টোবৰ", "nov": "নৱেম্বৰ", "dec": "ডিচেম্বৰ"
+  },
+  "icons": {
+    "live_tv": "লাইভ টিভি", "room_service": "রুম চার্ভিচ", "house_keeping": "হাউচ কিপিং", "amenities": "সুবিধাসমূহ", "settings": "ছেটিংচ", "languages": "ভাষাসমূহ", "applications": "এপচ", "weather": "বতৰ", "travel": "ভ্রমণ", "hotel_info": "হোটেলৰ তথ্য", "wifi": "ৱাইফাই", "parking": "পার্কিং", "metro": "মেট্র’", "railway": "রেলৱে", "taxi": "টেক্সী", "rooms": "কোঠাসমূহ", "language": "ভাষা", "restaurant": "ৰেষ্টুৰেণ্ট", "coffee_shop": "কফি শ্বপ", "bar": "বাৰ", "pool": "পুল", "gym": "জিম", "spa": "স্পা", "events": "অনুষ্ঠান", "weddings": "বিবাহ", "conferences": "সন্মিলন", "attractions": "আকর্ষণ", "sightseeing": "পর্যটন", "car_hire": "গাড়ী ভাড়া", "bike_hire": "বাইক ভাড়া", "medical": "চিকিৎসা", "forex": "বৈদেশিক মুদ্রা", "flights": "বিমান", "our_city": "আমাৰ চহৰ"
+  },
+  "messages": {
+    "no_internet": "ইণ্টাৰনেট সংযোগ পৰীক্ষা কৰক", "loading": "লোড হৈ আছে...", "emergency": "জৰুৰীকালীন", "fire_alert": "অগ্নি সতৰ্কবাণী"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "language_name": "Kannada",
+  "room_label": "ಕೊಠಡಿ",
+  "city_name": "ಮುಂಬೈ",
+  "feels_like": "ಅನಿಸಿಕೆ",
+  "humidity": "ತೇವಾಂಶ",
+  "pressure": "ವಾಯುಭಾರ",
+  "wind": "ಗಾಳಿ",
+  "sunrise": "ಸೂರ್ಯೋದಯ",
+  "sunset": "ಸೂರ್ಯಾಸ್ತ",
+  "aqi": "AQI",
+  "good": "ಉತ್ತಮ",
+  "satisfactory": "ತೃಪ್ತಿಕರ",
+  "moderate": "ಮಧ್ಯಮ",
+  "poor": "ಕಳಪೆ",
+  "very_poor": "ಬಹಳ ಕಳಪೆ",
+  "severe": "ತೀವ್ರ",
+  "time": "ಸಮಯ",
+  "flight": "ವಿಮಾನ",
+  "terminal": "ಟರ್ಮಿನಲ್",
+  "airline": "ಏರ್ಲೈನ್",
+  "destination": "ತಲುಪುವ ಸ್ಥಳ",
+  "origin": "ಹೊರಡುವ ಸ್ಥಳ",
+  "status": "ಸ್ಥಿತಿ",
+  "on_time": "ಸಮಯಕ್ಕೆ ಸರಿಯಾಗಿ",
+  "delayed": "ವಿಳಂಬ",
+  "cancelled": "ರದ್ದು",
+  "departures": "ನಿರ್ಗಮನ",
+  "arrivals": "ಆಗಮನ",
+  "next": "ಮುಂದೆ",
+  "previous": "ಹಿಂದೆ",
+  "refresh": "ಈಗ ನವೀಕರಿಸಿ",
+  "last_updated": "ಕೊನೆಯ ನವೀಕರಣ",
+  "greetings": {
+    "morning": "ಶುಭೋದಯ",
+    "afternoon": "ಶುಭ ಮಧ್ಯಾಹ್ನ",
+    "evening": "ಶುಭ ಸಂಜೆ",
+    "night": "ಶುಭ ರಾತ್ರಿ",
+    "welcome": "ನಮ್ಮ ಹೋಟೆಲ್‌ಗೆ ನಿಮಗೆ ಸುಸ್ವಾಗತ"
+  },
+  "days": {
+    "sun": "ಭಾನುವಾರ", "mon": "ಸೋಮವಾರ", "tue": "ಮಂಗಳವಾರ", "wed": "ಬುಧವಾರ", "thu": "ಗುರುವಾರ", "fri": "ಶುಕ್ರವಾರ", "sat": "ಶನಿವಾರ"
+  },
+  "days_short": {
+    "sun": "ಭಾನು", "mon": "ಸೋಮ", "tue": "ಮಂಗಳ", "wed": "ಬುಧ", "thu": "ಗುರು", "fri": "ಶುಕ್ರ", "sat": "ಶನಿ"
+  },
+  "months": {
+    "jan": "ಜನವರಿ", "feb": "ಫೆಬ್ರವರಿ", "mar": "ಮಾರ್ಚ್", "apr": "ಏಪ್ರಿಲ್", "may": "ಮೇ", "jun": "ಜೂನ್", "jul": "ಜುಲೈ", "aug": "ಆಗಸ್ಟ್", "sep": "ಸೆಪ್ಟೆಂಬರ್", "oct": "ಅಕ್ಟೋಬರ್", "nov": "ನವೆಂಬರ್", "dec": "ಡಿಸೆಂಬರ್"
+  },
+  "icons": {
+    "live_tv": "ಲೈವ್ ಟಿವಿ", "room_service": "ರೂಮ್ ಸರ್ವಿಸ್", "house_keeping": "ಹೌಸ್ ಕೀಪಿಂಗ್", "amenities": "ಸೌಲಭ್ಯಗಳು", "settings": "ಸೆಟ್ಟಿಂಗ್ಸ್", "languages": "ಭಾಷೆಗಳು", "applications": "ಅಪ್ಲಿಕೇಶನ್ಗಳು", "weather": "ಹವಾಮಾನ", "travel": "ಪ್ರಯಾಣ", "hotel_info": "ಹೋಟೆಲ್ ಮಾಹಿತಿ", "wifi": "ವೈಫೈ", "parking": "ಪಾರ್ಕಿಂಗ್", "metro": "ಮೆಟ್ರೋ", "railway": "ರೈಲ್ವೆ", "taxi": "ಟ್ಯಾಕ್ಸಿ", "rooms": "ಕೊಠಡಿಗಳು", "language": "ಭಾಷೆ", "restaurant": "ರೆಸ್ಟೋರೆಂಟ್", "coffee_shop": "ಕಾಫಿ ಶಾಪ್", "bar": "ಬಾರ್", "pool": "ಪೂಲ್", "gym": "ಜಿಮ್", "spa": "ಸ್ಪಾ", "events": "ಕಾರ್ಯಕ್ರಮಗಳು", "weddings": "ಮದುವೆಗಳು", "conferences": "ಸಮ್ಮೇಳನಗಳು", "attractions": "ಆಕರ್ಷಣೆಗಳು", "sightseeing": "ಪ್ರವಾಸಿ ತಾಣಗಳು", "car_hire": "ಕಾರ್ ಬಾಡಿಗೆ", "bike_hire": "ಬೈಕ್ ಬಾಡಿಗೆ", "medical": "ವೈದ್ಯಕೀಯ", "forex": "ವಿದೇಶಿ ವಿನಿಮಯ", "flights": "ವಿಮಾನಗಳು", "our_city": "ನಮ್ಮ ನಗರ"
+  },
+  "messages": {
+    "no_internet": "ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಪರೀಕ್ಷಿಸಿ", "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...", "emergency": "ತುರ್ತು ಪರಿಸ್ಥಿತಿ", "fire_alert": "ಬೆಂಕಿ ಎಚ್ಚರಿಕೆ"
+  }
+}

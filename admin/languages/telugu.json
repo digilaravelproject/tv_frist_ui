@@ -1,0 +1,56 @@
+{
+  "language_name": "Telugu",
+  "room_label": "గది",
+  "city_name": "ముంబై",
+  "feels_like": "అనుభూతి",
+  "humidity": "తేమ",
+  "pressure": "వాయు పీడనం",
+  "wind": "గాలి",
+  "sunrise": "సూర్యోదయం",
+  "sunset": "సూర్యాస్తమయం",
+  "aqi": "AQI",
+  "good": "మంచిది",
+  "satisfactory": "తృప్తికరం",
+  "moderate": "మితం",
+  "poor": "తక్కువ",
+  "very_poor": "చాలా తక్కువ",
+  "severe": "తీవ్రం",
+  "time": "సమయం",
+  "flight": "విమానం",
+  "terminal": "టెర్మినల్",
+  "airline": "ఎయిర్‌లైన్",
+  "destination": "గమ్యం",
+  "origin": "ప్రారంభం",
+  "status": "స్థితి",
+  "on_time": "సమయానికి",
+  "delayed": "ఆలస్యం",
+  "cancelled": "రద్దు",
+  "departures": "ప్రస్థానం",
+  "arrivals": "ఆగమనం",
+  "next": "తరువాత",
+  "previous": "మునుపటి",
+  "refresh": "తాజా చేయండి",
+  "last_updated": "చివరి అప్‌డేట్",
+  "greetings": {
+    "morning": "శుభోదయం",
+    "afternoon": "శుభ మధ్యాహ్నం",
+    "evening": "శుభ సాయంత్రం",
+    "night": "శుభ రాత్రి",
+    "welcome": "మా హోటల్‌కు మీకు స్వాగతం"
+  },
+  "days": {
+    "sun": "ఆదివారం", "mon": "సోమవారం", "tue": "మంగళవారం", "wed": "బుధవారం", "thu": "గురువారం", "fri": "శుక్రవారం", "sat": "శనివారం"
+  },
+  "days_short": {
+    "sun": "ఆది", "mon": "సోమ", "tue": "మంగళ", "wed": "బుధ", "thu": "గురు", "fri": "శుక్ర", "sat": "శని"
+  },
+  "months": {
+    "jan": "జనవరి", "feb": "ఫిబ్రవరి", "mar": "మార్చి", "apr": "ఏప్రిల్", "may": "మే", "jun": "జూన్", "jul": "జూలై", "aug": "ఆగస్టు", "sep": "సెప్టెంబర్", "oct": "అక్టోబర్", "nov": "నవంబర్", "dec": "డిసెంబర్"
+  },
+  "icons": {
+    "live_tv": "లైవ్ టీవీ", "room_service": "రూమ్ సర్వీస్", "house_keeping": "హౌస్ కీపింగ్", "amenities": "సదుపాయాలు", "settings": "సెట్టింగ్స్", "languages": "భాషలు", "applications": "యాప్స్", "weather": "వాతావరణం", "travel": "ప్రయాణం", "hotel_info": "హోటల్ సమాచారం", "wifi": "వైఫై", "parking": "పార్కింగ్", "metro": "మెట్రో", "railway": "రైల్వే", "taxi": "టాక్సీ", "rooms": "గదులు", "language": "భాష", "restaurant": "రెస్టారెంట్", "coffee_shop": "కాఫీ షాప్", "bar": "బార్", "pool": "పూల్", "gym": "జిమ్", "spa": "స్పా", "events": "ఈవెంట్స్", "weddings": "వివాహాలు", "conferences": "కాన్ఫరెన్స్", "attractions": "ఆకర్షణలు", "sightseeing": "పర్యాటకం", "car_hire": "కార్ రెంటల్", "bike_hire": "బైక్ రెంటల్", "medical": "వైద్యం", "forex": "కరెన్సీ", "flights": "విమానాలు", "our_city": "మా నగరం"
+  },
+  "messages": {
+    "no_internet": "ఇంటర్నెట్ తనిఖీ చేయండి", "loading": "లోడ్ అవుతోంది...", "emergency": "అత్యవసరం", "fire_alert": "ఫైర్ అలర్ట్"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "language_name": "Malayalam",
+  "room_label": "മുറി",
+  "city_name": "മുംബൈ",
+  "feels_like": "അനുഭവപ്പെടുന്നത്",
+  "humidity": "ആർദ്രത",
+  "pressure": "വായു മർദ്ദം",
+  "wind": "കാറ്റ്",
+  "sunrise": "സൂര്യോദയം",
+  "sunset": "സൂര്യാസ്തമയം",
+  "aqi": "AQI",
+  "good": "നല്ലത്",
+  "satisfactory": "തൃപ്തികരമായ",
+  "moderate": "മിതമായ",
+  "poor": "മോശം",
+  "very_poor": "വളരെ മോശം",
+  "severe": "ഗുരുതരം",
+  "time": "സമയം",
+  "flight": "വിമാനം",
+  "terminal": "ടെർമിനൽ",
+  "airline": "എയർലൈൻ",
+  "destination": "ലക്ഷ്യസ്ഥാനം",
+  "origin": "പുറപ്പെടുന്ന സ്ഥലം",
+  "status": "നില",
+  "on_time": "കൃത്യസമയം",
+  "delayed": "വൈകി",
+  "cancelled": "റദ്ദാക്കി",
+  "departures": "പുറപ്പെടൽ",
+  "arrivals": "ആഗമനം",
+  "next": "അടുത്തത്",
+  "previous": "മുമ്പത്തെ",
+  "refresh": "പുതുക്കുക",
+  "last_updated": "അവസാനം പുതുക്കിയത്",
+  "greetings": {
+    "morning": "സുപ്രഭാതം",
+    "afternoon": "നമസ്കാരം",
+    "evening": "ശുഭസന്ധ്യ",
+    "night": "ശുഭരാത്രി",
+    "welcome": "ഞങ്ങളുടെ ഹോട്ടലിലേക്ക് സ്വാഗതം"
+  },
+  "days": {
+    "sun": "ഞായർ", "mon": "തിങ്കൾ", "tue": "ചൊവ്വ", "wed": "ബുധൻ", "thu": "വ്യാഴം", "fri": "വെള്ളി", "sat": "ശനി"
+  },
+  "days_short": {
+    "sun": "ഞായർ", "mon": "തിങ്കൾ", "tue": "ചൊവ്വ", "wed": "ബുധൻ", "thu": "വ്യാഴം", "fri": "വെള്ളി", "sat": "ശനി"
+  },
+  "months": {
+    "jan": "ജനുവരി", "feb": "ഫെബ്രുവരി", "mar": "മാർച്ച്", "apr": "ഏപ്രിൽ", "may": "മേയ്", "jun": "ജൂൺ", "jul": "ജൂലൈ", "aug": "ഓഗസ്റ്റ്", "sep": "സെപ്റ്റംബർ", "oct": "ഒക്ടോബർ", "nov": "നവംബർ", "dec": "ഡിസംബർ"
+  },
+  "icons": {
+    "live_tv": "ലൈവ് ടിവി", "room_service": "റൂം സർവീസ്", "house_keeping": "ഹൗസ് കീപ്പിംഗ്", "amenities": "സൗകര്യങ്ങൾ", "settings": "ക്രമീകരണങ്ങൾ", "languages": "ഭാഷകൾ", "applications": "ആപ്പുകൾ", "weather": "കാലാവസ്ഥ", "travel": "യാത്ര", "hotel_info": "ഹോട്ടൽ വിവരം", "wifi": "വൈഫൈ", "parking": "പാർക്കിംഗ്", "metro": "മെട്രോ", "railway": "റെയിൽവേ", "taxi": "ടാക്സി", "rooms": "മുറികൾ", "language": "ഭാഷ", "restaurant": "റെസ്റ്റോറന്റ്", "coffee_shop": "കോഫി ഷോപ്പ്", "bar": "ബാർ", "pool": "പൂൾ", "gym": "ജിം", "spa": "സ്പാ", "events": "പരിപാടികൾ", "weddings": "വിവാഹങ്ങൾ", "conferences": "സമ്മേളനങ്ങൾ", "attractions": "ആകർഷണങ്ങൾ", "sightseeing": "സന്ദർശനം", "car_hire": "കാർ വാടകയ്ക്ക്", "bike_hire": "ബൈക്ക് വാടകയ്ക്ക്", "medical": "വൈദ്യം", "forex": "നാണയവിനിമയം", "flights": "വിമാനങ്ങൾ", "our_city": "ഞങ്ങളുടെ നഗരം"
+  },
+  "messages": {
+    "no_internet": "ഇന്റർനെറ്റ് പരിശോധിക്കുക", "loading": "ലോഡ് ചെയ്യുന്നു...", "emergency": "അടിയന്തരാവസ്ഥ", "fire_alert": "അഗ്നി മുന്നറിയിപ്പ്"
+  }
+}

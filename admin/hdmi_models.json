@@ -1,0 +1,7 @@
+{
+  "Worldtech_RT32HD": "com.realtek.tv.passthrough/.hdmiinput.HDMITvInputService/HW151519232",
+  "Sony_Bravia": "com.sony.dtv.tvinput.external/.ExternalTvInputService/HW1",
+  "Xiaomi_MiTV": "com.xiaomi.mitv.tvinput/.HdmiInputService/HW1",
+  "LG_WebOS": "com.lge.tv.input.external/.HdmiInputService/HW1",
+  "Samsung_Tizen": "com.samsung.tv.input/.HdmiInputService/HW1"
+}

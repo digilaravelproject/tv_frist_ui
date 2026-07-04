@@ -1,0 +1,23 @@
+{
+    "hotel": {
+        "name": "Taj Resorts",
+        "contactPerson": "Milind Kulkarni",
+        "address1": "B-219, Durian Estate,",
+        "address2": "Mulund Goregaon Link Road, Goregaon East,",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "country": "India",
+        "pin": "40063",
+        "email": "emkekulkarni@gmail.com",
+        "mobile": "+919821513611",
+        "temperatureUnit": "C"
+    },
+    "apps": {
+        "showApps": true,
+        "liveTVAppName": "Live TV"
+    },
+    "features": {
+        "showMyCity": true,
+        "showAmenities": true
+    }
+}

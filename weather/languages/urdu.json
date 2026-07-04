@@ -1,0 +1,57 @@
+{
+  "direction": "rtl",
+  "language_name": "Urdu",
+  "room_label": "کمرہ",
+  "city_name": "ممبئی",
+  "feels_like": "محسوس",
+  "humidity": "نمی",
+  "pressure": "ہوا کا دباؤ",
+  "wind": "ہوا",
+  "sunrise": "طلوع آفتاب",
+  "sunset": "غروب آفتاب",
+  "aqi": "اے کیو آئی",
+  "good": "اچھا",
+  "satisfactory": "تسلی بخش",
+  "moderate": "اوسط",
+  "poor": "خراب",
+  "very_poor": "بہت خراب",
+  "severe": "شدید",
+  "time": "وقت",
+  "flight": "پرواز",
+  "terminal": "ٹرمینل",
+  "airline": "ایئر لائن",
+  "destination": "منزل",
+  "origin": "آغاز",
+  "status": "صورتحال",
+  "on_time": "وقت پر",
+  "delayed": "تاخیر",
+  "cancelled": "منسوخ",
+  "departures": "روانگی",
+  "arrivals": "آمد",
+  "next": "آگے",
+  "previous": "پیچھے",
+  "refresh": "تازہ کریں",
+  "last_updated": "آخری اپ ڈیٹ",
+  "greetings": {
+    "morning": "صبح بخیر",
+    "afternoon": "نمشکار",
+    "evening": "شام بخیر",
+    "night": "شب بخیر",
+    "welcome": "ہمارے ہوٹل میں خوش آمدید"
+  },
+  "days": {
+    "sun": "اتوار", "mon": "پیر", "tue": "منگل", "wed": "بدھ", "thu": "جمعرات", "fri": "جمعہ", "sat": "ہفتہ"
+  },
+  "days_short": {
+    "sun": "اتوار", "mon": "پیر", "tue": "منگل", "wed": "بدھ", "thu": "جمعرات", "fri": "جمعہ", "sat": "ہفتہ"
+  },
+  "months": {
+    "jan": "جنوری", "feb": "فروری", "mar": "مارچ", "apr": "اپریل", "may": "مئی", "jun": "جون", "jul": "جولائی", "aug": "اگست", "sep": "ستمبر", "oct": "اکتوبر", "nov": "نومبر", "dec": "دسمبر"
+  },
+  "icons": {
+    "live_tv": "لائیو ٹی وی", "room_service": "روم سروس", "house_keeping": "ہاؤس کیپنگ", "amenities": "سہولیات", "settings": "سیٹنگز", "languages": "زبانیں", "applications": "ایپس", "weather": "موسم", "travel": "سفر", "hotel_info": "ہوٹل کی معلومات", "wifi": "وائی فائی", "parking": "پارکنگ", "metro": "میٹرو", "railway": "ریلوے", "taxi": "ٹیکسی", "rooms": "کمرے", "language": "زبان", "restaurant": "ریستوراں", "coffee_shop": "کافی شاپ", "bar": "بار", "pool": "پول", "gym": "جم", "spa": "اسپا", "events": "تقریبات", "weddings": "شادیاں", "conferences": "کانفرنس", "attractions": "کشش", "sightseeing": "سیر و تفریح", "car_hire": "کار کرایہ پر", "bike_hire": "بائیک کرایہ پر", "medical": "طبی", "forex": "زر مبادلہ", "flights": "پروازیں", "our_city": "ہمارਾ شہر"
+  },
+  "messages": {
+    "no_internet": "انٹرنیٹ چیک کریں", "loading": "لوڈ ہو رہا ہے...", "emergency": "ہنگامی", "fire_alert": "آگ کا الرٹ"
+  }
+}

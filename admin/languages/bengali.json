@@ -1,0 +1,56 @@
+{
+  "language_name": "Bengali",
+  "room_label": "ঘর",
+  "city_name": "মুম্বাই",
+  "feels_like": "অনুভূত",
+  "humidity": "আর্দ্রতা",
+  "pressure": "বায়ুচাপ",
+  "wind": "বাতাস",
+  "sunrise": "সূর্যোদয়",
+  "sunset": "সূর্যাস্ত",
+  "aqi": "AQI",
+  "good": "ভালো",
+  "satisfactory": "সন্তোষজনক",
+  "moderate": "মাঝারি",
+  "poor": "খারাপ",
+  "very_poor": "খুব খারাপ",
+  "severe": "মারাত্মক",
+  "time": "সময়",
+  "flight": "উড়ান",
+  "terminal": "টার্মিনাল",
+  "airline": "এয়ারলাইন",
+  "destination": "গন্তব্যস্থল",
+  "origin": "উৎসস্থল",
+  "status": "অবস্থা",
+  "on_time": "ঠিক সময়ে",
+  "delayed": "বিলম্বিত",
+  "cancelled": "বাতিল",
+  "departures": "প্রস্থান",
+  "arrivals": "আগমন",
+  "next": "পরবর্তী",
+  "previous": "পূর্ববর্তী",
+  "refresh": "এখন রিফ্রেশ করুন",
+  "last_updated": "শেষ আপডেট",
+  "greetings": {
+    "morning": "সুপ্রভাত",
+    "afternoon": "শুভ অপরাহ্ন",
+    "evening": "শুভ সন্ধ্যা",
+    "night": "শুভ রাত্রি",
+    "welcome": "আমাদের হোটেলে আপনাকে স্বাগত"
+  },
+  "days": {
+    "sun": "রবিবার", "mon": "সোমবার", "tue": "মঙ্গলবার", "wed": "বুধবার", "thu": "বৃহস্পতিবার", "fri": "শুক্রবার", "sat": "শনিবার"
+  },
+  "days_short": {
+    "sun": "রবি", "mon": "সোম", "tue": "মঙ্গল", "wed": "বুধ", "thu": "বৃহস্পতি", "fri": "শুক্র", "sat": "শনি"
+  },
+  "months": {
+    "jan": "জানুয়ারি", "feb": "ফেব্রুয়ারি", "mar": "মার্চ", "apr": "এপ্রিল", "may": "মে", "jun": "জুন", "jul": "জুলাই", "aug": "আগস্ট", "sep": "সেপ্টেম্বর", "oct": "অক্টোবর", "nov": "নভেম্বর", "dec": "ডিসেম্বর"
+  },
+  "icons": {
+    "live_tv": "লাইভ টিভি", "room_service": "রুম সার্ভিস", "house_keeping": "হাউসকিপিং", "amenities": "সুযোগ সুবিধা", "settings": "সেটিংস", "languages": "ভাষা", "applications": "অ্যাপস", "weather": "আবহাওয়া", "travel": "ভ্রমণ", "hotel_info": "হোটেল তথ্য", "wifi": "ওয়াইফাই", "parking": "পার্কিং", "metro": "মেট্রো", "railway": "রেলওয়ে", "taxi": "ট্যাক্সি", "rooms": "রুম", "language": "ভাষা", "restaurant": "রেস্তোরাঁ", "coffee_shop": "কফি শপ", "bar": "বার", "pool": "পুল", "gym": "জিম", "spa": "স্পা", "events": "অনুষ্ঠান", "weddings": "বিবাহ", "conferences": "সম্মেলন", "attractions": "আকর্ষণ", "sightseeing": "দর্শনীয় স্থান", "car_hire": "গাড়ি ভাড়া", "bike_hire": "বাইক ভাড়া", "medical": "চিকিৎসা", "forex": "বৈদেশিক মুদ্রা", "flights": "ফ্লাইট", "our_city": "আমাদের শহর"
+  },
+  "messages": {
+    "no_internet": "ইন্টারনেট সংযোগ চেক করুন", "loading": "লোড হচ্ছে...", "emergency": "জরুরী", "fire_alert": "অগ্নি সতর্কতা"
+  }
+}

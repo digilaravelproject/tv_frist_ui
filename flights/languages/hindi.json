@@ -1,0 +1,19 @@
+{
+  "language_name": "Hindi",
+  "time": "समय",
+  "flight": "उड़ान",
+  "terminal": "टर्मिनल",
+  "airline": "एयरलाइन",
+  "destination": "गंतव्य स्थान",
+  "origin": "आरंभ स्थान",
+  "status": "स्थिति",
+  "on_time": "समय पर",
+  "delayed": "विलंबित",
+  "cancelled": "रद्द",
+  "departures": "प्रस्थान",
+  "arrivals": "आगमन",
+  "next": "आगे",
+  "previous": "पीछे",
+  "refresh": "अभी अपडेट करें",
+  "last_updated": "अंतिम अपडेट"
+}

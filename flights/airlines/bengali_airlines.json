@@ -1,0 +1,210 @@
+[
+    {
+        "english_name": "Air India",
+        "local_name": "এয়ার ইন্ডিয়া"
+    },
+    {
+        "english_name": "IndiGo",
+        "local_name": "ইন্ডিগো"
+    },
+    {
+        "english_name": "Akasa Air",
+        "local_name": "আকাশ এয়ার"
+    },
+    {
+        "english_name": "SpiceJet",
+        "local_name": "স্পিসিজেট"
+    },
+    {
+        "english_name": "Go First",
+        "local_name": "গ ফার্স্ট"
+    },
+    {
+        "english_name": "Air India Express",
+        "local_name": "এয়ার ইন্ডিয়া এক্সপ্রেস"
+    },
+    {
+        "english_name": "Star Air",
+        "local_name": "ষ্টার এয়ার"
+    },
+    {
+        "english_name": "Air Canada",
+        "local_name": "এয়ার কানাডা"
+    },
+    {
+        "english_name": "Bluebird Airways",
+        "local_name": "ব্লুদেবীরদ আইরবয়স"
+    },
+    {
+        "english_name": "Alliance Air",
+        "local_name": "এলায়েন্স এয়ার"
+    },
+    {
+        "english_name": "Emirates",
+        "local_name": "এমিরেটস"
+    },
+    {
+        "english_name": "Abakan Air",
+        "local_name": "এবাকান এয়ার"
+    },
+    {
+        "english_name": "Salamair",
+        "local_name": "সালামের"
+    },
+    {
+        "english_name": "Iraqi Airways",
+        "local_name": "ইরাকি আইরবয়স"
+    },
+    {
+        "english_name": "Qatar Airways",
+        "local_name": "কাতার আইরবয়স"
+    },
+    {
+        "english_name": "Singapore Airlines",
+        "local_name": "সিঙ্গাপুর এয়ারলাইন্স"
+    },
+    {
+        "english_name": "British Airways",
+        "local_name": "ব্রিটিশ আইরবয়স"
+    },
+    {
+        "english_name": "Lufthansa",
+        "local_name": "লুফথানসা"
+    },
+    {
+        "english_name": "Iran Air",
+        "local_name": "ইরান এয়ার"
+    },
+    {
+        "english_name": "Etihad Airways",
+        "local_name": "ইতিহাদ আইরবয়স"
+    },
+    {
+        "english_name": "Thai Airways",
+        "local_name": "থাই আইরবয়স"
+    },
+    {
+        "english_name": "Cathay Pacific",
+        "local_name": "ক্যাথে প্যাসিফিক"
+    },
+    {
+        "english_name": "Air France",
+        "local_name": "এয়ার ফ্রান্স"
+    },
+    {
+        "english_name": "KLM",
+        "local_name": "কলম"
+    },
+    {
+        "english_name": "Swiss",
+        "local_name": "সুইস"
+    },
+    {
+        "english_name": "Malaysia Airlines",
+        "local_name": "মালয়েশিয়া এয়ারলাইন্স"
+    },
+    {
+        "english_name": "Thai Lion Air",
+        "local_name": "থাই লায়ন এয়ার"
+    },
+    {
+        "english_name": "Turkish Airlines",
+        "local_name": "টার্কিশ এয়ারলাইন্স"
+    },
+    {
+        "english_name": "Virgin Atlantic",
+        "local_name": "ভার্জিন অতলান্তিক"
+    },
+    {
+        "english_name": "Air Arabia",
+        "local_name": "এয়ার আরবে"
+    },
+    {
+        "english_name": "Flydubai",
+        "local_name": "ফ্ল্যাদুবাই"
+    },
+    {
+        "english_name": "Kuwait Airways",
+        "local_name": "কুয়েত আইরবয়স"
+    },
+    {
+        "english_name": "Oman Air",
+        "local_name": "ওমান এয়ার"
+    },
+    {
+        "english_name": "Saudia",
+        "local_name": "সৌদিয়া"
+    },
+    {
+        "english_name": "Ethiopian Airlines",
+        "local_name": "ইথিওপিয়ান এয়ারলাইন্স"
+    },
+    {
+        "english_name": "Kenya Airways",
+        "local_name": "কেনিয়া আইরবয়স"
+    },
+    {
+        "english_name": "Air Mauritius",
+        "local_name": "এয়ার মরিশাস"
+    },
+    {
+        "english_name": "Challenge Airlines",
+        "local_name": "চ্যালেঞ্জ এয়ারলাইন্স"
+    },
+    {
+        "english_name": "SriLankan Airlines",
+        "local_name": "শ্রীলংকান এয়ারলাইন্স"
+    },
+    {
+        "english_name": "Nepal Airlines",
+        "local_name": "নেপাল এয়ারলাইন্স"
+    },
+    {
+        "english_name": "Batik Air",
+        "local_name": "বাটিক এয়ার"
+    },
+    {
+        "english_name": "EgyptAir",
+        "local_name": "ইজিপ্টের"
+    },
+    {
+        "english_name": "LOT Polish Airlines",
+        "local_name": "লোট পালিশ এয়ারলাইন্স"
+    },
+    {
+        "english_name": "Azerbaijan Airlines",
+        "local_name": "আজেরবাইজান এয়ারলাইন্স"
+    },
+    {
+        "english_name": "All Nippon Airways",
+        "local_name": "অল নিপ্পন আইরবয়স"
+    },
+    {
+        "english_name": "Gulf Air",
+        "local_name": "গালফ এয়ার"
+    },
+    {
+        "english_name": "Vietnam Airlines",
+        "local_name": "ভিয়েতনাম এয়ারলাইন্স"
+    },
+    {
+        "english_name": "Vietjet Air",
+        "local_name": "ভিয়েতজেট এয়ার"
+    },
+    {
+        "english_name": "Air Astana",
+        "local_name": "এয়ার আস্তানা"
+    },
+    {
+        "english_name": "Jazeera Airways",
+        "local_name": "জাজীর আইরবয়স"
+    },
+    {
+        "english_name": "Royal Jordanian",
+        "local_name": "রয়েল জর্দানিয়ান"
+    },
+    {
+        "english_name": "Flynas",
+        "local_name": "ফ্ল্যান্স"
+    }
+]

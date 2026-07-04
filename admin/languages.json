@@ -1,0 +1,25 @@
+{
+  "available_languages": [
+    { "name": "English", "file": "english.json" },
+    { "name": "हिंदी", "file": "hindi.json" },
+    { "name": "मराठी", "file": "marathi.json" },
+    { "name": "कोंकणी", "file": "konkani.json" },
+    { "name": "ગુજરાતી", "file": "gujrati.json" },
+    { "name": "বাংলা", "file": "bengali.json" },
+    { "name": "ਪੰਜਾਬੀ", "file": "punjabi.json" },
+    { "name": "অসমীয়া", "file": "assamese.json" },
+    { "name": "ಕನ್ನಡ", "file": "kannada.json" },
+    { "name": "தமிழ்", "file": "tamil.json" },
+    { "name": "తెలుగు", "file": "telugu.json" },
+    { "name": "മലയാളം", "file": "malayalam.json" },
+    { "name": "Français", "file": "french.json" },
+    { "name": "Deutsch", "file": "german.json" },
+    { "name": "Español", "file": "spanish.json" },
+    { "name": "Português", "file": "portuguese.json" },
+    { "name": "Русский", "file": "russian.json" },
+    { "name": "简体中文", "file": "chinese.json" },
+    { "name": "עִברִית", "file": "hebrew.json" },
+    { "name": "اردو", "file": "urdu.json" },
+    { "name": "عربي", "file": "arabic.json" }
+  ]
+}

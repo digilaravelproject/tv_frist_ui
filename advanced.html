@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Configuration</title>
+<style>
+    :root { --house-gold: #b38a2d; }
+    body { 
+        background: #000 url('images/main.jpg') no-repeat center center fixed; 
+        background-size: cover; color: white; font-family: sans-serif; 
+        display: flex; justify-content: center; align-items: center; 
+        height: 100vh; margin: 0; overflow: hidden; 
+    }
+    .config-card { 
+        background: rgba(0,0,0,0.95); padding: 15px; border: 2px solid var(--house-gold); 
+        border-radius: 12px; width: 580px; display: flex; flex-direction: column; gap: 5px; 
+    }
+    .header-title { color: var(--house-gold); text-align: center; font-weight: bold; font-size: 0.95rem; text-transform: uppercase; margin-bottom: 10px; }
+    .main-layout { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
+    .left-col { width: 340px; }
+    .right-col { width: 210px; }
+    .field-box { margin-bottom: 8px; }
+    .field-box label { color: var(--house-gold); font-size: 0.65rem; font-weight: bold; margin-bottom: 2px; display: block; }
+    .input-styled, .themed-list, .hw-info { width: 100%; box-sizing: border-box; border: 1px solid var(--house-gold); background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+    .input-styled { color: white; padding: 10px; font-size: 1.1rem; text-align: center; height: 44px; }
+    
+    /* STYLES FOR IPTV AND TV APP (Standard 320px) */
+    .list-item, .package-item { padding: 8px 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); outline: none; cursor: pointer; font-size: 1rem; color: white; }
+    .tick { display: none; float: right; color: var(--house-gold); }
+    .list-item.selected .tick { display: inline; }
+    .list-item:focus, .package-item:focus, .key-btn:focus, .side-btn:focus, .btn-act:focus { background: var(--house-gold) !important; color: white !important; outline: 2px solid white; }
+    
+    .num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+    .key-btn { background: rgba(179, 138, 45, 0.1); border: 1px solid var(--house-gold); color: white; padding: 12px 0; border-radius: 4px; font-size: 1rem; outline: none; min-height: 45px;}
+    
+    .hw-info { padding: 8px; font-size: 0.70rem; display: flex; gap: 5px; height: 85px; }
+    .hw-sub-col { flex: 1; }
+    .hw-row { display: flex; padding: 1px 0; white-space: nowrap; }
+    .label-hw { color: var(--house-gold); font-weight: bold; width: 45px; }
+    
+    .side-btn-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .side-btn { width: 100%; height: 38px; background: transparent; border: 1px solid var(--house-gold); color: white; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+    .action-row { width: 100%; margin-top: 10px; display: flex; gap: 10px; }
+    .btn-act { flex: 1; height: 45px; background: transparent; border: 1px solid var(--house-gold); color: white; font-weight: bold; border-radius: 4px; text-transform: uppercase; cursor: pointer; }
+
+    /* OVERLAY SYSTEM */
+    .overlay-container { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; }
+    
+    .package-box { 
+        background: #000; 
+        border: 3px solid var(--house-gold); 
+        width: 320px; 
+        border-radius: 12px; 
+        box-shadow: 0 0 20px rgba(0,0,0,1);
+    }
+
+    /* HDMI SPECIFIC: Isolated width and height to fix your spoiled layout */
+    .hdmi-box { 
+        width: 520px !important; 
+        height: 480px; 
+        display: flex; 
+        flex-direction: column; 
+        overflow: hidden; 
+    }
+
+    #hdmiBox { overflow-y: auto; flex: 1; }
+    #hdmiBox::-webkit-scrollbar { width: 8px; }
+    #hdmiBox::-webkit-scrollbar-thumb { background: var(--house-gold); border-radius: 4px; }
+
+    /* HDMI Row Layout: Text on Left, Button on Right */
+    .hdmi-list-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        border-bottom: 1px solid #222;
+        outline: none;
+        cursor: pointer;
+    }
+    .hdmi-list-row:focus { background: rgba(179, 138, 45, 0.3); }
+    .model-name-text { font-size: 1.1rem; color: white; flex-grow: 1; text-align: left; }
+
+    .test-btn-inline {
+        background: var(--house-gold);
+        color: black;
+        border: none;
+        padding: 6px 12px;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        margin-left: 10px;
+    }
+.test-btn-inline:focus { 
+    background-color: var(--house-gold) !important; 
+    color: black !important; 
+    outline: 2px solid white; 
+    box-shadow: 0 0 10px var(--house-gold);
+}
+
+/* Ensure the Model Name also looks Gold when focused */
+.model-name-text:focus {
+    background: rgba(179, 138, 45, 0.2);
+    color: var(--house-gold);
+    outline: white;
+    border-radius: 4px;
+}
+</style> 
+</head>
+<body>
+
+<div id="packageOverlay" class="overlay-container">
+    <div class="package-box" id="packageBox">
+        <div id="pkgHeader" style="color:var(--house-gold); text-align:center; padding: 10px; font-size: 0.8rem;">CHOOSE IPTV PACKAGE</div>
+    </div>
+</div>
+
+<div id="appOverlay" class="overlay-container">
+    <div class="package-box" id="appBox">
+        <div id="appHeader" style="color:var(--house-gold); text-align:center; padding: 10px; font-size: 0.8rem;">CHOOSE TV APPLICATION</div>
+    </div>
+</div>
+
+<div id="hdmiOverlay" class="overlay-container">
+    <div class="package-box hdmi-box">
+        <div id="hdmiHeader" style="color:var(--house-gold); text-align:center; padding: 10px; font-size: 0.9rem; border-bottom: 2px solid var(--house-gold);">SELECT TV MODEL</div>
+        <div id="hdmiBox"></div> 
+    </div>
+</div>
+
+<div class="config-card">
+    <div class="header-title">Advanced Configuration</div>
+    <div class="main-layout">
+        <div class="left-col">
+            <div class="field-box">
+                <label>ROOM NUMBER</label>
+                <input type="text" id="roomNum" class="input-styled" maxlength="3" readonly placeholder="---">
+            </div>
+            <div class="field-box">
+                <label>LIVE TV INPUT</label>
+                <div class="themed-list">
+                    <div class="list-item" tabindex="0" id="btn-iptv" onclick="openIptvMenu()">IPTV <span class="tick">✔</span></div>
+                    <div class="list-item" tabindex="0" id="btn-tvapp" onclick="openAppMenu()">TV APP <span class="tick">✔</span></div>
+                    <div class="list-item" tabindex="0" id="btn-hdmi" onclick="openHdmiPort()">HDMI <span class="tick">✔</span></div>
+                </div>
+            </div>
+            <div class="field-box">
+                <label>HARDWARE DETAILS</label>
+                <div class="hw-info">
+                    <div class="hw-sub-col">
+                        <div class="hw-row"><span class="label-hw">Serial:</span> <span id="v-serial">...</span></div>
+                        <div class="hw-row"><span class="label-hw">IP:</span> <span id="v-ip">...</span></div>
+                        <div class="hw-row"><span class="label-hw">Gway:</span> <span id="v-gateway">...</span></div>
+                        <div class="hw-row"><span class="label-hw">Model:</span> <span id="v-model">...</span></div>
+                    </div>
+                    <div class="hw-sub-col">
+                        <div class="hw-row"><span class="label-hw">MAC:</span> <span id="v-mac">...</span></div>
+                        <div class="hw-row"><span class="label-hw">Sub:</span> <span id="v-subnet">...</span></div>
+                        <div class="hw-row"><span class="label-hw">DNS:</span> <span id="v-dns">...</span></div>
+                        <div class="hw-row"><span class="label-hw">Andrd:</span> <span id="v-android">...</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-col">
+            <div class="num-grid">
+                <button class="key-btn" id="key1" data-val="1">1</button><button class="key-btn" data-val="2">2</button><button class="key-btn" data-val="3">3</button>
+                <button class="key-btn" data-val="4">4</button><button class="key-btn" data-val="5">5</button><button class="key-btn" data-val="6">6</button>
+                <button class="key-btn" data-val="7">7</button><button class="key-btn" data-val="8">8</button><button class="key-btn" data-val="DEL">⌫</button>
+                <button class="key-btn" data-val="9">9</button><button class="key-btn" data-val="0">0</button><button class="key-btn" id="btn-esc">ESC</button>
+            </div>
+            <div class="side-btn-stack">
+                <button class="side-btn" id="androidBtn">Android Settings</button>
+                <button class="side-btn" id="refreshBtn" onclick="loadHW()">Refresh Details</button>
+            </div>
+        </div>
+    </div>
+    <div class="action-row">
+        <button class="btn-act" id="saveBtn">Save Configuration</button>
+        <button class="btn-act" id="exitBtn">Exit</button>
+    </div>
+</div>
+
+<script>
+    var room = document.getElementById('roomNum');
+    var currentSrc = ""; var currentPkg = ""; var isSaving = false;
+
+    function press(v) {
+        if (!isNaN(v) && room.value.length < 3) {
+            room.value += v;
+            if (room.value.length == 3) setTimeout(function(){ document.getElementById('btn-iptv').focus(); }, 200);
+        } else if (v == 'DEL') room.value = room.value.slice(0, -1);
+    }
+
+document.onkeydown = function(e) {
+    var code = e.keyCode || e.which;
+    var active = document.activeElement;
+
+    if (code >= 48 && code <= 57) { press(String.fromCharCode(code)); e.preventDefault(); return; }
+    if (code == 8) { press('DEL'); e.preventDefault(); return; }
+
+    // THE FIX: Stop the event from reaching the Save button after overlay closes
+    if (code == 13 && active && (
+        active.classList.contains('list-item') || 
+        active.classList.contains('package-item') || 
+        active.classList.contains('hdmi-list-row') ||
+        active.classList.contains('model-name-text') || 
+        active.classList.contains('test-btn-inline')
+    )) { 
+        e.preventDefault();
+        e.stopImmediatePropagation(); // Add this to kill the event immediately
+        e.stopPropagation();          // Prevents it from reaching parent elements
+        active.click(); 
+    }
+};
+
+    document.querySelectorAll('.key-btn').forEach(function(b) {
+        if(b.dataset.val) b.onclick = function(e) { e.preventDefault(); press(b.dataset.val); };
+    });
+
+    function openIptvMenu() {
+        var box = document.getElementById('packageBox');
+        box.querySelectorAll('.package-item').forEach(el => el.remove());
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "admin/iptv_packages.json?t=" + new Date().getTime(), true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var data = JSON.parse(xhr.responseText);
+                data.available_packages.forEach(pkg => {
+                    var div = document.createElement('div'); div.className = 'package-item'; div.tabIndex = 0; div.innerText = pkg.name;
+                    div.onclick = () => { currentPkg = pkg.file; currentSrc = "IPTV"; document.getElementById('packageOverlay').style.display='none'; updateUI('btn-iptv'); };
+                    box.appendChild(div);
+                });
+                document.getElementById('packageOverlay').style.display = 'flex';
+                setTimeout(() => box.querySelector('.package-item').focus(), 100);
+            }
+        };
+        xhr.send();
+    }
+
+    function openAppMenu() {
+        var box = document.getElementById('appBox');
+        box.querySelectorAll('.package-item').forEach(el => el.remove());
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "admin/tv_apps.json?t=" + new Date().getTime(), true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var data = JSON.parse(xhr.responseText);
+                data.available_tv_apps.forEach(app => {
+                    var div = document.createElement('div'); div.className = 'package-item'; div.tabIndex = 0; div.innerText = app.name;
+                    div.onclick = () => { currentPkg = app.process; currentSrc = "TV APP"; document.getElementById('appOverlay').style.display='none'; updateUI('btn-tvapp'); };
+                    box.appendChild(div);
+                });
+                document.getElementById('appOverlay').style.display = 'flex';
+                setTimeout(() => box.querySelector('.package-item').focus(), 100);
+            }
+        };
+        xhr.send();
+    }
+
+    function openHdmiPort() {
+        var ip = document.getElementById('v-ip').innerText;
+        var model = document.getElementById('v-model').innerText.trim();
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "admin/open_hdmi.php?ip=" + ip + "&model=" + model + "&t=" + new Date().getTime(), true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var res = JSON.parse(xhr.responseText);
+                var modelsList = res.options || res.available_models;
+                if (modelsList) showManualModelMenu(modelsList, model);
+            }
+        };
+        xhr.send();
+    }
+function showManualModelMenu(options, detectedModel) {
+    var box = document.getElementById('hdmiBox');
+    var overlay = document.getElementById('hdmiOverlay');
+    box.innerHTML = ''; 
+
+    function createRow(brand, modelName, pkg, isRecommended = false) {
+        let row = document.createElement('div');
+        row.className = 'hdmi-list-row';
+        row.tabIndex = 0;
+        
+        let displayTitle = isRecommended ? `★ RECOMMENDED: ${brand} (${modelName})` : `${brand} (${modelName})`;
+        
+        row.innerHTML = `
+            <div class="model-name-text" tabindex="0">${displayTitle}</div>
+            <button class="test-btn-inline" tabindex="0">TEST</button>
+        `;
+
+        const modelLabel = row.querySelector('.model-name-text');
+        const testBtn = row.querySelector('.test-btn-inline');
+
+        // Clicking the Model Name confirms selection (No immediate HDMI launch)
+        modelLabel.onclick = (e) => {
+            e.stopPropagation();
+            confirmSelection(pkg);
+        };
+
+        // Clicking the TEST button launches HDMI
+        testBtn.onclick = (e) => {
+            e.stopPropagation();
+            launchSpecificPackage(pkg);
+        };
+        
+        row.onkeydown = (e) => {
+            if (e.keyCode === 39) testBtn.focus(); // Right arrow -> Test Button
+            if (e.keyCode === 37) modelLabel.focus(); // Left arrow -> Model Name
+            if (e.keyCode === 13) { // Enter/OK
+                if (document.activeElement === testBtn) launchSpecificPackage(pkg);
+                else confirmSelection(pkg);
+            }
+        };
+
+        return row;
+    }
+
+    // Populate rows...
+    for (let brand in options) {
+        if (options[brand][detectedModel]) {
+            box.appendChild(createRow(brand, detectedModel, options[brand][detectedModel], true));
+        }
+    }
+    for (let brand in options) {
+        for (let modelName in options[brand]) {
+            if (modelName !== detectedModel) {
+                box.appendChild(createRow(brand, modelName, options[brand][modelName], false));
+            }
+        }
+    }
+
+    overlay.style.display = 'flex';
+    
+    // CHANGE 1: Focus the TEST button in Gold immediately on open
+    setTimeout(() => { 
+        let firstTestBtn = box.querySelector('.test-btn-inline');
+        if(firstTestBtn) firstTestBtn.focus(); 
+    }, 200);
+}
+
+function launchSpecificPackage(packageName) {
+    // Get IP from the HW info display
+    var ip = document.getElementById('v-ip').innerText;
+    if (ip === "..." || ip === "") return;
+
+    var xhr = new XMLHttpRequest();
+    // Path must match your folder structure (admin/launch_app.php)
+    xhr.open("GET", "admin/open_hdmi.php?ip=" + ip + "&package=" + packageName + "&t=" + new Date().getTime(), true);
+    xhr.send();
+}
+
+function confirmSelection(pkg) {
+    currentPkg = pkg; 
+    currentSrc = "HDMI";
+    
+    // CHANGE 2: Only close overlay and update UI. DO NOT launch HDMI here.
+    document.getElementById('hdmiOverlay').style.display = 'none';
+    updateUI('btn-hdmi');
+}
+function updateUI(activeId) {
+    document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected'));
+    const activeEl = document.getElementById(activeId);
+    if (activeEl) activeEl.classList.add('selected');
+    
+    const saveBtn = document.getElementById('saveBtn');
+    if (saveBtn) {
+        // We clear any existing focus first, then set it to Save
+        saveBtn.blur(); 
+        setTimeout(() => {
+            saveBtn.focus();
+            console.log("Waiting for manual OK on Save button.");
+        }, 50);
+    }
+}
+function loadHW() {
+        console.log("Loading hardware details...");
+        
+        // Use the Android Bridge if available (direct from APK)
+        if (window.Android && window.Android.getDeviceInfo) {
+            try {
+                const deviceInfo = JSON.parse(window.Android.getDeviceInfo());
+                displayHWData(deviceInfo);
+                console.log("Data retrieved directly from APK.");
+                return; // Stop here if APK provided data
+            } catch (e) {
+                console.error("APK Bridge Error, falling back to PHP:", e);
+            }
+        }
+
+        // Fallback to PHP if bridge is missing (old method)
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "admin/identify_device.php?t=" + new Date().getTime(), true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                try {
+                    var d = JSON.parse(xhr.responseText);
+                    displayHWData(d);
+                } catch(e) { console.log("HW Parse Error"); }
+            }
+        };
+        xhr.send();
+    }
+
+    // New helper to update the UI labels
+    function displayHWData(d) {
+        document.getElementById('v-serial').innerText = d.serial || "UNKNOWN";
+        document.getElementById('v-ip').innerText = d.ip || "...";
+        document.getElementById('v-gateway').innerText = d.gateway || "...";
+        document.getElementById('v-mac').innerText = d.mac || "...";
+        document.getElementById('v-subnet').innerText = d.subnet || "...";
+        document.getElementById('v-dns').innerText = d.DNS || d.dns || "..."; // Handles both case variants
+        document.getElementById('v-model').innerText = d.model || "...";
+        document.getElementById('v-android').innerText = d.android || d.Andrd || "11"; 
+        
+        if(d.room && d.room !== "---") room.value = d.room;
+        
+        // Keep your existing focus logic
+        setTimeout(() => { let k1 = document.getElementById('key1'); if(k1) k1.focus(); }, 300);
+    }
+
+document.getElementById('saveBtn').onclick = function() {
+    if (isSaving || room.value.length < 3 || currentSrc == "") return;
+    isSaving = true;
+
+    var payload = {
+        room: room.value,
+        serial: document.getElementById('v-serial').innerText,
+        ip: document.getElementById('v-ip').innerText,
+        gateway: document.getElementById('v-gateway').innerText,
+        mac: document.getElementById('v-mac').innerText,
+        subnet: document.getElementById('v-subnet').innerText,
+        DNS: document.getElementById('v-dns').innerText,
+        model: document.getElementById('v-model').innerText,
+        android: document.getElementById('v-android').innerText,
+        tv_source: currentSrc,
+        package: currentPkg
+    };
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "admin/save_configuration.php", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+
+            // ✅ Persist ONLY after successful save
+            localStorage.setItem('roomNo', payload.room);
+            localStorage.setItem('deviceSerial', payload.serial);
+            localStorage.setItem('deviceIp', payload.ip);
+
+            window.location.href = 'index.html';
+        }
+    };
+
+    xhr.send(JSON.stringify(payload));
+};
+/* --- ADD THIS TO YOUR SCRIPT SECTION --- */
+
+// 1. Fix for Android Settings not opening
+document.getElementById('androidBtn').onclick = function() {
+    if (window.Android && window.Android.openAndroidSettings) {
+        window.Android.openAndroidSettings();
+    } else {
+        // Fallback for debugging via browser
+        console.log("Android Settings Bridge not found. Attempting PHP fallback...");
+        var ip = document.getElementById('v-ip').innerText;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "admin/open_settings.php?ip=" + ip, true);
+        xhr.send();
+    }
+};
+
+// 2. Navigation fix for the Side Buttons
+document.getElementById('androidBtn').onkeydown = function(e) {
+    if (e.keyCode === 40) document.getElementById('refreshBtn').focus(); // Down
+    if (e.keyCode === 37) document.getElementById('key1').focus();       // Left
+    if (e.keyCode === 13) this.click();                                  // Enter
+};
+
+document.getElementById('refreshBtn').onkeydown = function(e) {
+    if (e.keyCode === 38) document.getElementById('androidBtn').focus(); // Up
+    if (e.keyCode === 37) document.getElementById('key1').focus();       // Left
+    if (e.keyCode === 40) document.getElementById('saveBtn').focus();    // Down
+    if (e.keyCode === 13) this.click();                                  // Enter
+};
+
+    document.getElementById('exitBtn').onclick = () => window.location.href = 'index.html';
+    document.getElementById('btn-esc').onclick = () => window.location.href = 'index.html';
+    window.onload = loadHW;
+</script>
+</body>
+</html>

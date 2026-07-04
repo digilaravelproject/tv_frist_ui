@@ -1,0 +1,7 @@
+{
+  "available_tv_apps": [
+    { "name": "Mera TV", "process": "com.meratv.app" },
+    { "name": "Xstream Play", "process": "tv.airtel.xstream.tvapp" },
+    { "name": "Netflix", "process": "com.netflix.ninja" }
+  ]
+}
