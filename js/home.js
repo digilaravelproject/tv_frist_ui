@@ -251,17 +251,24 @@ async function updateWeather() {
 
 /* ================= 4. LISTENERS ================= */
 document.addEventListener("keydown", (e) => {
-    if (e.keyCode === 8 || e.keyCode === 461) {
+    const keyCode = e.keyCode || e.which;
+    if (keyCode === 8 || keyCode === 461 || keyCode === 4) { // 4 is Android TV remote BACK button
         const path = window.location.pathname.split("/").pop();
         if (path !== "index.html" && path !== "") {
             e.preventDefault();
             window.location.href = "index.html";
         }
     }
-    if (e.key === "ArrowRight") rotate('right');
-    else if (e.key === "ArrowLeft") rotate('left');
-    else if (e.key === "Enter") {
+    
+    if (keyCode === 39 || keyCode === 22 || e.key === "ArrowRight" || e.key === "Right") {
+        rotate('right');
+    }
+    else if (keyCode === 37 || keyCode === 21 || e.key === "ArrowLeft" || e.key === "Left") {
+        rotate('left');
+    }
+    else if (keyCode === 13 || keyCode === 23 || keyCode === 66 || e.key === "Enter") {
         const active = document.activeElement;
+        if (!active) return;
         const link = active.getAttribute('data-link');
         const action = active.getAttribute('data-action');
         

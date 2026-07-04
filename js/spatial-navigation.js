@@ -3,6 +3,7 @@
  * 
  * Handles ArrowUp, ArrowDown, ArrowLeft, ArrowRight, and Enter/OK events 
  * to navigate between actionable HTML elements (buttons, links, inputs, cards).
+ * Fully compatible with standard browsers and Android TV WebView keycodes.
  */
 (function() {
     'use strict';
@@ -107,39 +108,41 @@
         }
     }
 
-    // Global Key Down Listener
+    // Global Key Down Listener (Supports both standard browser keys and Android TV keycodes)
     window.addEventListener('keydown', function(e) {
         const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.split('/').pop() === '';
+        const keyCode = e.keyCode || e.which;
         
-        switch (e.key) {
-            case 'ArrowLeft':
+        let direction = null;
+
+        // Map D-pad and arrow key events
+        if (keyCode === 37 || keyCode === 21 || e.key === 'ArrowLeft' || e.key === 'Left') {
+            direction = 'left';
+        } else if (keyCode === 39 || keyCode === 22 || e.key === 'ArrowRight' || e.key === 'Right') {
+            direction = 'right';
+        } else if (keyCode === 38 || keyCode === 19 || e.key === 'ArrowUp' || e.key === 'Up') {
+            direction = 'up';
+        } else if (keyCode === 40 || keyCode === 20 || e.key === 'ArrowDown' || e.key === 'Down') {
+            direction = 'down';
+        } else if (keyCode === 13 || keyCode === 23 || keyCode === 66 || e.key === 'Enter') {
+            direction = 'enter';
+        }
+
+        if (direction) {
+            if (direction === 'enter') {
+                const active = document.activeElement;
+                if (active && active !== document.body) {
+                    e.preventDefault();
+                    active.click();
+                }
+            } else {
                 // On index page, the horizontal carousel handles ArrowLeft/Right itself.
-                if (!isIndex) {
-                    e.preventDefault();
-                    navigate('left');
+                if (isIndex && (direction === 'left' || direction === 'right')) {
+                    return; // Let home.js handle horizontal movement
                 }
-                break;
-            case 'ArrowRight':
-                if (!isIndex) {
-                    e.preventDefault();
-                    navigate('right');
-                }
-                break;
-            case 'ArrowUp':
                 e.preventDefault();
-                navigate('up');
-                break;
-            case 'ArrowDown':
-                e.preventDefault();
-                navigate('down');
-                break;
-            case 'Enter':
-                // Standard browser click activation handles Enter/OK key on focused elements,
-                // but let's ensure it is triggered properly on TV platform WebViews.
-                if (document.activeElement && typeof document.activeElement.click === 'function') {
-                    // Let the default enter handle, or trigger click if it does not react.
-                }
-                break;
+                navigate(direction);
+            }
         }
     });
 
