@@ -3,37 +3,39 @@ const track = document.getElementById("menuTrack");
 const centerIndex = 3; 
 
 function updateCarouselPosition() {
-    const vWidth = window.innerWidth;
-    const totalSlot = vWidth * 0.14285; 
-    const offset = (vWidth / 2) - (centerIndex * totalSlot) - (totalSlot / 2);
-    if(track) track.style.transform = `translateX(${offset}px)`;
+    var vWidth = window.innerWidth;
+    var totalSlot = vWidth * 0.14285; 
+    var offset = (vWidth / 2) - (centerIndex * totalSlot) - (totalSlot / 2);
+    if(track) track.style.transform = 'translate3d(' + offset + 'px, 0px, 0px)';
 }
 
 function syncFocus() {
     if (!track) return;
-    const allIcons = Array.from(track.querySelectorAll(".icon-item"));
+    var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item"));
     
-    allIcons.forEach(icon => {
+    for (var i = 0; i < allIcons.length; i++) {
+        var icon = allIcons[i];
         icon.classList.remove("active-focus");
-        const img = icon.querySelector(".icon-img");
+        var img = icon.querySelector(".icon-img");
         if (img) img.classList.remove("bounce");
-    });
+    }
 
-    const target = allIcons[centerIndex];
+    var target = allIcons[centerIndex];
     if (target) {
         target.focus();
         target.classList.add("active-focus");
         
         // Save the focused label to localStorage to restore it on Back navigation
-        const label = target.querySelector(".icon-label")?.innerText;
+        var labelEl = target.querySelector(".icon-label");
+        var label = labelEl ? labelEl.innerText : null;
         if (label) {
             localStorage.setItem("lastFocusedLabel", label);
         }
         
-        const img = target.querySelector(".icon-img");
-        if (img) {
-            void img.offsetWidth; 
-            img.classList.add("bounce");
+        var targetImg = target.querySelector(".icon-img");
+        if (targetImg) {
+            void targetImg.offsetWidth; 
+            targetImg.classList.add("bounce");
         }
     }
 }
@@ -121,22 +123,29 @@ async function initLanguage() {
         fetchGuestData();
         
         // Restore last focused item from localStorage before updating positions
-        const lastLabel = localStorage.getItem("lastFocusedLabel");
+        var lastLabel = localStorage.getItem("lastFocusedLabel");
         if (lastLabel && track) {
             // Disable transition temporarily to prevent sliding animation on page load
-            const originalTransition = track.style.transition;
+            var originalTransition = track.style.transition;
             track.style.transition = 'none';
             
-            const allIcons = Array.from(track.querySelectorAll(".icon-item"));
-            const targetIndex = allIcons.findIndex(icon => icon.querySelector(".icon-label")?.innerText === lastLabel);
+            var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item"));
+            var targetIndex = -1;
+            for (var j = 0; j < allIcons.length; j++) {
+                var labelEl = allIcons[j].querySelector(".icon-label");
+                if (labelEl && labelEl.innerText === lastLabel) {
+                    targetIndex = j;
+                    break;
+                }
+            }
             if (targetIndex !== -1) {
-                let diff = targetIndex - centerIndex;
+                var diff = targetIndex - centerIndex;
                 if (diff > 0) {
-                    for (let i = 0; i < diff; i++) {
+                    for (var i = 0; i < diff; i++) {
                         track.appendChild(track.firstElementChild);
                     }
                 } else if (diff < 0) {
-                    for (let i = 0; i < Math.abs(diff); i++) {
+                    for (var i = 0; i < Math.abs(diff); i++) {
                         track.insertBefore(track.lastElementChild, track.firstElementChild);
                     }
                 }
@@ -292,10 +301,10 @@ async function updateWeather() {
 }
 
 /* ================= 4. LISTENERS ================= */
-document.addEventListener("keydown", (e) => {
-    const keyCode = e.keyCode || e.which;
-    if (keyCode === 8 || keyCode === 461 || keyCode === 4) { // 4 is Android TV remote BACK button
-        const path = window.location.pathname.split("/").pop();
+document.addEventListener("keydown", function(e) {
+    var keyCode = e.keyCode || e.which;
+    if (keyCode === 8 || keyCode === 461 || keyCode === 4 || keyCode === 10009 || keyCode === 10182) { // support Android TV, webOS, and Tizen back keys
+        var path = window.location.pathname.split("/").pop();
         if (path !== "index.html" && path !== "") {
             e.preventDefault();
             window.location.href = "index.html";
@@ -309,17 +318,17 @@ document.addEventListener("keydown", (e) => {
         rotate('left');
     }
     else if (keyCode === 13 || keyCode === 23 || keyCode === 66 || e.key === "Enter") {
-        const active = document.activeElement;
+        var active = document.activeElement;
         if (!active) return;
-        const link = active.getAttribute('data-link');
-        const action = active.getAttribute('data-action');
+        var link = active.getAttribute('data-link');
+        var action = active.getAttribute('data-action');
         
         if (action === "apps") {
             if (window.AndroidBridge && window.AndroidBridge.openApplications) {
                 window.AndroidBridge.openApplications();
             } else if (window.flutterBridge) {
                 // Fallback: open applications menu via bridge
-                window.flutterBridge.getHdmiModels().catch(() => {});
+                window.flutterBridge.getHdmiModels()["catch"](function() {});
             }
         } else if (action === "livetv") {
             handleLiveTV();
@@ -329,7 +338,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-window.onload = () => {
+window.onload = function() {
     initLanguage();
     setInterval(updateDateTime, 1000);
     setInterval(updateWeather, 900000); // 15 minutes

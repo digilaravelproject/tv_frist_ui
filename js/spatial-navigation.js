@@ -3,27 +3,37 @@
  * 
  * Handles ArrowUp, ArrowDown, ArrowLeft, ArrowRight, and Enter/OK events 
  * to navigate between actionable HTML elements (buttons, links, inputs, cards).
- * Fully compatible with standard browsers and Android TV WebView keycodes.
+ * Fully compatible with standard browsers, Android TV, Tizen, and webOS keycodes.
+ * Built using ES5 syntax for older TV rendering engines.
  */
 (function() {
     'use strict';
 
     // Focusable selector for actionable elements
-    const FOCUSABLE_SELECTOR = 'button, a, input, select, textarea, [tabindex="0"], .lang-item, .icon-item, .num-btn';
+    var FOCUSABLE_SELECTOR = 'button, a, input, select, textarea, [tabindex="0"], .lang-item, .icon-item, .num-btn';
 
     function getFocusableElements() {
-        return Array.from(document.querySelectorAll(FOCUSABLE_SELECTOR)).filter(el => {
-            if (el.disabled || el.tabIndex === -1) return false;
+        var elements = document.querySelectorAll(FOCUSABLE_SELECTOR);
+        var focusables = [];
+        
+        for (var i = 0; i < elements.length; i++) {
+            var el = elements[i];
+            if (el.disabled || el.tabIndex === -1) continue;
             
             // Check visibility
-            const rect = el.getBoundingClientRect();
-            const style = window.getComputedStyle(el);
-            return rect.width > 0 && 
-                   rect.height > 0 && 
-                   style.display !== 'none' && 
-                   style.visibility !== 'hidden' &&
-                   style.opacity !== '0';
-        });
+            var rect = el.getBoundingClientRect();
+            var style = window.getComputedStyle(el);
+            var isVisible = rect.width > 0 && 
+                            rect.height > 0 && 
+                            style.display !== 'none' && 
+                            style.visibility !== 'hidden' &&
+                            style.opacity !== '0';
+            
+            if (isVisible) {
+                focusables.push(el);
+            }
+        }
+        return focusables;
     }
 
     function getCenter(rect) {
@@ -34,16 +44,16 @@
     }
 
     function navigate(direction) {
-        const active = document.activeElement;
-        const focusables = getFocusableElements();
+        var active = document.activeElement;
+        var focusables = getFocusableElements();
         
         if (!focusables.length) return;
 
         // If nothing is focused, default focus to the first available element
-        if (!active || active === document.body || !focusables.includes(active)) {
-            const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.split('/').pop() === '';
+        if (!active || active === document.body || focusables.indexOf(active) === -1) {
+            var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
             if (isIndex) {
-                const allIcons = document.querySelectorAll('.icon-item');
+                var allIcons = document.querySelectorAll('.icon-item');
                 if (allIcons.length > 3) {
                     allIcons[3].focus();
                     return;
@@ -53,21 +63,22 @@
             return;
         }
 
-        const activeRect = active.getBoundingClientRect();
-        const activeCenter = getCenter(activeRect);
+        var activeRect = active.getBoundingClientRect();
+        var activeCenter = getCenter(activeRect);
 
-        let bestCandidate = null;
-        let minDistance = Infinity;
+        var bestCandidate = null;
+        var minDistance = Infinity;
 
-        focusables.forEach(candidate => {
-            if (candidate === active) return;
+        for (var i = 0; i < focusables.length; i++) {
+            var candidate = focusables[i];
+            if (candidate === active) continue;
 
-            const rect = candidate.getBoundingClientRect();
-            const center = getCenter(rect);
+            var rect = candidate.getBoundingClientRect();
+            var center = getCenter(rect);
 
-            let dStraight = 0;
-            let dOrthogonal = 0;
-            let isValid = false;
+            var dStraight = 0;
+            var dOrthogonal = 0;
+            var isValid = false;
 
             switch (direction) {
                 case 'left':
@@ -94,13 +105,13 @@
 
             if (isValid) {
                 // Distance formula weighting straight movement over orthogonal deviation
-                const distance = dStraight + (dOrthogonal * 3);
+                var distance = dStraight + (dOrthogonal * 3);
                 if (distance < minDistance) {
                     minDistance = distance;
                     bestCandidate = candidate;
                 }
             }
-        });
+        }
 
         if (bestCandidate) {
             bestCandidate.focus();
@@ -108,21 +119,21 @@
         }
     }
 
-    // Global Key Down Listener (Supports both standard browser keys and Android TV keycodes)
+    // Global Key Down Listener (Supports standard browsers, Android TV, Tizen, and webOS)
     window.addEventListener('keydown', function(e) {
-        const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.split('/').pop() === '';
-        const keyCode = e.keyCode || e.which;
+        var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
+        var keyCode = e.keyCode || e.which;
         
-        // Global Back Navigation Handler for Android TV D-pad Back (4/8/461/Backspace)
-        if (keyCode === 8 || keyCode === 461 || keyCode === 4 || e.key === 'Backspace' || e.key === 'Escape') {
+        // Global Back Navigation Handler (4 = Android back, 8 = Backspace, 461 = webOS back, 10009 = Tizen back, 10182 = Tizen exit)
+        if (keyCode === 8 || keyCode === 461 || keyCode === 4 || keyCode === 10009 || keyCode === 10182 || e.key === 'Backspace' || e.key === 'Escape') {
             if (!isIndex) {
                 e.preventDefault();
-                const isSubfolder = window.location.pathname.includes('/travel/') || 
-                                    window.location.pathname.includes('/amenities/') || 
-                                    window.location.pathname.includes('/city/') || 
-                                    window.location.pathname.includes('/hotel_info/') || 
-                                    window.location.pathname.includes('/weather/') || 
-                                    window.location.pathname.includes('/flights/');
+                var isSubfolder = window.location.pathname.indexOf('/travel/') !== -1 || 
+                                    window.location.pathname.indexOf('/amenities/') !== -1 || 
+                                    window.location.pathname.indexOf('/city/') !== -1 || 
+                                    window.location.pathname.indexOf('/hotel_info/') !== -1 || 
+                                    window.location.pathname.indexOf('/weather/') !== -1 || 
+                                    window.location.pathname.indexOf('/flights/') !== -1;
                 if (isSubfolder) {
                     window.location.href = "../index.html";
                 } else {
@@ -132,7 +143,7 @@
             }
         }
         
-        let direction = null;
+        var direction = null;
 
         // Map D-pad and arrow key events
         if (keyCode === 37 || keyCode === 21 || e.key === 'ArrowLeft' || e.key === 'Left') {
@@ -149,7 +160,7 @@
 
         if (direction) {
             if (direction === 'enter') {
-                const active = document.activeElement;
+                var active = document.activeElement;
                 if (active && active !== document.body) {
                     e.preventDefault();
                     active.click();
@@ -167,11 +178,11 @@
 
     // Auto-focus logic when the DOM is ready
     function handleInitialFocus() {
-        const focusables = getFocusableElements();
+        var focusables = getFocusableElements();
         if (focusables.length && (document.activeElement === document.body || !document.activeElement)) {
-            const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.split('/').pop() === '';
+            var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
             if (isIndex) {
-                const allIcons = document.querySelectorAll('.icon-item');
+                var allIcons = document.querySelectorAll('.icon-item');
                 // Center item in a 7-slot view is index 3
                 if (allIcons.length > 3) {
                     allIcons[3].focus();
@@ -185,7 +196,9 @@
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => setTimeout(handleInitialFocus, 150));
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(handleInitialFocus, 150);
+        });
     } else {
         setTimeout(handleInitialFocus, 150);
     }
