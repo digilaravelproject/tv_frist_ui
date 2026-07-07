@@ -1,62 +1,5 @@
 {
-    "101": {
-        "room_number": "101",
-        "guest_name": {
-            "english": "Saurabh",
-            "hindi": "सौरभ",
-            "marathi": "सौरभ",
-            "gujrati": "સૌરભ",
-            "bengali": "সৌরভ",
-            "punjabi": "ਸੌਰਭ",
-            "assamese": "সৌৰভ",
-            "kannada": "ಸೌರಭ್",
-            "tamil": "ஸுரபி",
-            "telugu": "సౌరభ్",
-            "malayalam": "സൗരഭ്",
-            "konkani": "सौरभ",
-            "french": "Saurabh",
-            "german": "Saurabh",
-            "spanish": "Saurabh",
-            "portuguese": "Saurabh",
-            "russian": "Саураб",
-            "chinese": "索拉布",
-            "hebrew": "סהרעבה",
-            "urdu": "سوربھ",
-            "arabic": "سوراب"
-        },
-        "checkin_date": "11/04/26 18:06",
-        "checkout_date": "15/04/26 11:00"
-    },
-    "103": {
-        "room_number": "103",
-        "guest_name": {
-            "english": "Ankit",
-            "hindi": "अंकित",
-            "marathi": "अंकित",
-            "gujrati": "અંકિત",
-            "bengali": "অংকিত",
-            "punjabi": "ਅੰਕਿਤ",
-            "assamese": "অংকিত",
-            "kannada": "ಅಂಕಿತ್",
-            "tamil": "அன்கிட்",
-            "telugu": "అంకిత్",
-            "malayalam": "അങ്കിത്",
-            "konkani": "अंकित",
-            "french": "Ankit",
-            "german": "Ankit",
-            "spanish": "Ankit",
-            "portuguese": "Ankit",
-            "russian": "Анкит",
-            "chinese": "安基特",
-            "hebrew": "ענקית",
-            "urdu": "انکیت",
-            "arabic": "أنكيت"
-        },
-        "checkin_date": "11/04/26 16:18",
-        "checkout_date": "14/04/26 11:00"
-    },
-    "105": {
-        "room_number": "105",
+    "_default": {
         "guest_name": {
             "english": "Guest",
             "hindi": "अतिथि",
@@ -80,7 +23,7 @@
             "urdu": "مہمان",
             "arabic": "ضيف"
         },
-        "checkin_date": "07/07/26 12:00",
-        "checkout_date": "10/07/26 11:00"
+        "checkin_date": "",
+        "checkout_date": ""
     }
 }

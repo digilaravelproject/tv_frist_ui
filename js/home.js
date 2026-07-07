@@ -345,10 +345,10 @@ function fetchGuestData() {
     fetch(`admin/rooms.json?t=` + new Date().getTime())
         .then(res => res.json())
         .then(allRooms => {
-            const roomData = allRooms[roomNo];
+            const roomData = allRooms[roomNo] || allRooms["_default"];
             if (roomData && roomData.guest_name) {
                 const langKey = (currentData.language_name) ? currentData.language_name.toLowerCase() : "english";
-                let localizedName = roomData.guest_name[langKey] || roomData.guest_name["english"] || "";
+                let localizedName = roomData.guest_name[langKey] || roomData.guest_name["english"] || "Guest";
                 window.guestName = localizedName;
                 updateGreetingDisplay();
             }
