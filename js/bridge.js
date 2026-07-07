@@ -11,7 +11,7 @@
  * The Flutter developer must implement the native side for each method listed below.
  */
 
-(function() {
+(function () {
     'use strict';
 
     const PENDING_CALLS = new Map();
@@ -263,3 +263,19 @@
     };
 
 })();
+
+// Expose global configuration file name for easy external adjustments
+window.HOTEL_DATA_FILE = "data.json";
+
+// Centralized instant-load offline helper
+window.getFastConfig = function () {
+    try {
+        const cached = localStorage.getItem('cachedHotelData');
+        if (cached) {
+            return JSON.parse(cached);
+        }
+    } catch (e) {
+        console.error("Error reading fast config:", e);
+    }
+    return null;
+};

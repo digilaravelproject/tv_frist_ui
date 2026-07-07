@@ -1,18 +1,18 @@
 /* ================= 1. CAROUSEL & FOCUS LOGIC ================= */
 const track = document.getElementById("menuTrack");
-const centerIndex = 3; 
+const centerIndex = 3;
 
 function updateCarouselPosition() {
     var vWidth = window.innerWidth;
-    var totalSlot = vWidth * 0.14285; 
+    var totalSlot = vWidth * 0.14285;
     var offset = (vWidth / 2) - (centerIndex * totalSlot) - (totalSlot / 2);
-    if(track) track.style.transform = 'translate3d(' + offset + 'px, 0px, 0px)';
+    if (track) track.style.transform = 'translate3d(' + offset + 'px, 0px, 0px)';
 }
 
 function syncFocus() {
     if (!track) return;
     var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item"));
-    
+
     for (var i = 0; i < allIcons.length; i++) {
         var icon = allIcons[i];
         icon.classList.remove("active-focus");
@@ -24,17 +24,17 @@ function syncFocus() {
     if (target) {
         target.focus();
         target.classList.add("active-focus");
-        
+
         // Save the focused label to localStorage to restore it on Back navigation
         var labelEl = target.querySelector(".icon-label");
         var label = labelEl ? labelEl.innerText : null;
         if (label) {
             localStorage.setItem("lastFocusedLabel", label);
         }
-        
+
         var targetImg = target.querySelector(".icon-img");
         if (targetImg) {
-            void targetImg.offsetWidth; 
+            void targetImg.offsetWidth;
             targetImg.classList.add("bounce");
         }
     }
@@ -78,7 +78,7 @@ async function handleLiveTV() {
 
     try {
         const config = await fetch(`admin/devices/${serial}.json?t=${Date.now()}`).then(r => r.json());
-        
+
         if (config.tv_source === "TV APP") {
             await window.flutterBridge.launchApp(config.package);
         } else if (config.tv_source === "HDMI") {
@@ -102,8 +102,145 @@ let currentData = {
     "icons": {}
 };
 
+async function fetchHotelConfig() {
+    var injected = window.tvLoginData || (window.parent && window.parent.tvLoginData);
+    if (injected) {
+        localStorage.setItem('cachedHotelData', JSON.stringify(injected));
+        return injected;
+    }
+
+    // Try network first, always fetch fresh data.json
+    const filename = window.HOTEL_DATA_FILE || 'data.json';
+    const paths = [filename, `../${filename}`, 'data.json', '../data.json'];
+
+    for (let path of paths) {
+        try {
+            const res = await fetch(`${path}?t=${Date.now()}`);
+            if (res.ok) {
+                const config = await res.json();
+                localStorage.setItem('cachedHotelData', JSON.stringify(config));
+                return config;
+            }
+        } catch (e) {
+            console.warn(`Failed to fetch config from ${path}:`, e);
+        }
+    }
+
+    // Network failed — fall back to localStorage cache
+    const cached = localStorage.getItem('cachedHotelData');
+    if (cached) {
+        try { return JSON.parse(cached); } catch (e) {
+            console.error("Failed parsing cached config:", e);
+        }
+    }
+    return null;
+}
+
+let slideImages = [];
+let currentImageIndex = 0;
+let activeSlideIndex = 0;
+let sliderIntervalId = null;
+
+function initSlider(images) {
+    if (sliderIntervalId) clearInterval(sliderIntervalId);
+    slideImages = images || [];
+
+    // Fallback: If no slider images are specified, try default cover or main.jpg
+    if (slideImages.length === 0) {
+        const cached = localStorage.getItem('cachedHotelData');
+        if (cached) {
+            try {
+                const config = JSON.parse(cached);
+                if (config.hotel && config.hotel.media && config.hotel.media.cover_image) {
+                    slideImages = [config.hotel.media.cover_image];
+                }
+            } catch (e) { }
+        }
+    }
+
+    if (slideImages.length === 0) {
+        slideImages = ['images/main.jpg'];
+    }
+
+    const slides = document.querySelectorAll('#bg-slider .slide');
+    if (slides.length < 2) return;
+
+    // Show main.jpg immediately, then upgrade to external images if they load
+    slides[0].style.backgroundImage = "url('images/main.jpg')";
+    slides[0].classList.add('active');
+    slides[1].classList.remove('active');
+    if (slideImages[0] && slideImages[0] !== 'images/main.jpg') {
+        const tempImg1 = new Image();
+        tempImg1.onload = () => {
+            slides[0].style.backgroundImage = `url('${slideImages[0]}')`;
+        };
+        tempImg1.src = slideImages[0];
+    }
+
+    currentImageIndex = 0;
+    activeSlideIndex = 0;
+
+    if (slideImages.length > 1) {
+        sliderIntervalId = setInterval(() => {
+            currentImageIndex = (currentImageIndex + 1) % slideImages.length;
+            const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
+            const targetUrl = slideImages[currentImageIndex];
+
+            // Validate image loads successfully before transitioning
+            const tempImgNext = new Image();
+            tempImgNext.onload = () => {
+                slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+                slides[nextSlideIndex].classList.add('active');
+                slides[activeSlideIndex].classList.remove('active');
+                activeSlideIndex = nextSlideIndex;
+            };
+            tempImgNext.onerror = () => {
+                console.warn(`Failed to load slider image: ${targetUrl}. Falling back to default.`);
+                slides[nextSlideIndex].style.backgroundImage = "url('images/main.jpg')";
+                slides[nextSlideIndex].classList.add('active');
+                slides[activeSlideIndex].classList.remove('active');
+                activeSlideIndex = nextSlideIndex;
+            };
+            tempImgNext.src = targetUrl;
+        }, 2000);
+    }
+}
+
 async function initLanguage() {
     try {
+        // Load dynamic hotel configuration instantly from cache if available
+        const cachedConfig = window.getFastConfig();
+        if (cachedConfig) {
+            if (cachedConfig.device && cachedConfig.device.room_no) {
+                localStorage.setItem('roomNo', cachedConfig.device.room_no);
+            }
+            if (cachedConfig.hotel && cachedConfig.hotel.hotel_name) {
+                document.title = cachedConfig.hotel.hotel_name;
+            }
+            if (cachedConfig.hotel && cachedConfig.hotel.media && cachedConfig.hotel.media.slider_images) {
+                initSlider(cachedConfig.hotel.media.slider_images);
+            } else {
+                initSlider([]);
+            }
+        } else {
+            initSlider([]);
+        }
+
+        // Run updated fetch in the background to avoid blocking initial render
+        fetchHotelConfig().then(config => {
+            if (config) {
+                if (config.device && config.device.room_no) {
+                    localStorage.setItem('roomNo', config.device.room_no);
+                }
+                if (config.hotel && config.hotel.hotel_name) {
+                    document.title = config.hotel.hotel_name;
+                }
+                if (config.hotel && config.hotel.media && config.hotel.media.slider_images) {
+                    initSlider(config.hotel.media.slider_images);
+                }
+            }
+        }).catch(err => console.warn("Background fetch failed:", err));
+
         const langFile = localStorage.getItem('selectedLangFile') || 'english.json';
         const response = await fetch(`admin/languages/${langFile}`);
         if (response.ok) {
@@ -119,16 +256,16 @@ async function initLanguage() {
     finally {
         applyTranslations();
         updateDateTime();
-        updateWeather(); 
+        updateWeather();
         fetchGuestData();
-        
+
         // Restore last focused item from localStorage before updating positions
         var lastLabel = localStorage.getItem("lastFocusedLabel");
         if (lastLabel && track) {
             // Disable transition temporarily to prevent sliding animation on page load
             var originalTransition = track.style.transition;
             track.style.transition = 'none';
-            
+
             var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item"));
             var targetIndex = -1;
             for (var j = 0; j < allIcons.length; j++) {
@@ -150,18 +287,18 @@ async function initLanguage() {
                     }
                 }
             }
-            
+
             updateCarouselPosition();
-            
+
             // Force a DOM reflow to make the positioning instant before re-enabling transition
             void track.offsetHeight;
-            
+
             // Restore transition for D-pad navigation
             track.style.transition = originalTransition;
         } else {
             updateCarouselPosition();
         }
-        
+
         setTimeout(syncFocus, 300);
     }
 }
@@ -169,21 +306,21 @@ async function initLanguage() {
 function applyTranslations() {
     const roomNo = localStorage.getItem('roomNo') || "";
     const roomEl = document.getElementById('room');
-    if(roomEl) roomEl.textContent = `${currentData.room_label} ${roomNo}`;
-    
-    const iconMap = { 
+    if (roomEl) roomEl.textContent = `${currentData.room_label} ${roomNo}`;
+
+    const iconMap = {
         'apps': 'applications',
-        'livetv': 'live_tv', 
-        'languages.html': 'language', 
+        'livetv': 'live_tv',
+        'languages.html': 'language',
         'hotel_info/hotel_info.html': 'hotel_info',
         'amenities/amenities.html': 'amenities',
-        'travel/travel.html': 'travel', 
-        'city/city.html': 'our_city', 
-        'weather/weather.html': 'weather', 
-        'settings.html': 'settings', 
-        'flights/flights.html': 'flights' 
+        'travel/travel.html': 'travel',
+        'city/city.html': 'our_city',
+        'weather/weather.html': 'weather',
+        'settings.html': 'settings',
+        'flights/flights.html': 'flights'
     };
-    
+
     document.querySelectorAll('.icon-item').forEach(item => {
         const key = item.getAttribute('data-link') || item.getAttribute('data-action');
         const labelEl = item.querySelector('.icon-label');
@@ -196,41 +333,43 @@ function applyTranslations() {
 
 function fetchGuestData() {
     const roomNo = localStorage.getItem('roomNo') || "";
-    fetch(`admin/rooms/${roomNo}.json?t=` + new Date().getTime())
+    if (!roomNo) return;
+    fetch(`admin/rooms.json?t=` + new Date().getTime())
         .then(res => res.json())
-        .then(roomData => {
-            if(roomData.guest_name) {
+        .then(allRooms => {
+            const roomData = allRooms[roomNo];
+            if (roomData && roomData.guest_name) {
                 const langKey = (currentData.language_name) ? currentData.language_name.toLowerCase() : "english";
                 let localizedName = roomData.guest_name[langKey] || roomData.guest_name["english"] || "";
                 window.guestName = localizedName;
                 updateGreetingDisplay();
             }
-        }).catch(e => {});
+        }).catch(e => { });
 }
 
 function updateDateTime() {
     const now = new Date();
     const isRTL = document.body.classList.contains('rtl-mode');
-    
+
     // Set Time - uses local system clock (no NTP)
     const timeEl = document.getElementById('time');
-    if(timeEl) timeEl.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+    if (timeEl) timeEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 
     // Set Room
     const roomNo = localStorage.getItem('roomNo') || "";
     const roomEl = document.getElementById('room');
-    if(roomEl) roomEl.textContent = `${currentData.room_label} ${roomNo}`;
+    if (roomEl) roomEl.textContent = `${currentData.room_label} ${roomNo}`;
 
     // Set Date with RTL comma
     const dateEl = document.getElementById('date');
-    if(dateEl) {
-        const dayKey = now.toLocaleDateString('en-US', {weekday: 'short'}).toLowerCase();
-        const monthKey = now.toLocaleDateString('en-US', {month: 'short'}).toLowerCase();
+    if (dateEl) {
+        const dayKey = now.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+        const monthKey = now.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
         const dayName = (currentData.days && currentData.days[dayKey]) || "";
         const monthName = (currentData.months && currentData.months[monthKey]) || "";
-        
-        dateEl.textContent = isRTL 
-            ? `${dayName}، ${now.getDate()} ${monthName}` 
+
+        dateEl.textContent = isRTL
+            ? `${dayName}، ${now.getDate()} ${monthName}`
             : `${dayName}, ${monthName} ${now.getDate()}`;
     }
     updateGreetingDisplay();
@@ -247,7 +386,14 @@ function updateGreetingDisplay() {
     if (!greetEl) return;
     const guest = window.guestName || "";
     const comma = (currentData.direction === 'rtl') ? "، " : ", ";
-    greetEl.textContent = guest ? `${msg}${comma}${guest}` : msg;
+    var text = guest ? msg + comma + guest : msg;
+
+    var cfg = typeof window.getFastConfig === 'function' ? window.getFastConfig() : null;
+    if (cfg && cfg.hotel && cfg.hotel.hotel_name) {
+        text = text + " | " + cfg.hotel.hotel_name;
+    }
+
+    greetEl.textContent = text;
 }
 
 async function updateWeather() {
@@ -274,13 +420,13 @@ async function updateWeather() {
         // Fallback: direct fetch (will work if cached, show error gracefully if not)
         const response = await fetch('weather/weather_data.json?v=' + Date.now());
         if (!response.ok) throw new Error("Weather file not found");
-        
+
         const data = await response.json();
-        const tempC = Math.round(data.extracted_data.temp); 
-        const tempF = Math.round((tempC * 9/5) + 32);
+        const tempC = Math.round(data.extracted_data.temp);
+        const tempF = Math.round((tempC * 9 / 5) + 32);
         const tempString = `${tempC}°C / ${tempF}°F`;
 
-        let city = "Mumbai"; 
+        let city = "Mumbai";
         if (typeof currentData !== 'undefined' && currentData.city_name) {
             city = currentData.city_name;
         }
@@ -301,7 +447,7 @@ async function updateWeather() {
 }
 
 /* ================= 4. LISTENERS ================= */
-document.addEventListener("keydown", function(e) {
+document.addEventListener("keydown", function (e) {
     var keyCode = e.keyCode || e.which;
     if (keyCode === 8 || keyCode === 461 || keyCode === 4 || keyCode === 10009 || keyCode === 10182) { // support Android TV, webOS, and Tizen back keys
         var path = window.location.pathname.split("/").pop();
@@ -310,7 +456,7 @@ document.addEventListener("keydown", function(e) {
             window.location.href = "index.html";
         }
     }
-    
+
     if (keyCode === 39 || keyCode === 22 || e.key === "ArrowRight" || e.key === "Right") {
         rotate('right');
     }
@@ -322,13 +468,13 @@ document.addEventListener("keydown", function(e) {
         if (!active) return;
         var link = active.getAttribute('data-link');
         var action = active.getAttribute('data-action');
-        
+
         if (action === "apps") {
             if (window.AndroidBridge && window.AndroidBridge.openApplications) {
                 window.AndroidBridge.openApplications();
             } else if (window.flutterBridge) {
                 // Fallback: open applications menu via bridge
-                window.flutterBridge.getHdmiModels()["catch"](function() {});
+                window.flutterBridge.getHdmiModels()["catch"](function () { });
             }
         } else if (action === "livetv") {
             handleLiveTV();
@@ -338,8 +484,12 @@ document.addEventListener("keydown", function(e) {
     }
 });
 
-window.onload = function() {
+window.onload = function () {
+    var bg = document.getElementById('bg-slider');
+    if (bg && !bg.style.backgroundImage) {
+        bg.style.backgroundImage = "url('images/main.jpg')";
+    }
     initLanguage();
     setInterval(updateDateTime, 1000);
-    setInterval(updateWeather, 900000); // 15 minutes
+    setInterval(updateWeather, 900000);
 };

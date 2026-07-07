@@ -1,60 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Admin Login</title>
     <style>
-        :root { --house-gold: #b38a2d; }
-        body { 
-            background: #000 url('images/main.jpg') no-repeat center center fixed; 
-            background-size: cover; color: white; font-family: sans-serif; 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; margin: 0; overflow: hidden; 
-        }
-        .login-card { 
-            background: rgba(0,0,0,0.9); padding: 30px; border: 2px solid var(--house-gold); 
-            border-radius: 15px; width: 300px; text-align: center; backdrop-filter: blur(10px);
+        :root {
+            --house-gold: #b38a2d;
         }
 
-        #passDisplay { 
-            background: #000; 
-            color: var(--house-gold); 
-            font-size: 1.2rem; 
-            font-weight: normal; 
-            margin-bottom: 20px; 
-            border: 1px solid var(--house-gold); 
-            border-radius: 5px; 
-            height: 50px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            letter-spacing: 12px; 
+        body {
+            background-color: #000;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
-        .num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        
-        .num-btn { 
-            background: rgba(179, 138, 45, 0.1); 
-            border: 1px solid var(--house-gold); 
-            color: white; 
-            font-size: 1.2rem; 
-            padding: 15px; 
-            border-radius: 5px; 
-            outline: none; 
+        #bg-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1000ms ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .login-card {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border: 2px solid var(--house-gold);
+            border-radius: 15px;
+            width: 300px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        #passDisplay {
+            background: #000;
+            color: var(--house-gold);
+            font-size: 1.2rem;
+            font-weight: normal;
+            margin-bottom: 20px;
+            border: 1px solid var(--house-gold);
+            border-radius: 5px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 12px;
+        }
+
+        .num-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .num-btn {
+            background: rgba(179, 138, 45, 0.1);
+            border: 1px solid var(--house-gold);
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px;
+            border-radius: 5px;
+            outline: none;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        
-        .num-btn:focus { 
-            background: var(--house-gold); 
-            color: white !important; 
+
+        .num-btn:focus {
+            background: var(--house-gold);
+            color: white !important;
             box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
             transform: scale(1.08);
         }
     </style>
     <script>
-        (function() {
+        (function () {
             const time = Date.now();
+
+            // Load bridge first
+            const bridgeJs = document.createElement('script');
+            bridgeJs.src = 'js/bridge.js?v=' + time;
+            bridgeJs.defer = true;
+            document.head.appendChild(bridgeJs);
+
             const spatialNav = document.createElement('script');
             spatialNav.src = 'js/spatial-navigation.js?v=' + time;
             spatialNav.defer = true;
@@ -62,117 +116,225 @@
         })();
     </script>
 </head>
+
 <body>
-
-<div class="login-card">
-    <div style="color:var(--house-gold); font-weight:bold; margin-bottom:15px;">ADMIN ACCESS</div>
-    <div id="passDisplay">******</div>
-    <div class="num-grid" id="keypad">
-        <button class="num-btn" data-val="1">1</button>
-        <button class="num-btn" data-val="2">2</button>
-        <button class="num-btn" data-val="3">3</button>
-        <button class="num-btn" data-val="4">4</button>
-        <button class="num-btn" data-val="5">5</button>
-        <button class="num-btn" data-val="6">6</button>
-        <button class="num-btn" data-val="7">7</button>
-        <button class="num-btn" data-val="8">8</button>
-        <button class="num-btn" data-val="DEL">⌫</button>
-        <button class="num-btn" data-val="9">9</button>
-        <button class="num-btn" data-val="0">0</button>
-        <button class="num-btn" data-val="ESC">ESC</button>
+    <div id="bg-slider">
+        <div class="slide active"></div>
+        <div class="slide"></div>
     </div>
-</div>
 
-<script>
-    let currentPin = "";
-    let maskedPin = ["*", "*", "*", "*", "*", "*"];
-    let isProcessing = false;
+    <div class="login-card">
+        <div style="color:var(--house-gold); font-weight:bold; margin-bottom:15px;">ADMIN ACCESS</div>
+        <div id="passDisplay">******</div>
+        <div class="num-grid" id="keypad">
+            <button class="num-btn" data-val="1">1</button>
+            <button class="num-btn" data-val="2">2</button>
+            <button class="num-btn" data-val="3">3</button>
+            <button class="num-btn" data-val="4">4</button>
+            <button class="num-btn" data-val="5">5</button>
+            <button class="num-btn" data-val="6">6</button>
+            <button class="num-btn" data-val="7">7</button>
+            <button class="num-btn" data-val="8">8</button>
+            <button class="num-btn" data-val="DEL">⌫</button>
+            <button class="num-btn" data-val="9">9</button>
+            <button class="num-btn" data-val="0">0</button>
+            <button class="num-btn" data-val="ESC">ESC</button>
+        </div>
+    </div>
 
-    function updateDisplay() {
-        const disp = document.getElementById('passDisplay');
-        disp.innerText = maskedPin.join("");
-    }
+    <script>
+        // Dynamic background slider support
+        let bgSlideImages = [];
+        let bgCurrentImageIndex = 0;
+        let bgActiveSlideIndex = 0;
+        let bgSliderIntervalId = null;
 
-    function addDigit(digit) {
-        if (currentPin.length < 6 && !isProcessing) {
-            const index = currentPin.length;
-            currentPin += digit;
-            maskedPin[index] = digit;
-            updateDisplay();
+        async function fetchHotelConfig() {
+            const filename = window.HOTEL_DATA_FILE || 'data.json';
+            const paths = [filename, `../${filename}`, 'data.json', '../data.json'];
+            let config = null;
 
-            setTimeout(() => {
-                if (currentPin.length > index) {
-                    maskedPin[index] = "*";
-                    updateDisplay();
+            for (let path of paths) {
+                try {
+                    const res = await fetch(`${path}?t=${Date.now()}`);
+                    if (res.ok) {
+                        config = await res.json();
+                        localStorage.setItem('cachedHotelData', JSON.stringify(config));
+                        break;
+                    }
+                } catch (e) {
+                    console.warn(`Failed to fetch config from ${path}:`, e);
                 }
-            }, 700);
+            }
 
-            if (currentPin.length === 6) {
-                isProcessing = true;
-                setTimeout(checkPin, 800);
+            if (!config) {
+                const cached = localStorage.getItem('cachedHotelData');
+                if (cached) {
+                    try {
+                        config = JSON.parse(cached);
+                    } catch (e) {
+                        console.error("Failed parsing cached config:", e);
+                    }
+                }
+            }
+            return config;
+        }
+
+        function initBackgroundSlider(config) {
+            if (bgSliderIntervalId) clearInterval(bgSliderIntervalId);
+            bgSlideImages = [];
+
+            if (config && config.hotel && config.hotel.media) {
+                if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
+                    bgSlideImages = config.hotel.media.slider_images;
+                } else if (config.hotel.media.cover_image) {
+                    bgSlideImages = [config.hotel.media.cover_image];
+                }
+            }
+
+            if (bgSlideImages.length === 0) {
+                bgSlideImages = ['images/main.jpg'];
+            }
+
+            const slides = document.querySelectorAll('#bg-slider .slide');
+            if (slides.length < 2) return;
+
+            // Load initial background image
+            const tempImg1 = new Image();
+            tempImg1.onload = () => {
+                slides[0].style.backgroundImage = `url('${bgSlideImages[0]}')`;
+                slides[0].classList.add('active');
+                slides[1].classList.remove('active');
+            };
+            tempImg1.onerror = () => {
+                slides[0].style.backgroundImage = "url('images/main.jpg')";
+                slides[0].classList.add('active');
+                slides[1].classList.remove('active');
+            };
+            tempImg1.src = bgSlideImages[0];
+
+            bgCurrentImageIndex = 0;
+            bgActiveSlideIndex = 0;
+
+            if (bgSlideImages.length > 1) {
+                bgSliderIntervalId = setInterval(() => {
+                    bgCurrentImageIndex = (bgCurrentImageIndex + 1) % bgSlideImages.length;
+                    const nextSlideIndex = bgActiveSlideIndex === 0 ? 1 : 0;
+                    const targetUrl = bgSlideImages[bgCurrentImageIndex];
+
+                    const tempImgNext = new Image();
+                    tempImgNext.onload = () => {
+                        slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+                        slides[nextSlideIndex].classList.add('active');
+                        slides[bgActiveSlideIndex].classList.remove('active');
+                        bgActiveSlideIndex = nextSlideIndex;
+                    };
+                    tempImgNext.onerror = () => {
+                        slides[nextSlideIndex].style.backgroundImage = "url('images/main.jpg')";
+                        slides[nextSlideIndex].classList.add('active');
+                        slides[bgActiveSlideIndex].classList.remove('active');
+                        bgActiveSlideIndex = nextSlideIndex;
+                    };
+                    tempImgNext.src = targetUrl;
+                }, 2000);
             }
         }
-    }
 
-    function checkPin() {
-        const d = new Date();
-        const correct = String(d.getFullYear()).slice(-2) + 
-                        String(d.getMonth() + 1).padStart(2, '0') + 
-                        String(d.getDate()).padStart(2, '0');
-        
-        if (currentPin === correct) {
-            window.location.href = 'advanced.html';
-        } else {
+        // Load background slider
+        fetchHotelConfig().then(config => {
+            initBackgroundSlider(config);
+        });
+
+        let currentPin = "";
+        let maskedPin = ["*", "*", "*", "*", "*", "*"];
+        let isProcessing = false;
+
+        function updateDisplay() {
             const disp = document.getElementById('passDisplay');
-            disp.innerText = "ERROR";
-            disp.style.color = "#ff4444";
-            
-            setTimeout(() => {
-                currentPin = "";
-                maskedPin = ["*", "*", "*", "*", "*", "*"];
-                disp.style.color = "var(--house-gold)";
+            disp.innerText = maskedPin.join("");
+        }
+
+        function addDigit(digit) {
+            if (currentPin.length < 6 && !isProcessing) {
+                const index = currentPin.length;
+                currentPin += digit;
+                maskedPin[index] = digit;
                 updateDisplay();
-                isProcessing = false;
-            }, 1500);
-        }
-    }
 
-    // Keypad Button Navigation (Arrow Keys)
-    const buttons = Array.from(document.querySelectorAll('.num-btn'));
-    document.addEventListener('keydown', (e) => {
-        const index = buttons.indexOf(document.activeElement);
-        
-        if (e.key === "ArrowRight") {
-            if ((index + 1) % 3 !== 0) buttons[index + 1].focus();
-        } else if (e.key === "ArrowLeft") {
-            if (index % 3 !== 0) buttons[index - 1].focus();
-        } else if (e.key === "ArrowDown") {
-            if (index + 3 < buttons.length) buttons[index + 3].focus();
-        } else if (e.key === "ArrowUp") {
-            if (index - 3 >= 0) buttons[index - 3].focus();
-        }
-        
-        // Remote/Keyboard Numbers
-        if (e.key >= '0' && e.key <= '9') addDigit(e.key);
-        else if (e.key === "Backspace") handleDel();
-        else if (e.key === "Escape") window.location.href = 'index.html';
-        else if (e.key === "Enter") {
-            const val = document.activeElement.dataset.val;
-            if (val === "DEL") handleDel();
-            else if (val === "ESC") window.location.href = 'index.html';
-            else if (!isNaN(val)) addDigit(val);
-        }
-    });
+                setTimeout(() => {
+                    if (currentPin.length > index) {
+                        maskedPin[index] = "*";
+                        updateDisplay();
+                    }
+                }, 700);
 
-    function handleDel() {
-        if (currentPin.length > 0 && !isProcessing) {
-            currentPin = currentPin.slice(0, -1);
-            maskedPin[currentPin.length] = "*";
-            updateDisplay();
+                if (currentPin.length === 6) {
+                    isProcessing = true;
+                    setTimeout(checkPin, 800);
+                }
+            }
         }
-    }
 
-    window.onload = () => buttons[0].focus();
-</script>
+        function checkPin() {
+            const d = new Date();
+            const correct = String(d.getFullYear()).slice(-2) +
+                String(d.getMonth() + 1).padStart(2, '0') +
+                String(d.getDate()).padStart(2, '0');
+
+            if (currentPin === correct) {
+                window.location.href = 'advanced.html';
+            } else {
+                const disp = document.getElementById('passDisplay');
+                disp.innerText = "ERROR";
+                disp.style.color = "#ff4444";
+
+                setTimeout(() => {
+                    currentPin = "";
+                    maskedPin = ["*", "*", "*", "*", "*", "*"];
+                    disp.style.color = "var(--house-gold)";
+                    updateDisplay();
+                    isProcessing = false;
+                }, 1500);
+            }
+        }
+
+        // Keypad Button Navigation (Arrow Keys)
+        const buttons = Array.from(document.querySelectorAll('.num-btn'));
+        document.addEventListener('keydown', (e) => {
+            const index = buttons.indexOf(document.activeElement);
+
+            if (e.key === "ArrowRight") {
+                if ((index + 1) % 3 !== 0) buttons[index + 1].focus();
+            } else if (e.key === "ArrowLeft") {
+                if (index % 3 !== 0) buttons[index - 1].focus();
+            } else if (e.key === "ArrowDown") {
+                if (index + 3 < buttons.length) buttons[index + 3].focus();
+            } else if (e.key === "ArrowUp") {
+                if (index - 3 >= 0) buttons[index - 3].focus();
+            }
+
+            // Remote/Keyboard Numbers
+            if (e.key >= '0' && e.key <= '9') addDigit(e.key);
+            else if (e.key === "Backspace") handleDel();
+            else if (e.key === "Escape") window.location.href = 'index.html';
+            else if (e.key === "Enter") {
+                const val = document.activeElement.dataset.val;
+                if (val === "DEL") handleDel();
+                else if (val === "ESC") window.location.href = 'index.html';
+                else if (!isNaN(val)) addDigit(val);
+            }
+        });
+
+        function handleDel() {
+            if (currentPin.length > 0 && !isProcessing) {
+                currentPin = currentPin.slice(0, -1);
+                maskedPin[currentPin.length] = "*";
+                updateDisplay();
+            }
+        }
+
+        window.onload = () => buttons[0].focus();
+    </script>
 </body>
+
 </html>

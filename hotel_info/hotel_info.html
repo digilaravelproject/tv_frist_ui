@@ -1,31 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Hotel Info</title>
     <style>
-        :root { --gold: #b38a2d; }
+        :root {
+            --gold: #b38a2d;
+        }
+
         body {
-            margin: 0; padding: 0;
-            background: #000 url('../images/main.jpg') no-repeat center center;
-            background-size: 100% 100%; 
+            margin: 0;
+            padding: 0;
+            background-color: #000;
             font-family: sans-serif;
             overflow: hidden;
-            display: flex; 
+            display: flex;
             flex-direction: column;
-            justify-content: flex-start; 
+            justify-content: flex-start;
             align-items: center;
             height: 100vh;
             width: 100vw;
         }
 
+        #bg-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1000ms ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
         /* Page Title adjusted to sit below the background logo */
         #headerTitle {
             color: var(--gold);
-            font-size: 1.8rem; /* Reduced to match APPLICATIONS header size */
+            font-size: 1.8rem;
+            /* Reduced to match APPLICATIONS header size */
             font-weight: bold;
             text-transform: uppercase;
-            margin-top: 62px; /* Increased distance from top to clear logo */
+            margin-top: 62px;
+            /* Increased distance from top to clear logo */
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             letter-spacing: 2px;
@@ -34,83 +68,271 @@
         /* Container for the gallery */
         .content-box {
             position: relative;
-            width: 80vw; 
-            height: 70vh; /* Proportionally matched to the apps grid height */
+            width: 80vw;
+            height: 70vh;
+            /* Proportionally matched to the apps grid height */
             border: 3px solid var(--gold);
             background: rgba(0, 0, 0, 0.5);
             display: flex;
-            justify-content: center; 
-            align-items: center;     
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
             border-radius: 10px;
         }
 
         .slide-img {
-            width: 100%; 
+            width: 100%;
             height: 100%;
             object-fit: cover;
             transition: opacity 0.3s ease-in-out;
         }
 
         /* Navigation Arrows */
-        .nav-icon { 
-            position: absolute; 
-            width: 50px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            z-index: 10; 
+        .nav-icon {
+            position: absolute;
+            width: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
             opacity: 0.8;
         }
-        .prev { left: 20px; }
-        .next { right: 20px; }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
 
         @keyframes shake {
-            0%, 100% { transform: translateY(-50%) translateX(0); }
-            25% { transform: translateY(-50%) translateX(-10px); }
-            75% { transform: translateY(-50%) translateX(10px); }
+
+            0%,
+            100% {
+                transform: translateY(-50%) translateX(0);
+            }
+
+            25% {
+                transform: translateY(-50%) translateX(-10px);
+            }
+
+            75% {
+                transform: translateY(-50%) translateX(10px);
+            }
         }
-        .vibrate { animation: shake 0.2s 2; }
+
+        .vibrate {
+            animation: shake 0.2s 2;
+        }
     </style>
 </head>
-<body>
 
+<body>
+    <div id="bg-slider">
+        <div class="slide active"></div>
+        <div class="slide"></div>
+    </div>
     <div id="headerTitle">Hotel Information</div>
 
     <div class="content-box">
         <img src="" id="displayImage" class="slide-img">
-        
+
         <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
         <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
     </div>
 
     <script>
-        let images = []; 
+        let images = [];
         let currentIndex = 0;
         let autoTimer;
 
-        function initGallery() {
-            if (window.AndroidBridge && window.AndroidBridge.getPictureList) {
-                const listString = window.AndroidBridge.getPictureList();
-                images = JSON.parse(listString);
-            } else {
-                images = ["pics/slide1.jpg", "pics/slide2.jpg"];
-            }
-            
-            if (images.length > 0) {
-                updateDisplay();
-                startAutoSlide();
+        function waitForLoginData() {
+            return new Promise(resolve => {
+                if (window.tvLoginData) return resolve(window.tvLoginData);
+                if (window.parent && window.parent.tvLoginData) return resolve(window.parent.tvLoginData);
+                const check = setInterval(() => {
+                    const data = window.tvLoginData || (window.parent && window.parent.tvLoginData);
+                    if (data) {
+                        clearInterval(check);
+                        resolve(data);
+                    }
+                }, 100);
+                setTimeout(() => { clearInterval(check); resolve(null); }, 3000);
+            });
+        }
+
+        async function fetchHotelConfig() {
+            // 1. Try window variable injected by Flutter
+            const injected = await waitForLoginData();
+            if (injected) {
+                localStorage.setItem('cachedHotelData', JSON.stringify(injected));
+                return injected;
             }
 
+            // 2. Fallback to local files
+            const filename = window.parent.HOTEL_DATA_FILE || window.HOTEL_DATA_FILE || 'data.json';
+            const paths = [`../${filename}`, filename, '../data.json', 'data.json'];
+            let config = null;
+
+            for (let path of paths) {
+                try {
+                    const res = await fetch(`${path}?t=${Date.now()}`);
+                    if (res.ok) {
+                        config = await res.json();
+                        localStorage.setItem('cachedHotelData', JSON.stringify(config));
+                        break;
+                    }
+                } catch (e) {
+                    console.warn(`Failed to fetch config from ${path}:`, e);
+                }
+            }
+
+            // 3. Fallback to local storage cache
+            if (!config) {
+                const cached = localStorage.getItem('cachedHotelData');
+                if (cached) {
+                    try {
+                        config = JSON.parse(cached);
+                    } catch (e) {
+                        console.error("Failed parsing cached config:", e);
+                    }
+                }
+            }
+            return config;
+        }
+
+        let bgSlideImages = [];
+        let bgCurrentImageIndex = 0;
+        let bgActiveSlideIndex = 0;
+        let bgSliderIntervalId = null;
+
+        function initBackgroundSlider(config) {
+            if (bgSliderIntervalId) clearInterval(bgSliderIntervalId);
+            bgSlideImages = [];
+
+            if (config && config.hotel && config.hotel.media) {
+                if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
+                    bgSlideImages = config.hotel.media.slider_images;
+                } else if (config.hotel.media.cover_image) {
+                    bgSlideImages = [config.hotel.media.cover_image];
+                }
+            }
+
+            if (bgSlideImages.length === 0) {
+                bgSlideImages = ['../images/main.jpg'];
+            }
+
+            const slides = document.querySelectorAll('#bg-slider .slide');
+            if (slides.length < 2) return;
+
+            // Load initial background image
+            const tempImg1 = new Image();
+            tempImg1.onload = () => {
+                slides[0].style.backgroundImage = `url('${bgSlideImages[0]}')`;
+                slides[0].classList.add('active');
+                slides[1].classList.remove('active');
+            };
+            tempImg1.onerror = () => {
+                slides[0].style.backgroundImage = "url('../images/main.jpg')";
+                slides[0].classList.add('active');
+                slides[1].classList.remove('active');
+            };
+            tempImg1.src = bgSlideImages[0];
+
+            bgCurrentImageIndex = 0;
+            bgActiveSlideIndex = 0;
+
+            if (bgSlideImages.length > 1) {
+                bgSliderIntervalId = setInterval(() => {
+                    bgCurrentImageIndex = (bgCurrentImageIndex + 1) % bgSlideImages.length;
+                    const nextSlideIndex = bgActiveSlideIndex === 0 ? 1 : 0;
+                    const targetUrl = bgSlideImages[bgCurrentImageIndex];
+
+                    const tempImgNext = new Image();
+                    tempImgNext.onload = () => {
+                        slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+                        slides[nextSlideIndex].classList.add('active');
+                        slides[bgActiveSlideIndex].classList.remove('active');
+                        bgActiveSlideIndex = nextSlideIndex;
+                    };
+                    tempImgNext.onerror = () => {
+                        slides[nextSlideIndex].style.backgroundImage = "url('../images/main.jpg')";
+                        slides[nextSlideIndex].classList.add('active');
+                        slides[bgActiveSlideIndex].classList.remove('active');
+                        bgActiveSlideIndex = nextSlideIndex;
+                    };
+                    tempImgNext.src = targetUrl;
+                }, 2000);
+            }
+        }
+
+        async function initGallery() {
+            // Load dynamic configuration instantly from parent cache if available
+            const cachedConfig = (window.parent && window.parent.getFastConfig) ? window.parent.getFastConfig() : null;
+            images = [];
+
+            if (cachedConfig) {
+                initBackgroundSlider(cachedConfig);
+                if (cachedConfig.hotel && cachedConfig.hotel.media) {
+                    if (cachedConfig.hotel.media.slider_images && cachedConfig.hotel.media.slider_images.length > 0) {
+                        images = cachedConfig.hotel.media.slider_images;
+                    } else if (cachedConfig.hotel.media.cover_image) {
+                        images = [cachedConfig.hotel.media.cover_image];
+                    }
+                }
+            } else {
+                initBackgroundSlider(null);
+            }
+
+            // Run updated fetch in the background to avoid blocking initial render
+            fetchHotelConfig().then(config => {
+                if (config) {
+                    initBackgroundSlider(config);
+
+                    let newImages = [];
+                    if (config.hotel && config.hotel.media) {
+                        if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
+                            newImages = config.hotel.media.slider_images;
+                        } else if (config.hotel.media.cover_image) {
+                            newImages = [config.hotel.media.cover_image];
+                        }
+                    }
+                    if (newImages.length > 0 && JSON.stringify(newImages) !== JSON.stringify(images)) {
+                        images = newImages;
+                        currentIndex = 0;
+                        updateDisplay();
+                        startAutoSlide();
+                    }
+                }
+            }).catch(err => console.warn("Background fetch failed:", err));
+
+            // Standard local offline default fallback
+            if (images.length === 0) {
+                if (window.AndroidBridge && window.AndroidBridge.getPictureList) {
+                    try {
+                        const listString = window.AndroidBridge.getPictureList();
+                        images = JSON.parse(listString);
+                    } catch (e) { }
+                }
+            }
+
+            if (images.length === 0) {
+                images = ["pics/slide1.jpg", "pics/slide2.jpg"];
+            }
+
+            updateDisplay();
+            startAutoSlide();
+
             let langFile = localStorage.getItem('selectedLangFile') || 'english.json';
-            
+
             if (window.AndroidBridge && window.AndroidBridge.getSelectedLanguageFile) {
                 langFile = window.AndroidBridge.getSelectedLanguageFile();
             }
 
-            fetch(`../admin/${langFile}?t=${Date.now()}`)
+            fetch(`../admin/languages/${langFile}?t=${Date.now()}`)
                 .then(res => res.json())
                 .then(data => {
-                    const titleKey = 'hotel_info'; 
+                    const titleKey = 'hotel_info';
                     const titleEl = document.getElementById('headerTitle');
                     if (data.icons && data.icons[titleKey]) {
                         titleEl.innerText = data.icons[titleKey];
@@ -136,10 +358,10 @@
             let next = currentIndex + dir;
             if (next < 0) { trigger('btnPrev'); return; }
             if (next >= images.length) { trigger('btnNext'); return; }
-            
+
             currentIndex = next;
             updateDisplay();
-            startAutoSlide(); 
+            startAutoSlide();
         }
 
         function startAutoSlide() {
@@ -173,4 +395,5 @@
         window.onload = initGallery;
     </script>
 </body>
+
 </html>
