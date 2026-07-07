@@ -182,6 +182,8 @@
             outline: none;
         }
 
+        #appsCloseBtn { display: none !important; }
+
         #comingSoonOverlay .cs-icon {
             font-size: 6vw;
             margin-bottom: 2vh;
@@ -377,7 +379,6 @@
         async function loadTvInputs() {
             var container = document.getElementById('tv-inputs-container');
             if (!container) return;
-            container.innerHTML = '';
 
             try {
                 var bridge = window.flutterBridge;
@@ -387,17 +388,45 @@
                     return;
                 }
 
+                var lastPort = localStorage.getItem('selectedHdmiPort');
+                try {
+                    var adminSerial = localStorage.getItem('adminSerial') || localStorage.getItem('serialNumber');
+                    if (adminSerial) {
+                        var res = await fetch('/admin/devices/' + adminSerial + '.json');
+                        if (res.ok) {
+                            var deviceData = await res.json();
+                            if (deviceData.hdmiPort) lastPort = deviceData.hdmiPort;
+                        }
+                    }
+                } catch (e) { /* fall back to localStorage */ }
+
+                container.innerHTML = '';
                 inputs.forEach(function(input) {
                     var btn = document.createElement('button');
                     btn.className = 'tv-input-btn';
                     btn.tabIndex = 0;
-                    btn.textContent = input.label || input.id || 'HDMI';
-                    btn.setAttribute('data-model', input.id || '');
+                    var label = input.label || input.id || 'HDMI';
+                    btn.textContent = label;
+                    var modelId = input.id || '';
+                    btn.setAttribute('data-model', modelId);
+
+                    if (lastPort && (modelId === lastPort || label === lastPort)) {
+                        btn.style.borderColor = '#b38a2d';
+                        btn.style.background = 'rgba(179,138,45,0.25)';
+                        btn.style.boxShadow = '0 0 12px rgba(179,138,45,0.5)';
+                    }
 
                     btn.addEventListener('click', function() {
                         var model = this.getAttribute('data-model');
+                        var label = this.textContent;
+                        if (model) {
+                            localStorage.setItem('selectedHdmiPort', model);
+                        } else if (label) {
+                            localStorage.setItem('selectedHdmiPort', label);
+                        }
+                        loadTvInputs();
+                        closeAppsOverlay();
                         if (model && window.flutterBridge && window.flutterBridge.launchHdmi) {
-                            closeAppsOverlay();
                             window.flutterBridge.launchHdmi(model)['catch'](function(err) {
                                 console.error('Launch HDMI failed:', err);
                             });
@@ -424,7 +453,27 @@
             document.getElementById('mainUI').style.display = 'none';
             window.history.pushState(null, "", window.location.href);
 
+            document.getElementById('appsTitle').textContent = 'Applications';
+            document.getElementById('tv-inputs-section').style.display = 'none';
+            document.getElementById('apps-container').style.display = '';
+
             loadApplications();
+
+            var closeBtn = document.getElementById('appsCloseBtn');
+            if (closeBtn) setTimeout(function() { closeBtn.focus(); }, 100);
+        }
+
+        function openLiveTVOverlay() {
+            var overlay = document.getElementById('appsOverlay');
+            if (!overlay) return;
+            overlay.classList.add('show');
+            document.getElementById('mainUI').style.display = 'none';
+            window.history.pushState(null, "", window.location.href);
+
+            document.getElementById('appsTitle').textContent = 'Live TV';
+            document.getElementById('tv-inputs-section').style.display = '';
+            document.getElementById('apps-container').style.display = 'none';
+
             loadTvInputs();
 
             var closeBtn = document.getElementById('appsCloseBtn');
@@ -459,11 +508,17 @@
 
         window.openAppsOverlay = openAppsOverlay;
         window.closeAppsOverlay = closeAppsOverlay;
+        window.openLiveTVOverlay = openLiveTVOverlay;
 
         var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
 
         document.querySelectorAll('.icon-item').forEach(item => {
             item.addEventListener('click', function () {
+                const action = this.getAttribute('data-action');
+                if (action === "livetv") {
+                    if (typeof window.openLiveTVOverlay === 'function') window.openLiveTVOverlay();
+                    return;
+                }
                 const link = this.dataset.link || this.getAttribute('href');
                 if (link && comingSoonLinks.indexOf(link) !== -1) {
                     document.getElementById('comingSoonOverlay').style.display = 'flex';

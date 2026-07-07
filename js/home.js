@@ -496,7 +496,9 @@ document.addEventListener("keydown", function (e) {
                 window.AndroidBridge.openApplications();
             }
         } else if (action === "livetv") {
-            handleLiveTV();
+            if (typeof window.openLiveTVOverlay === 'function') {
+                window.openLiveTVOverlay();
+            }
         } else if (link) {
             if (comingSoonLinks.indexOf(link) !== -1) {
                 e.preventDefault();
