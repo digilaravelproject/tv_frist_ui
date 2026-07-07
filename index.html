@@ -64,6 +64,124 @@
             justify-content: center;
         }
 
+        #appsOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92);
+            z-index: 9998;
+            flex-direction: column;
+            padding: 4vh 4vw;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        #appsOverlay.show {
+            display: flex;
+        }
+
+        #appsOverlay .apps-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3vh;
+        }
+
+        #appsOverlay .apps-title {
+            color: #b38a2d;
+            font-size: 2.2vw;
+            font-weight: 600;
+        }
+
+        #appsOverlay .close-btn {
+            color: #fff;
+            font-size: 2.5vw;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.5vw 1.5vw;
+            opacity: 0.7;
+        }
+
+        #appsOverlay .close-btn:hover,
+        #appsOverlay .close-btn:focus {
+            opacity: 1;
+        }
+
+        #apps-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5vw;
+            margin-bottom: 3vh;
+        }
+
+        .app-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5vw;
+            background: rgba(255,255,255,0.06);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .app-card:hover,
+        .app-card:focus {
+            background: rgba(255,255,255,0.15);
+            outline: 2px solid #b38a2d;
+        }
+
+        .app-card img {
+            width: 4vw;
+            height: 4vw;
+            object-fit: contain;
+            margin-bottom: 0.8vh;
+        }
+
+        .app-card .app-name {
+            color: #ddd;
+            font-size: 1.1vw;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .tv-section-title {
+            color: #b38a2d;
+            font-size: 1.6vw;
+            font-weight: 600;
+            margin-bottom: 1.5vh;
+        }
+
+        #tv-inputs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1vw;
+        }
+
+        .tv-input-btn {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 0.8vw 2vw;
+            font-size: 1.1vw;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .tv-input-btn:hover,
+        .tv-input-btn:focus {
+            background: rgba(179,138,45,0.25);
+            border-color: #b38a2d;
+            outline: none;
+        }
+
         #comingSoonOverlay .cs-icon {
             font-size: 6vw;
             margin-bottom: 2vh;
@@ -152,6 +270,16 @@
         <iframe id="subFrame" src=""></iframe>
     </div>
 
+    <div id="appsOverlay">
+        <div class="apps-header">
+            <div class="apps-title">Applications</div>
+            <button class="close-btn" id="appsCloseBtn" tabindex="0">&times;</button>
+        </div>
+        <div id="apps-container"></div>
+        <div class="tv-section-title">TV Inputs</div>
+        <div id="tv-inputs-container"></div>
+    </div>
+
     <div id="comingSoonOverlay">
         <div class="cs-icon">&#9203;</div>
         <div class="cs-title">Coming Soon</div>
@@ -162,7 +290,13 @@
         // --- 1. PREVENT ANDROID EXIT (Original Logic) ---
         window.history.pushState(null, "", window.location.href);
         window.onpopstate = function () {
-            const overlay = document.getElementById('subPageOverlay');
+            var appsOverlay = document.getElementById('appsOverlay');
+            if (appsOverlay && appsOverlay.classList.contains('show')) {
+                closeAppsOverlay();
+                window.history.pushState(null, "", window.location.href);
+                return;
+            }
+            var overlay = document.getElementById('subPageOverlay');
             if (overlay.style.display === 'block') {
                 closeSubPage();
                 window.history.pushState(null, "", window.location.href);
@@ -175,9 +309,156 @@
             document.getElementById('subPageOverlay').style.display = 'none';
             document.getElementById('subFrame').src = "";
             document.getElementById('mainUI').style.display = 'block';
-            const items = document.querySelectorAll('.icon-item');
+            var items = document.querySelectorAll('.icon-item');
             if (items[3]) items[3].focus();
         }
+
+        // =============================================================
+        // APPLICATIONS OVERLAY (Apps + TV Inputs)
+        // =============================================================
+
+        var DEFAULT_APP_ICON = 'images/icons/apps.png';
+
+        async function loadApplications() {
+            var container = document.getElementById('apps-container');
+            if (!container) return;
+            container.innerHTML = '<div style="color:#888;font-size:1.2vw;grid-column:1/-1;text-align:center;">Loading...</div>';
+
+            try {
+                var bridge = window.flutterBridge;
+                var apps = await bridge.getInstalledApps();
+                if (!apps || apps.length === 0) throw new Error('No apps');
+
+                container.innerHTML = '';
+                apps.forEach(function(app) {
+                    var pkg = app.packageName || app.package || app.id || '';
+                    var name = app.name || app.label || pkg;
+                    var icon = app.icon_url || '';
+
+                    var card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.tabIndex = 0;
+                    card.setAttribute('data-package', pkg);
+
+                    var img = document.createElement('img');
+                    img.src = icon || DEFAULT_APP_ICON;
+                    img.alt = name;
+                    img.onerror = function() { this.src = DEFAULT_APP_ICON; };
+
+                    var label = document.createElement('div');
+                    label.className = 'app-name';
+                    label.textContent = name;
+
+                    card.appendChild(img);
+                    card.appendChild(label);
+
+                    card.addEventListener('click', function() {
+                        var p = this.getAttribute('data-package');
+                        if (p && window.flutterBridge && window.flutterBridge.launchApp) {
+                            window.flutterBridge.launchApp(p)['catch'](function(err) {
+                                console.error('Launch app failed:', err);
+                            });
+                        }
+                    });
+                    card.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.keyCode === 13) {
+                            this.click();
+                        }
+                    });
+
+                    container.appendChild(card);
+                });
+            } catch (e) {
+                container.innerHTML = '<div style="color:#888;font-size:1.2vw;grid-column:1/-1;text-align:center;">No applications available</div>';
+                console.error('loadApplications error:', e);
+            }
+        }
+
+        async function loadTvInputs() {
+            var container = document.getElementById('tv-inputs-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            try {
+                var bridge = window.flutterBridge;
+                var inputs = await bridge.getTvInputs();
+                if (!inputs || inputs.length === 0) {
+                    container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
+                    return;
+                }
+
+                inputs.forEach(function(input) {
+                    var btn = document.createElement('button');
+                    btn.className = 'tv-input-btn';
+                    btn.tabIndex = 0;
+                    btn.textContent = input.label || input.id || 'HDMI';
+                    btn.setAttribute('data-model', input.id || '');
+
+                    btn.addEventListener('click', function() {
+                        var model = this.getAttribute('data-model');
+                        if (model && window.flutterBridge && window.flutterBridge.launchHdmi) {
+                            closeAppsOverlay();
+                            window.flutterBridge.launchHdmi(model)['catch'](function(err) {
+                                console.error('Launch HDMI failed:', err);
+                            });
+                        }
+                    });
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.keyCode === 13) {
+                            this.click();
+                        }
+                    });
+
+                    container.appendChild(btn);
+                });
+            } catch (e) {
+                container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
+                console.error('loadTvInputs error:', e);
+            }
+        }
+
+        function openAppsOverlay() {
+            var overlay = document.getElementById('appsOverlay');
+            if (!overlay) return;
+            overlay.classList.add('show');
+            document.getElementById('mainUI').style.display = 'none';
+            window.history.pushState(null, "", window.location.href);
+
+            loadApplications();
+            loadTvInputs();
+
+            var closeBtn = document.getElementById('appsCloseBtn');
+            if (closeBtn) setTimeout(function() { closeBtn.focus(); }, 100);
+        }
+
+        function closeAppsOverlay() {
+            var overlay = document.getElementById('appsOverlay');
+            if (!overlay) return;
+            overlay.classList.remove('show');
+            document.getElementById('mainUI').style.display = 'block';
+            var items = document.querySelectorAll('.icon-item');
+            if (items[3]) items[3].focus();
+        }
+
+        document.addEventListener('keydown', function(e) {
+            var appsOverlay = document.getElementById('appsOverlay');
+            if (!appsOverlay || !appsOverlay.classList.contains('show')) return;
+
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 8 || keyCode === 461 || keyCode === 4 || keyCode === 10009 || keyCode === 10182 || keyCode === 27) {
+                e.preventDefault();
+                closeAppsOverlay();
+                window.history.pushState(null, "", window.location.href);
+            }
+        });
+
+        document.getElementById('appsCloseBtn').addEventListener('click', function() {
+            closeAppsOverlay();
+            window.history.pushState(null, "", window.location.href);
+        });
+
+        window.openAppsOverlay = openAppsOverlay;
+        window.closeAppsOverlay = closeAppsOverlay;
 
         var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
 

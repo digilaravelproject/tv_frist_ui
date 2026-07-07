@@ -232,6 +232,64 @@
          */
         checkInternet() {
             return callNative('checkInternet', []);
+        },
+
+        // ============================================================
+        // PUBLIC WRAPPER & APP/HDMI QUERIES (Hybrid with JSON fallback)
+        // ============================================================
+
+        /**
+         * Generic public bridge call wrapper
+         * @param {string} method - Native method name
+         * @param {Array} [args] - Arguments array
+         * @returns {Promise<any>}
+         */
+        call(method, args) {
+            return callNative(method, args || []);
+        },
+
+        /**
+         * Get installed applications on the TV
+         * Falls back to admin JSON when FlutterBridge is unavailable
+         * @returns {Promise<Array>}
+         */
+        async getInstalledApps() {
+            try {
+                return await callNative('getInstalledApps', []);
+            } catch (e) {
+                const serial = localStorage.getItem('deviceSerial');
+                const fallbackFiles = ['4KTV-0SU', 'SEI530', 'JSHRASHD'];
+                const filesToTry = serial ? [serial, ...fallbackFiles.filter(function(f) { return f !== serial; })] : fallbackFiles;
+                for (const file of filesToTry) {
+                    try {
+                        const resp = await fetch('admin/' + file + '_applications.json?t=' + Date.now());
+                        if (resp.ok) return await resp.json();
+                    } catch (_) {}
+                }
+                return [];
+            }
+        },
+
+        /**
+         * Get available TV inputs (HDMI sources)
+         * Falls back to admin/hdmi_models.json when FlutterBridge is unavailable
+         * @returns {Promise<Array>}
+         */
+        async getTvInputs() {
+            try {
+                return await callNative('getTvInputs', []);
+            } catch (e) {
+                try {
+                    const resp = await fetch('admin/hdmi_models.json?t=' + Date.now());
+                    if (!resp.ok) return [];
+                    const models = await resp.json();
+                    return Object.keys(models).map(function(key) {
+                        return { id: key, label: key, type: 'HDMI' };
+                    });
+                } catch (_) {
+                    return [];
+                }
+            }
         }
     };
 

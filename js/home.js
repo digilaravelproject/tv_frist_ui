@@ -490,11 +490,10 @@ document.addEventListener("keydown", function (e) {
         var action = active.getAttribute('data-action');
 
         if (action === "apps") {
-            if (window.AndroidBridge && window.AndroidBridge.openApplications) {
+            if (typeof window.openAppsOverlay === 'function') {
+                window.openAppsOverlay();
+            } else if (window.AndroidBridge && window.AndroidBridge.openApplications) {
                 window.AndroidBridge.openApplications();
-            } else if (window.flutterBridge) {
-                // Fallback: open applications menu via bridge
-                window.flutterBridge.getHdmiModels()["catch"](function () { });
             }
         } else if (action === "livetv") {
             handleLiveTV();
