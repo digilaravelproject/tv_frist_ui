@@ -204,7 +204,7 @@ function initSlider(images) {
                 activeSlideIndex = nextSlideIndex;
             };
             tempImgNext.src = targetUrl;
-        }, 2000);
+        }, 5000);
     }
 }
 
