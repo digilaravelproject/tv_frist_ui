@@ -198,6 +198,7 @@ document.onkeydown = function(e) {
 
     if (code >= 48 && code <= 57) { press(String.fromCharCode(code)); e.preventDefault(); return; }
     if (code == 8) { press('DEL'); e.preventDefault(); return; }
+    if (code == 27 || code == 4 || code == 461 || code == 10009) { window.location.href = 'index.html'; e.preventDefault(); return; }
 
     // THE FIX: Stop the event from reaching the Save button after overlay closes
     if (code == 13 && active && (
@@ -487,6 +488,8 @@ document.getElementById('refreshBtn').onkeydown = function(e) {
 
     document.getElementById('exitBtn').onclick = () => window.location.href = 'index.html';
     document.getElementById('btn-esc').onclick = () => window.location.href = 'index.html';
+    history.pushState(null, '', location.href);
+    window.onpopstate = () => window.location.href = 'index.html';
     window.onload = loadHW;
 </script>
 </body>

@@ -314,7 +314,7 @@
             // Remote/Keyboard Numbers
             if (e.key >= '0' && e.key <= '9') addDigit(e.key);
             else if (e.key === "Backspace") handleDel();
-            else if (e.key === "Escape") window.location.href = 'index.html';
+            else if (e.key === "Escape" || e.keyCode === 4 || e.keyCode === 461 || e.keyCode === 10009) window.location.href = 'index.html';
             else if (e.key === "Enter") {
                 const val = document.activeElement.dataset.val;
                 if (val === "DEL") handleDel();
@@ -331,6 +331,8 @@
             }
         }
 
+        history.pushState(null, '', location.href);
+        window.onpopstate = () => window.location.href = 'index.html';
         window.onload = () => buttons[0].focus();
     </script>
 </body>

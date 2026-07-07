@@ -136,7 +136,7 @@
     <div id="headerTitle">Travel</div>
 
     <div class="content-box">
-        <img src="" id="displayImage" class="slide-img">
+        <img src="" id="displayImage" class="slide-img" tabindex="0">
 
         <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
         <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
@@ -389,10 +389,12 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === "ArrowRight") changeSlide(1);
             if (e.key === "ArrowLeft") changeSlide(-1);
-            if (e.key === "Backspace" || e.key === "Escape") goBack();
+            if (e.key === "Backspace" || e.key === "Escape" || e.keyCode === 4 || e.keyCode === 461 || e.keyCode === 10009) goBack();
         });
 
-        window.onload = initGallery;
+        history.pushState(null, '', location.href);
+        window.onpopstate = goBack;
+        window.onload = () => { initGallery(); setTimeout(() => document.getElementById('displayImage').focus(), 200); };
     </script>
 </body>
 
