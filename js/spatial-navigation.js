@@ -121,6 +121,8 @@
 
     // Global Key Down Listener (Supports standard browsers, Android TV, Tizen, and webOS)
     window.addEventListener('keydown', function(e) {
+        if (window.__appsOverlayOpen) return;
+
         var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
         var keyCode = e.keyCode || e.which;
         

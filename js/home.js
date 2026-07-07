@@ -461,6 +461,8 @@ var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city
 document.addEventListener("keydown", function (e) {
     var keyCode = e.keyCode || e.which;
 
+    if (window.__appsOverlayOpen) return;
+
     // If coming soon overlay is visible, dismiss it on any keypress
     var csOverlay = document.getElementById('comingSoonOverlay');
     if (csOverlay && csOverlay.style.display === 'flex') {

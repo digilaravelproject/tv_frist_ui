@@ -466,6 +466,7 @@
             overlay.classList.add('show');
             document.getElementById('mainUI').style.display = 'none';
             window.history.pushState(null, "", window.location.href);
+            window.__appsOverlayOpen = true;
 
             var appsTitle = overlay.querySelector('.apps-title');
             if (appsTitle) appsTitle.textContent = 'Applications';
@@ -492,6 +493,7 @@
             overlay.classList.add('show');
             document.getElementById('mainUI').style.display = 'none';
             window.history.pushState(null, "", window.location.href);
+            window.__appsOverlayOpen = true;
 
             var appsTitle = overlay.querySelector('.apps-title');
             if (appsTitle) appsTitle.textContent = 'Live TV';
@@ -516,9 +518,52 @@
             var overlay = document.getElementById('appsOverlay');
             if (!overlay) return;
             overlay.classList.remove('show');
+            window.__appsOverlayOpen = false;
             document.getElementById('mainUI').style.display = 'block';
             var items = document.querySelectorAll('.icon-item');
             if (items[3]) items[3].focus();
+        }
+
+        function moveFocus(direction) {
+            var active = document.activeElement;
+            if (!active || (!active.classList.contains('app-card') && !active.classList.contains('tv-input-btn'))) {
+                var first = document.querySelector('.app-card, .tv-input-btn');
+                if (first) first.focus();
+                return;
+            }
+            var rect = active.getBoundingClientRect();
+            var activeX = rect.left + rect.width / 2;
+            var activeY = rect.top + rect.height / 2;
+            var candidates = Array.from(document.querySelectorAll('.app-card, .tv-input-btn')).filter(function(el) {
+                if (el === active) return false;
+                var style = window.getComputedStyle(el);
+                if (style.display === 'none' || style.visibility === 'hidden') return false;
+                var parent = el.closest('#apps-container, #tv-inputs-section');
+                return parent && window.getComputedStyle(parent).display !== 'none';
+            });
+            var bestCandidate = null;
+            var minScore = Infinity;
+            candidates.forEach(function(cand) {
+                var candRect = cand.getBoundingClientRect();
+                var candX = candRect.left + candRect.width / 2;
+                var candY = candRect.top + candRect.height / 2;
+                var dx = candX - activeX;
+                var dy = candY - activeY;
+                var isValid = false;
+                if (direction === 'left' && dx < -1) isValid = true;
+                if (direction === 'right' && dx > 1) isValid = true;
+                if (direction === 'up' && dy < -1) isValid = true;
+                if (direction === 'down' && dy > 1) isValid = true;
+                if (!isValid) return;
+                var score = (direction === 'left' || direction === 'right')
+                    ? Math.abs(dx) + Math.abs(dy) * 2.5
+                    : Math.abs(dy) + Math.abs(dx) * 2.5;
+                if (score < minScore) {
+                    minScore = score;
+                    bestCandidate = cand;
+                }
+            });
+            if (bestCandidate) bestCandidate.focus();
         }
 
         document.addEventListener('keydown', function(e) {
@@ -536,6 +581,21 @@
             if (!appsOverlay || !appsOverlay.classList.contains('show')) return;
 
             var keyCode = e.keyCode || e.which;
+
+            if (e.key === "ArrowRight" || keyCode === 39) {
+                e.preventDefault();
+                moveFocus('right');
+            } else if (e.key === "ArrowLeft" || keyCode === 37) {
+                e.preventDefault();
+                moveFocus('left');
+            } else if (e.key === "ArrowDown" || keyCode === 40) {
+                e.preventDefault();
+                moveFocus('down');
+            } else if (e.key === "ArrowUp" || keyCode === 38) {
+                e.preventDefault();
+                moveFocus('up');
+            }
+
             if (keyCode === 8 || keyCode === 461 || keyCode === 4 || keyCode === 10009 || keyCode === 10182 || keyCode === 27) {
                 e.preventDefault();
                 closeAppsOverlay();
