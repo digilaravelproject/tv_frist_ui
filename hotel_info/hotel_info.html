@@ -65,19 +65,27 @@
             letter-spacing: 2px;
         }
 
-        /* Container for the gallery */
         .content-box {
             position: relative;
-            width: 80vw;
+            width: 85vw;
             height: 70vh;
-            /* Proportionally matched to the apps grid height */
             border: 3px solid var(--gold);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: row;
             overflow: hidden;
             border-radius: 10px;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 55%;
+            height: 100%;
+            border-right: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .slide-img {
@@ -85,6 +93,58 @@
             height: 100%;
             object-fit: cover;
             transition: opacity 0.3s ease-in-out;
+        }
+
+        .details-container {
+            width: 45%;
+            height: 100%;
+            padding: 2.5vw;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            color: #fff;
+            overflow-y: auto;
+        }
+
+        .hotel-title {
+            color: var(--gold);
+            font-size: 2.2vw;
+            font-weight: bold;
+            margin-bottom: 1vh;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+
+        .hotel-sub {
+            color: #ccc;
+            font-size: 1.2vw;
+            margin-bottom: 3vh;
+            text-align: left;
+        }
+
+        .hotel-desc {
+            color: #eee;
+            font-size: 1.1vw;
+            line-height: 1.6;
+            margin-bottom: 4vh;
+            flex-grow: 1;
+            overflow-y: auto;
+            text-align: justify;
+        }
+
+        .hotel-contact {
+            border-top: 1px solid rgba(255,255,255,0.15);
+            padding-top: 2vh;
+            width: 100%;
+            font-size: 1.1vw;
+            color: #bbb;
+            text-align: left;
+        }
+
+        .hotel-contact div {
+            margin-bottom: 1vh;
         }
 
         /* Navigation Arrows */
@@ -135,10 +195,21 @@
     <div id="headerTitle">Hotel Information</div>
 
     <div class="content-box">
-        <img src="" id="displayImage" class="slide-img">
-
-        <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
-        <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
+        <div class="slider-container">
+            <img src="" id="displayImage" class="slide-img">
+            <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
+            <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
+        </div>
+        
+        <div class="details-container">
+            <div id="hotelName" class="hotel-title">Hotel Name</div>
+            <div id="hotelLocation" class="hotel-sub">Location</div>
+            <div id="hotelDescription" class="hotel-desc">Loading details...</div>
+            <div class="hotel-contact">
+                <div id="hotelPhone">Phone: Loading...</div>
+                <div id="hotelEmail">Email: Loading...</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -201,6 +272,17 @@
                 }
             }
             return config;
+        }
+
+        function updateHotelDetails(config) {
+            if (config && config.hotel) {
+                var h = config.hotel;
+                document.getElementById('hotelName').textContent = h.hotel_name || 'Hotel Name';
+                document.getElementById('hotelLocation').textContent = h.hotel_location || 'Location';
+                document.getElementById('hotelDescription').textContent = h.description || 'Welcome to our hotel. We are committed to providing you with premium hospitality, luxury accommodations, and world-class amenities during your stay.';
+                document.getElementById('hotelPhone').innerHTML = '<strong>Phone:</strong> ' + (h.phone || 'N/A');
+                document.getElementById('hotelEmail').innerHTML = '<strong>Email:</strong> ' + (h.email || 'N/A');
+            }
         }
 
         let bgSlideImages = [];
@@ -275,6 +357,7 @@
 
             if (cachedConfig) {
                 initBackgroundSlider(cachedConfig);
+                updateHotelDetails(cachedConfig);
                 if (cachedConfig.hotel && cachedConfig.hotel.media) {
                     if (cachedConfig.hotel.media.slider_images && cachedConfig.hotel.media.slider_images.length > 0) {
                         images = cachedConfig.hotel.media.slider_images;
@@ -291,6 +374,7 @@
                 if (config) {
                     window.checkPlanExpiredRedirect(config, '../index.html');
                     initBackgroundSlider(config);
+                    updateHotelDetails(config);
 
                     let newImages = [];
                     if (config.hotel && config.hotel.media) {

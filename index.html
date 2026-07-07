@@ -123,15 +123,19 @@
             justify-content: center;
             padding: 1.5vw;
             background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 12px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
 
         .app-card:hover,
         .app-card:focus {
-            background: rgba(255,255,255,0.15);
-            outline: 2px solid #b38a2d;
+            background: rgba(179,138,45,0.25) !important;
+            border-color: #b38a2d !important;
+            outline: none !important;
+            box-shadow: 0 0 15px rgba(179,138,45,0.6);
+            transform: scale(1.05);
         }
 
         .app-card img {
@@ -172,14 +176,16 @@
             padding: 0.8vw 2vw;
             font-size: 1.1vw;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
 
         .tv-input-btn:hover,
         .tv-input-btn:focus {
-            background: rgba(179,138,45,0.25);
-            border-color: #b38a2d;
-            outline: none;
+            background: rgba(179,138,45,0.4) !important;
+            border-color: #b38a2d !important;
+            box-shadow: 0 0 15px rgba(179,138,45,0.7) !important;
+            transform: scale(1.05) !important;
+            outline: none !important;
         }
 
         #appsCloseBtn { display: none !important; }
@@ -294,6 +300,12 @@
         // --- 1. PREVENT ANDROID EXIT (Original Logic) ---
         window.history.pushState(null, "", window.location.href);
         window.onpopstate = function () {
+            var comingSoon = document.getElementById('comingSoonOverlay');
+            if (comingSoon && comingSoon.style.display === 'flex') {
+                comingSoon.style.display = 'none';
+                window.history.pushState(null, "", window.location.href);
+                return;
+            }
             var appsOverlay = document.getElementById('appsOverlay');
             if (appsOverlay && appsOverlay.classList.contains('show')) {
                 closeAppsOverlay();
@@ -337,7 +349,7 @@
                 apps.forEach(function(app) {
                     var pkg = app.packageName || app.package || app.id || '';
                     var name = app.name || app.label || pkg;
-                    var icon = app.icon_url || '';
+                    var icon = app.icon || '';
 
                     var card = document.createElement('div');
                     card.className = 'app-card';
@@ -391,16 +403,16 @@
                 }
 
                 var lastPort = localStorage.getItem('selectedHdmiPort');
-                try {
-                    var adminSerial = localStorage.getItem('adminSerial') || localStorage.getItem('serialNumber');
-                    if (adminSerial) {
-                        var res = await fetch('/admin/devices/' + adminSerial + '.json');
+                var deviceSerial = localStorage.getItem('deviceSerial');
+                if (deviceSerial) {
+                    try {
+                        var res = await fetch('/admin/devices/' + deviceSerial + '.json');
                         if (res.ok) {
                             var deviceData = await res.json();
                             if (deviceData.hdmiPort) lastPort = deviceData.hdmiPort;
                         }
-                    }
-                } catch (e) { /* fall back to localStorage */ }
+                    } catch (e) { /* fallback to local storage */ }
+                }
 
                 container.innerHTML = '';
                 inputs.forEach(function(input) {
@@ -412,10 +424,10 @@
                     var modelId = input.id || '';
                     btn.setAttribute('data-model', modelId);
 
-                    if (lastPort && (modelId === lastPort || label === lastPort)) {
-                        btn.style.borderColor = '#b38a2d';
-                        btn.style.background = 'rgba(179,138,45,0.25)';
-                        btn.style.boxShadow = '0 0 12px rgba(179,138,45,0.5)';
+                    if (lastPort && (modelId.toLowerCase() === lastPort.toLowerCase() || label.toLowerCase() === lastPort.toLowerCase())) {
+                        btn.style.border = '2px solid #b38a2d';
+                        btn.style.background = 'rgba(179,138,45,0.2)';
+                        btn.style.boxShadow = 'inset 0 0 8px rgba(179,138,45,0.5)';
                     }
 
                     btn.addEventListener('click', function() {
@@ -455,14 +467,23 @@
             document.getElementById('mainUI').style.display = 'none';
             window.history.pushState(null, "", window.location.href);
 
-            document.getElementById('appsTitle').textContent = 'Applications';
-            document.getElementById('tv-inputs-section').style.display = 'none';
+            var appsTitle = overlay.querySelector('.apps-title');
+            if (appsTitle) appsTitle.textContent = 'Applications';
+
+            var section = document.getElementById('tv-inputs-section');
+            if (section) section.style.display = 'none';
+
+            var container = document.getElementById('tv-inputs-container');
+            if (container) container.style.display = 'none';
+
             document.getElementById('apps-container').style.display = '';
 
             loadApplications();
 
-            var closeBtn = document.getElementById('appsCloseBtn');
-            if (closeBtn) setTimeout(function() { closeBtn.focus(); }, 100);
+            setTimeout(function() {
+                var firstCard = document.querySelector('.app-card');
+                if (firstCard) firstCard.focus();
+            }, 200);
         }
 
         function openLiveTVOverlay() {
@@ -472,14 +493,23 @@
             document.getElementById('mainUI').style.display = 'none';
             window.history.pushState(null, "", window.location.href);
 
-            document.getElementById('appsTitle').textContent = 'Live TV';
-            document.getElementById('tv-inputs-section').style.display = '';
+            var appsTitle = overlay.querySelector('.apps-title');
+            if (appsTitle) appsTitle.textContent = 'Live TV';
+
+            var section = document.getElementById('tv-inputs-section');
+            if (section) section.style.display = '';
+
+            var container = document.getElementById('tv-inputs-container');
+            if (container) container.style.display = '';
+
             document.getElementById('apps-container').style.display = 'none';
 
             loadTvInputs();
 
-            var closeBtn = document.getElementById('appsCloseBtn');
-            if (closeBtn) setTimeout(function() { closeBtn.focus(); }, 100);
+            setTimeout(function() {
+                var firstInput = document.querySelector('.tv-input-btn');
+                if (firstInput) firstInput.focus();
+            }, 200);
         }
 
         function closeAppsOverlay() {
@@ -492,6 +522,16 @@
         }
 
         document.addEventListener('keydown', function(e) {
+            var comingSoon = document.getElementById('comingSoonOverlay');
+            if (comingSoon && comingSoon.style.display === 'flex') {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode === 8 || keyCode === 13 || keyCode === 27 || keyCode === 461 || keyCode === 4 || keyCode === 10009) {
+                    e.preventDefault();
+                    comingSoon.style.display = 'none';
+                    return;
+                }
+            }
+
             var appsOverlay = document.getElementById('appsOverlay');
             if (!appsOverlay || !appsOverlay.classList.contains('show')) return;
 

@@ -149,14 +149,12 @@ body.rtl-mode .menu-container {
     transition: all 0.3s ease;
 }
 
-.icon-item:focus,
 .icon-item.active-focus {
     opacity: 1.0;
     transform: scale(1.25);
     outline: none !important;
 }
 
-.icon-item:focus .icon-img,
 .icon-item.active-focus .icon-img {
     border: 4px solid #b38a2d;
     box-shadow: 0 0 30px rgba(179, 138, 45, 1.0);
@@ -182,7 +180,6 @@ body.rtl-mode .menu-container {
     transition: color 0.3s ease;
 }
 
-.icon-item:focus .icon-label,
 .icon-item.active-focus .icon-label {
     color: #f5e985;
     font-weight: 600;
@@ -192,7 +189,6 @@ body.rtl-mode .menu-container {
 /* ============================================================
    4. BOUNCE ANIMATION
    ============================================================ */
-.icon-item:focus .icon-img,
 .icon-item.active-focus .icon-img,
 .icon-img.bounce { 
     animation: macBounce 0.5s ease; 
