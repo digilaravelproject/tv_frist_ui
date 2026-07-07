@@ -1,32 +1,47 @@
 {
   "status": true,
   "message": "TV logged in successfully.",
-  "auth": {
-    "token": "oucEocZnApovZz3SGJrpw5vI6nvl46ZhLNdyGuyutyBub9YDAP7WaruvnxsE896k6GtKTMDbmZWFFg9j"
-  },
-  "device": {
-    "room_no": "105",
-    "device_id": "6231A4D7B13402C5",
-    "mac_address": "AA:BB:CC:DD:EE:FF",
-    "ip_address": "192.168.1.100",
-    "model": "BRAVIA-X90L",
-    "brand": "Sony",
-    "os_version": "Android TV 12"
-  },
-  "hotel": {
-    "hotel_name": "Karnival Plaza",
-    "hotel_location": "Pune",
-    "description": null,
-    "owner_name": "Darshan Kondekar",
-    "email": "darshankondekar01@gmail.com",
-    "phone": "8975845684",
-    "media": {
-      "logo_image": "https://tvapp.digiemperor.com/uploads/hotel_logos/1783173121_logo_7ANoXcRg.png",
-      "cover_image": "https://tvapp.digiemperor.com/uploads/hotel_images/1783173121_image_sDTg0sZN.jpeg",
-      "slider_images": [
-        "https://tvapp.digiemperor.com/uploads/hotel_sliders/1783173121_slider_uMYUoeZz.jpg",
-        "https://tvapp.digiemperor.com/uploads/hotel_sliders/1783173121_slider_Rx26AlfM.jpg"
-      ]
+  "data": {
+    "auth": {
+      "token": "9t8kSmOIt9zrWCbqz1mqzdEfkZtKM43QGCjI7ra9Za3cr2YJSoeGNT9dZc5IOsTEr01OwhVoAwDXm5vb"
+    },
+    "template": {
+      "latest_version": "1.5",
+      "old_version": "1.0",
+      "download_url": "https://tvapp.digiemperor.com/uploads/templates/1698820123_template_v1.5.zip",
+      "uploaded_at": "2026-07-06T13:02:26+00:00",
+      "is_update_available": false
+    },
+    "device": {
+      "room_no": "101",
+      "device_id": "6231A4D7B13402C5",
+      "mac_address": "AA:BB:CC:DD:EE:FF",
+      "ip_address": "192.168.1.100",
+      "model": "BRAVIA-X90L",
+      "brand": "Sony",
+      "os_version": "Android TV 12"
+    },
+    "hotel": {
+      "hotel_name": "Karnival Plaza",
+      "hotel_location": "Pune",
+      "description": null,
+      "owner_name": "Darshan Kondekar",
+      "email": "darshankondekar01@gmail.com",
+      "phone": "8975845684",
+      "media": {
+        "logo_image": "https://tvapp.digiemperor.com/uploads/hotel_logos/1783173121_logo_7ANoXcRg.png",
+        "cover_image": "https://tvapp.digiemperor.com/uploads/hotel_images/1783173121_image_sDTg0sZN.jpeg",
+        "slider_images": [
+          "https://tvapp.digiemperor.com/uploads/hotel_sliders/1783173121_slider_uMYUoeZz.jpg",
+          "https://tvapp.digiemperor.com/uploads/hotel_sliders/1783173121_slider_Rx26AlfM.jpg"
+        ]
+      },
+      "active_plan": {
+        "plan_name": "Deluxe Plan",
+        "plan_price": "1999.00",
+        "purchase_date": "2026-07-02T00:23:09+00:00",
+        "expiry_date": "2026-08-01T00:23:09+00:00"
+      }
     }
   }
 }

@@ -165,8 +165,9 @@
             // 1. Try window variable injected by Flutter
             const injected = await waitForLoginData();
             if (injected) {
-                localStorage.setItem('cachedHotelData', JSON.stringify(injected));
-                return injected;
+                var normalized = injected.data || injected;
+                localStorage.setItem('cachedHotelData', JSON.stringify(normalized));
+                return normalized;
             }
 
             // 2. Fallback to local files
@@ -179,6 +180,7 @@
                     const res = await fetch(`${path}?t=${Date.now()}`);
                     if (res.ok) {
                         config = await res.json();
+                        config = config.data || config;
                         localStorage.setItem('cachedHotelData', JSON.stringify(config));
                         break;
                     }

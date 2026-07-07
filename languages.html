@@ -186,6 +186,7 @@
                     const res = await fetch(`${path}?t=${Date.now()}`);
                     if (res.ok) {
                         config = await res.json();
+                        config = config.data || config;
                         localStorage.setItem('cachedHotelData', JSON.stringify(config));
                         break;
                     }

@@ -105,8 +105,9 @@ let currentData = {
 async function fetchHotelConfig() {
     var injected = window.tvLoginData || (window.parent && window.parent.tvLoginData);
     if (injected) {
-        localStorage.setItem('cachedHotelData', JSON.stringify(injected));
-        return injected;
+        var normalized = injected.data || injected;
+        localStorage.setItem('cachedHotelData', JSON.stringify(normalized));
+        return normalized;
     }
 
     // Try network first, always fetch fresh data.json
@@ -117,9 +118,10 @@ async function fetchHotelConfig() {
         try {
             const res = await fetch(`${path}?t=${Date.now()}`);
             if (res.ok) {
-                const config = await res.json();
-                localStorage.setItem('cachedHotelData', JSON.stringify(config));
-                return config;
+                var config = await res.json();
+                var normalized = config.data || config;
+                localStorage.setItem('cachedHotelData', JSON.stringify(normalized));
+                return normalized;
             }
         } catch (e) {
             console.warn(`Failed to fetch config from ${path}:`, e);

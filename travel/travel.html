@@ -165,8 +165,9 @@
         async function fetchHotelConfig() {
             const injected = await waitForLoginData();
             if (injected) {
-                localStorage.setItem('cachedHotelData', JSON.stringify(injected));
-                return injected;
+                var normalized = injected.data || injected;
+                localStorage.setItem('cachedHotelData', JSON.stringify(normalized));
+                return normalized;
             }
 
             const filename = window.parent.HOTEL_DATA_FILE || window.HOTEL_DATA_FILE || 'data.json';
@@ -178,6 +179,7 @@
                     const res = await fetch(`${path}?t=${Date.now()}`);
                     if (res.ok) {
                         config = await res.json();
+                        config = config.data || config;
                         localStorage.setItem('cachedHotelData', JSON.stringify(config));
                         break;
                     }
