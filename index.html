@@ -51,6 +51,36 @@
             height: 100%;
             border: none;
         }
+
+        #comingSoonOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.88);
+            z-index: 99999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #comingSoonOverlay .cs-icon {
+            font-size: 6vw;
+            margin-bottom: 2vh;
+        }
+
+        #comingSoonOverlay .cs-title {
+            font-size: 5vw;
+            color: #b38a2d;
+            font-weight: 600;
+            margin-bottom: 1.5vh;
+            text-shadow: 0 0 30px rgba(179,138,45,0.5);
+        }
+
+        #comingSoonOverlay .cs-sub {
+            font-size: 2vw;
+            color: #999;
+        }
     </style>
 </head>
 
@@ -122,6 +152,12 @@
         <iframe id="subFrame" src=""></iframe>
     </div>
 
+    <div id="comingSoonOverlay">
+        <div class="cs-icon">&#9203;</div>
+        <div class="cs-title">Coming Soon</div>
+        <div class="cs-sub">Press BACK or ENTER to continue</div>
+    </div>
+
     <script>
         // --- 1. PREVENT ANDROID EXIT (Original Logic) ---
         window.history.pushState(null, "", window.location.href);
@@ -143,9 +179,15 @@
             if (items[3]) items[3].focus();
         }
 
+        var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
+
         document.querySelectorAll('.icon-item').forEach(item => {
             item.addEventListener('click', function () {
                 const link = this.dataset.link || this.getAttribute('href');
+                if (link && comingSoonLinks.indexOf(link) !== -1) {
+                    document.getElementById('comingSoonOverlay').style.display = 'flex';
+                    return;
+                }
                 if (link) {
                     window.location.href = link;
                 }

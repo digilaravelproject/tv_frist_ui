@@ -446,9 +446,21 @@ async function updateWeather() {
     }
 }
 
-/* ================= 4. LISTENERS ================= */
+/* ================= 4. COMING SOON ================= */
+var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
+
+/* ================= 5. LISTENERS ================= */
 document.addEventListener("keydown", function (e) {
     var keyCode = e.keyCode || e.which;
+
+    // If coming soon overlay is visible, dismiss it on any keypress
+    var csOverlay = document.getElementById('comingSoonOverlay');
+    if (csOverlay && csOverlay.style.display === 'flex') {
+        e.preventDefault();
+        csOverlay.style.display = 'none';
+        return;
+    }
+
     if (keyCode === 8 || keyCode === 461 || keyCode === 4 || keyCode === 10009 || keyCode === 10182) { // support Android TV, webOS, and Tizen back keys
         var path = window.location.pathname.split("/").pop();
         if (path !== "index.html" && path !== "") {
@@ -479,6 +491,11 @@ document.addEventListener("keydown", function (e) {
         } else if (action === "livetv") {
             handleLiveTV();
         } else if (link) {
+            if (comingSoonLinks.indexOf(link) !== -1) {
+                e.preventDefault();
+                document.getElementById('comingSoonOverlay').style.display = 'flex';
+                return;
+            }
             window.location.href = link;
         }
     }
