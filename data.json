@@ -13,7 +13,7 @@
       "is_update_available": false
     },
     "device": {
-      "room_no": "101",
+      "room_no": "105",
       "device_id": "6231A4D7B13402C5",
       "mac_address": "AA:BB:CC:DD:EE:FF",
       "ip_address": "192.168.1.100",

@@ -289,6 +289,7 @@
             // Run updated fetch in the background to avoid blocking initial render
             fetchHotelConfig().then(config => {
                 if (config) {
+                    window.checkPlanExpiredRedirect(config, '../index.html');
                     initBackgroundSlider(config);
 
                     let newImages = [];

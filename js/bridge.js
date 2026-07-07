@@ -279,3 +279,17 @@ window.getFastConfig = function () {
     }
     return null;
 };
+
+// Check if the hotel plan is expired and redirect to index if so
+window.checkPlanExpiredRedirect = function (config, redirectUrl) {
+    if (!config || !config.hotel || !config.hotel.active_plan || !config.hotel.active_plan.expiry_date) return false;
+    var now = new Date();
+    var expiry = new Date(config.hotel.active_plan.expiry_date);
+    if (expiry <= now) {
+        var p = window.location.pathname;
+        var redirect = redirectUrl || ((p.lastIndexOf('/') > 0) ? '../index.html' : 'index.html');
+        window.location.href = redirect;
+        return true;
+    }
+    return false;
+};

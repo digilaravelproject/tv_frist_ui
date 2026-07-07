@@ -270,6 +270,7 @@
 
         // Load background slider
         fetchHotelConfig().then(config => {
+            window.checkPlanExpiredRedirect(config);
             initBackgroundSlider(config);
         });
 

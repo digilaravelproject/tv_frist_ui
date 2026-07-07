@@ -219,6 +219,9 @@ async function initLanguage() {
             if (cachedConfig.hotel && cachedConfig.hotel.hotel_name) {
                 document.title = cachedConfig.hotel.hotel_name;
             }
+            if (cachedConfig.hotel && cachedConfig.hotel.active_plan) {
+                checkPlanStatus(cachedConfig.hotel.active_plan);
+            }
             if (cachedConfig.hotel && cachedConfig.hotel.media && cachedConfig.hotel.media.slider_images) {
                 initSlider(cachedConfig.hotel.media.slider_images);
             } else {
@@ -236,6 +239,9 @@ async function initLanguage() {
                 }
                 if (config.hotel && config.hotel.hotel_name) {
                     document.title = config.hotel.hotel_name;
+                }
+                if (config.hotel && config.hotel.active_plan) {
+                    checkPlanStatus(config.hotel.active_plan);
                 }
                 if (config.hotel && config.hotel.media && config.hotel.media.slider_images) {
                     initSlider(config.hotel.media.slider_images);
@@ -502,6 +508,45 @@ document.addEventListener("keydown", function (e) {
         }
     }
 });
+
+function showExpiredOverlay() {
+    var overlay = document.getElementById('planExpiredOverlay');
+    if (!overlay) return;
+    overlay.style.display = 'flex';
+    var btn = document.getElementById('planDismissBtn');
+    if (btn) {
+        btn.onclick = function () { overlay.style.display = 'none'; };
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            overlay.style.display = 'none';
+        }
+    });
+}
+
+function showWarningToast(daysLeft) {
+    var toast = document.getElementById('planWarningToast');
+    var body = document.getElementById('planWarningBody');
+    if (!toast || !body) return;
+    body.innerHTML = 'Your plan will expire in <strong>' + daysLeft + ' day' + (daysLeft > 1 ? 's' : '') + '</strong>. Please renew to avoid interruption.';
+    toast.style.display = 'block';
+    setTimeout(function () {
+        toast.style.display = 'none';
+    }, 10000);
+}
+
+function checkPlanStatus(plan) {
+    if (!plan || !plan.expiry_date) return;
+    var now = new Date();
+    var parts = plan.expiry_date.split('-');
+    var expiry = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    var diff = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+    if (diff <= 0) {
+        showExpiredOverlay();
+    } else if (diff <= 5) {
+        showWarningToast(diff);
+    }
+}
 
 window.onload = function () {
     var bg = document.getElementById('bg-slider');
