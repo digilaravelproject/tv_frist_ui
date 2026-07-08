@@ -47,14 +47,21 @@
         }
 
         /* Navigation Arrows */
-        .nav-icon { 
-            position: absolute; 
-            width: 50px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            z-index: 10; 
+        .nav-icon {
+            position: absolute;
+            width: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
             opacity: 0.8;
+            transition: opacity 0.2s ease, filter 0.2s ease;
         }
+
+        .nav-icon.active-focus {
+            opacity: 1;
+            filter: brightness(1.3) drop-shadow(0 0 8px rgba(179,138,45,0.6));
+        }
+
         .prev { left: 20px; }
         .next { right: 20px; }
 

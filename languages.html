@@ -9,23 +9,12 @@
     <link rel="stylesheet" href="css/pages/languages.css">
 
     <!-- CORE JS -->
-    <script src="js/bridge.js"></script>
-    <script src="js/core/tv-core.js"></script>
-    <script src="js/core/tv-navigation.js"></script>
+    <script src="js/bridge.js" defer></script>
+    <script src="js/core/tv-core.js" defer></script>
+    <script src="js/core/tv-navigation.js" defer></script>
     
     <!-- PAGE JS -->
-    <script src="js/pages/languages.js"></script>
-
-    <script>
-        (function () {
-            const time = Date.now();
-            // Load bridge first
-            const bridgeJs = document.createElement('script');
-            bridgeJs.src = 'js/bridge.js?v=' + time;
-            bridgeJs.defer = true;
-            document.head.appendChild(bridgeJs);
-        })();
-    </script>
+    <script src="js/pages/languages.js" defer></script>
 </head>
 <body class="page-centered">
     <div id="bg-slider">

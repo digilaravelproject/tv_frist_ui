@@ -11,38 +11,56 @@
     // Focusable selector for actionable elements
     var FOCUSABLE_SELECTOR = 'button, a, input, select, textarea, [tabindex="0"], .lang-item, .icon-item, .num-btn, .list-item, .package-item, .key-btn, .side-btn, .btn-act, .hdmi-list-row, .model-name-text, .test-btn-inline';
 
+    var rectCache = { dirty: true, elements: [], rects: [] };
+
+    function markCacheDirty() {
+        rectCache.dirty = true;
+    }
+
+    // Invalidate cache on scroll, resize, or DOM changes
+    window.addEventListener('scroll', markCacheDirty, { passive: true });
+    window.addEventListener('resize', markCacheDirty, { passive: true });
+    if (typeof MutationObserver !== 'undefined') {
+        var obs = new MutationObserver(markCacheDirty);
+        obs.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+    }
+
+    function isVisible(el) {
+        var style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+        var parentOverlay = el.closest('.overlay-fullscreen, .overlay-container, #appsOverlay');
+        if (parentOverlay) {
+            var os = window.getComputedStyle(parentOverlay);
+            if (os.display === 'none' || os.visibility === 'hidden') return false;
+        }
+        var rect = el.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+    }
+
     window.TVNavigation = {
         getFocusableElements: function() {
+            if (!rectCache.dirty) return rectCache.elements;
             var elements = document.querySelectorAll(FOCUSABLE_SELECTOR);
             var focusables = [];
-            
+            var rects = [];
             for (var i = 0; i < elements.length; i++) {
                 var el = elements[i];
                 if (el.disabled || el.tabIndex === -1) continue;
-                
-                // Check visibility
-                var rect = el.getBoundingClientRect();
-                var style = window.getComputedStyle(el);
-                var isVisible = rect.width > 0 && 
-                                rect.height > 0 && 
-                                style.display !== 'none' && 
-                                style.visibility !== 'hidden' &&
-                                style.opacity !== '0';
-                
-                // Extra check for parent visibility in overlays
-                var parentOverlay = el.closest('.overlay-fullscreen, .overlay-container, #appsOverlay');
-                if (parentOverlay) {
-                    var overlayStyle = window.getComputedStyle(parentOverlay);
-                    if (overlayStyle.display === 'none' || overlayStyle.visibility === 'hidden') {
-                        isVisible = false;
-                    }
-                }
-                
-                if (isVisible) {
-                    focusables.push(el);
-                }
+                if (!isVisible(el)) continue;
+                focusables.push(el);
+                rects.push(el.getBoundingClientRect());
             }
+            rectCache.elements = focusables;
+            rectCache.rects = rects;
+            rectCache.dirty = false;
             return focusables;
+        },
+
+        getRects: function() {
+            if (rectCache.dirty) {
+                this.getFocusableElements();
+            }
+            return rectCache.rects;
         },
 
         getCenter: function(rect) {
@@ -110,6 +128,7 @@
 
             var activeRect = active.getBoundingClientRect();
             var activeCenter = this.getCenter(activeRect);
+            var rects = this.getRects();
 
             var bestCandidate = null;
             var minDistance = Infinity;
@@ -118,7 +137,7 @@
                 var candidate = focusables[i];
                 if (candidate === active) continue;
 
-                var rect = candidate.getBoundingClientRect();
+                var rect = rects[i];
                 var center = this.getCenter(rect);
 
                 var dStraight = 0;

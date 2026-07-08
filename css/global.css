@@ -108,7 +108,9 @@ html, body {
     cursor: pointer;
     display: inline-block;
 }
-#planDismissBtn:hover, #planDismissBtn:focus {
+#planDismissBtn:hover,
+#planDismissBtn:focus,
+#planDismissBtn.active-focus {
     opacity: 0.9;
     outline: 2px solid #fff;
 }

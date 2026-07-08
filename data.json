@@ -3,17 +3,17 @@
   "message": "TV logged in successfully.",
   "data": {
     "auth": {
-      "token": "9t8kSmOIt9zrWCbqz1mqzdEfkZtKM43QGCjI7ra9Za3cr2YJSoeGNT9dZc5IOsTEr01OwhVoAwDXm5vb"
+      "token": "OIAGfCxZSzZLe8WokENniQSRysG6dDFj4mTQT0UwNZOu7qq4VXnlE1XzNKCckJKb4I5Ei1DkpiENHUyh"
     },
     "template": {
-      "latest_version": "1.5",
-      "old_version": "1.0",
-      "download_url": "https://tvapp.digiemperor.com/uploads/templates/1698820123_template_v1.5.zip",
-      "uploaded_at": "2026-07-06T13:02:26+00:00",
+      "latest_version": "3.5",
+      "old_version": "3.0",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v3_5_1783428952.zip",
+      "uploaded_at": "2026-07-07T12:55:52+05:30",
       "is_update_available": false
     },
     "device": {
-      "room_no": "105",
+      "room_no": "1503",
       "device_id": "6231A4D7B13402C5",
       "mac_address": "AA:BB:CC:DD:EE:FF",
       "ip_address": "192.168.1.100",
@@ -26,22 +26,35 @@
       "hotel_location": "Pune",
       "description": null,
       "owner_name": "Darshan Kondekar",
-      "email": "darshankondekar01@gmail.com",
+      "email": "darshankondekar011@gmail.com",
       "phone": "8975845684",
       "media": {
-        "logo_image": "https://tvapp.digiemperor.com/uploads/hotel_logos/1783173121_logo_7ANoXcRg.png",
-        "cover_image": "https://tvapp.digiemperor.com/uploads/hotel_images/1783173121_image_sDTg0sZN.jpeg",
+        "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1783173121_logo_7ANoXcRg.png",
+        "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1783173121_image_sDTg0sZN.jpeg",
         "slider_images": [
-          "https://tvapp.digiemperor.com/uploads/hotel_sliders/1783173121_slider_uMYUoeZz.jpg",
-          "https://tvapp.digiemperor.com/uploads/hotel_sliders/1783173121_slider_Rx26AlfM.jpg"
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_bHnBDrLx.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_vy85lP9C.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_shoxzMjX.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_a69AOsrU.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_kF8Mq0Ej.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_CqDWMKn3.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_gAeyOBWM.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_WUP4MIAl.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_tLoZC6ZZ.jpg"
         ]
       },
       "active_plan": {
         "plan_name": "Deluxe Plan",
         "plan_price": "1999.00",
-        "purchase_date": "2026-07-02T00:23:09+00:00",
-        "expiry_date": "2026-08-01T00:23:09+00:00"
+        "purchase_date": "2026-07-08T13:25:50+05:30",
+        "expiry_date": "2026-08-07T13:25:50+05:30"
       }
+    },
+    "guest_info": {
+      "name": "Sanket",
+      "mobile_number": "9876543210",
+      "check_in_datetime": "2026-07-08T19:43:00+05:30",
+      "check_out_datetime": null
     }
   }
 }

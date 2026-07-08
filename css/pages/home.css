@@ -262,7 +262,8 @@ body.rtl-mode .menu-container {
 }
 
 #appsOverlay .close-btn:hover,
-#appsOverlay .close-btn:focus {
+#appsOverlay .close-btn:focus,
+#appsOverlay .close-btn.active-focus {
     opacity: 1;
 }
 
@@ -287,7 +288,8 @@ body.rtl-mode .menu-container {
 }
 
 .app-card:hover,
-.app-card:focus {
+.app-card:focus,
+.app-card.active-focus {
     background: rgba(179,138,45,0.25) !important;
     border-color: #b38a2d !important;
     outline: none !important;
@@ -337,7 +339,8 @@ body.rtl-mode .menu-container {
 }
 
 .tv-input-btn:hover,
-.tv-input-btn:focus {
+.tv-input-btn:focus,
+.tv-input-btn.active-focus {
     background: rgba(179,138,45,0.4) !important;
     border-color: #b38a2d !important;
     box-shadow: 0 0 15px rgba(179,138,45,0.7) !important;
