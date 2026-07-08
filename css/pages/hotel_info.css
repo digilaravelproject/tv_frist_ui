@@ -1,0 +1,179 @@
+:root {
+            --gold: #b38a2d;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #bg-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1000ms ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Page Title adjusted to sit below the background logo */
+        #headerTitle {
+            color: var(--gold);
+            font-size: 1.8rem;
+            /* Reduced to match APPLICATIONS header size */
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 85px;
+            /* Increased distance from top to clear logo */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            letter-spacing: 2px;
+        }
+
+        .content-box {
+            position: relative;
+            width: 85vw;
+            height: 70vh;
+            border: 3px solid var(--gold);
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 55%;
+            height: 100%;
+            border-right: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .details-container {
+            width: 45%;
+            height: 100%;
+            padding: 2.5vw;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            color: #fff;
+            overflow-y: auto;
+        }
+
+        .hotel-title {
+            color: var(--gold);
+            font-size: 2.2vw;
+            font-weight: bold;
+            margin-bottom: 1vh;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+
+        .hotel-sub {
+            color: #ccc;
+            font-size: 1.2vw;
+            margin-bottom: 3vh;
+            text-align: left;
+        }
+
+        .hotel-desc {
+            color: #eee;
+            font-size: 1.1vw;
+            line-height: 1.6;
+            margin-bottom: 4vh;
+            flex-grow: 1;
+            overflow-y: auto;
+            text-align: justify;
+        }
+
+        .hotel-contact {
+            border-top: 1px solid rgba(255,255,255,0.15);
+            padding-top: 2vh;
+            width: 100%;
+            font-size: 1.1vw;
+            color: #bbb;
+            text-align: left;
+        }
+
+        .hotel-contact div {
+            margin-bottom: 1vh;
+        }
+
+        /* Navigation Arrows */
+        .nav-icon {
+            position: absolute;
+            width: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            opacity: 0.8;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateY(-50%) translateX(0);
+            }
+
+            25% {
+                transform: translateY(-50%) translateX(-10px);
+            }
+
+            75% {
+                transform: translateY(-50%) translateX(10px);
+            }
+        }
+
+        .vibrate {
+            animation: shake 0.2s 2;
+        }

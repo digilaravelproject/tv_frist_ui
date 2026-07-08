@@ -1,153 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Select Language</title>
+    <!-- GLOBAL CSS -->
+    <link rel="stylesheet" href="css/global.css">
+    <!-- PAGE CSS -->
+    <link rel="stylesheet" href="css/pages/languages.css">
 
-    <style>
-        :root {
-            --house-gold: #b38a2d;
-        }
+    <!-- CORE JS -->
+    <script src="js/bridge.js"></script>
+    <script src="js/core/tv-core.js"></script>
+    <script src="js/core/tv-navigation.js"></script>
+    
+    <!-- PAGE JS -->
+    <script src="js/pages/languages.js"></script>
 
-        body {
-            background-color: #000;
-            color: white;
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        #bg-slider {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-            background-color: #000;
-        }
-
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0;
-            transition: opacity 1000ms ease-in-out;
-        }
-
-        .slide.active {
-            opacity: 1;
-        }
-
-        .lang-card {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border: 2px solid var(--house-gold);
-            border-radius: 15px;
-            width: 320px;
-            text-align: center;
-        }
-
-        .header-title {
-            color: var(--house-gold);
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .lang-list {
-            height: 250px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            border: 1px solid rgba(179, 138, 45, 0.3);
-            border-radius: 5px;
-        }
-
-        .lang-list::-webkit-scrollbar {
-            display: none;
-        }
-
-        .lang-item {
-            background: rgba(179, 138, 45, 0.1);
-            padding: 12px;
-            margin: 2px;
-            border-radius: 5px;
-            outline: none;
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-
-        .lang-item:focus {
-            background: var(--house-gold);
-            color: white;
-            box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
-            transform: scale(1.02);
-        }
-
-        .tick {
-            visibility: hidden;
-        }
-
-        .lang-item.selected .tick {
-            visibility: visible;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            background: rgba(179, 138, 45, 0.1);
-            border: 1px solid var(--house-gold);
-            color: white;
-            font-size: 1rem;
-            padding: 12px;
-            border-radius: 5px;
-            outline: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn:focus {
-            background: var(--house-gold);
-            box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
-            transform: scale(1.05);
-        }
-    </style>
     <script>
         (function () {
             const time = Date.now();
-
             // Load bridge first
             const bridgeJs = document.createElement('script');
             bridgeJs.src = 'js/bridge.js?v=' + time;
             bridgeJs.defer = true;
             document.head.appendChild(bridgeJs);
-
-            const spatialNav = document.createElement('script');
-            spatialNav.src = 'js/spatial-navigation.js?v=' + time;
-            spatialNav.defer = true;
-            document.head.appendChild(spatialNav);
         })();
     </script>
 </head>
-
-<body>
+<body class="page-centered">
     <div id="bg-slider">
         <div class="slide active"></div>
         <div class="slide"></div>
@@ -163,218 +43,5 @@
             <button class="btn" id="cancelBtn">Cancel</button>
         </div>
     </div>
-
-    <script>
-        const langList = document.getElementById('langList');
-        const applyBtn = document.getElementById('applyBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const current = localStorage.getItem('selectedLangFile') || 'english.json';
-
-        // Dynamic background slider support
-        let bgSlideImages = [];
-        let bgCurrentImageIndex = 0;
-        let bgActiveSlideIndex = 0;
-        let bgSliderIntervalId = null;
-
-        async function fetchHotelConfig() {
-            const filename = window.HOTEL_DATA_FILE || 'data.json';
-            const paths = [filename, `../${filename}`, 'data.json', '../data.json'];
-            let config = null;
-
-            for (let path of paths) {
-                try {
-                    const res = await fetch(`${path}?t=${Date.now()}`);
-                    if (res.ok) {
-                        config = await res.json();
-                        config = config.data || config;
-                        localStorage.setItem('cachedHotelData', JSON.stringify(config));
-                        break;
-                    }
-                } catch (e) {
-                    console.warn(`Failed to fetch config from ${path}:`, e);
-                }
-            }
-
-            if (!config) {
-                const cached = localStorage.getItem('cachedHotelData');
-                if (cached) {
-                    try {
-                        config = JSON.parse(cached);
-                    } catch (e) {
-                        console.error("Failed parsing cached config:", e);
-                    }
-                }
-            }
-            return config;
-        }
-
-        function initBackgroundSlider(config) {
-            if (bgSliderIntervalId) clearInterval(bgSliderIntervalId);
-            bgSlideImages = [];
-
-            if (config && config.hotel && config.hotel.media) {
-                if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                    bgSlideImages = config.hotel.media.slider_images;
-                } else if (config.hotel.media.cover_image) {
-                    bgSlideImages = [config.hotel.media.cover_image];
-                }
-            }
-
-            if (bgSlideImages.length === 0) {
-                bgSlideImages = ['images/main.jpg'];
-            }
-
-            const slides = document.querySelectorAll('#bg-slider .slide');
-            if (slides.length < 2) return;
-
-            // Load initial background image
-            const tempImg1 = new Image();
-            tempImg1.onload = () => {
-                slides[0].style.backgroundImage = `url('${bgSlideImages[0]}')`;
-                slides[0].classList.add('active');
-                slides[1].classList.remove('active');
-            };
-            tempImg1.onerror = () => {
-                slides[0].style.backgroundImage = "url('images/main.jpg')";
-                slides[0].classList.add('active');
-                slides[1].classList.remove('active');
-            };
-            tempImg1.src = bgSlideImages[0];
-
-            bgCurrentImageIndex = 0;
-            bgActiveSlideIndex = 0;
-
-            if (bgSlideImages.length > 1) {
-                bgSliderIntervalId = setInterval(() => {
-                    bgCurrentImageIndex = (bgCurrentImageIndex + 1) % bgSlideImages.length;
-                    const nextSlideIndex = bgActiveSlideIndex === 0 ? 1 : 0;
-                    const targetUrl = bgSlideImages[bgCurrentImageIndex];
-
-                    const tempImgNext = new Image();
-                    tempImgNext.onload = () => {
-                        slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
-                        slides[nextSlideIndex].classList.add('active');
-                        slides[bgActiveSlideIndex].classList.remove('active');
-                        bgActiveSlideIndex = nextSlideIndex;
-                    };
-                    tempImgNext.onerror = () => {
-                        slides[nextSlideIndex].style.backgroundImage = "url('images/main.jpg')";
-                        slides[nextSlideIndex].classList.add('active');
-                        slides[bgActiveSlideIndex].classList.remove('active');
-                        bgActiveSlideIndex = nextSlideIndex;
-                    };
-                    tempImgNext.src = targetUrl;
-                }, 5000);
-            }
-        }
-
-        // Load background slider
-        fetchHotelConfig().then(config => {
-            window.checkPlanExpiredRedirect(config);
-            initBackgroundSlider(config);
-        });
-
-        fetch('admin/languages.json?t=' + Date.now())
-            .then(res => res.json())
-            .then(data => {
-                data.available_languages.forEach(lang => {
-                    const div = document.createElement('div');
-                    div.className = 'lang-item';
-                    div.tabIndex = 0;
-                    div.dataset.file = lang.file;
-                    div.innerHTML = `${lang.name} <span class="tick">✓</span>`;
-
-                    if (lang.file === current) div.classList.add('selected');
-
-                    // Navigation and Selection
-                    div.onkeydown = e => {
-                        const items = [...document.querySelectorAll('.lang-item')];
-                        const i = items.indexOf(div);
-
-                        if (e.key === 'ArrowDown') {
-                            e.preventDefault();
-                            if (i < items.length - 1) {
-                                items[i + 1].focus();
-                            } else {
-                                applyBtn.focus();
-                            }
-                        }
-                        if (e.key === 'ArrowUp') {
-                            e.preventDefault();
-                            if (i > 0) items[i - 1].focus();
-                        }
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            // Just mark as selected visually, do NOT exit
-                            items.forEach(x => x.classList.remove('selected'));
-                            div.classList.add('selected');
-
-                            // Optional: move focus to apply button to show next step
-                            setTimeout(() => applyBtn.focus(), 200);
-                        }
-                    };
-
-                    // Touch/Mouse support
-                    div.onclick = () => {
-                        const items = [...document.querySelectorAll('.lang-item')];
-                        items.forEach(x => x.classList.remove('selected'));
-                        div.classList.add('selected');
-                    };
-
-                    langList.appendChild(div);
-                });
-
-                // Auto-focus the current selection
-                setTimeout(() => {
-                    const first = document.querySelector('.lang-item.selected') || langList.firstChild;
-                    if (first) first.focus();
-                }, 100);
-            });
-
-        // CRITICAL: Strictly wait for Apply button click/Enter to exit
-        applyBtn.onclick = () => {
-            const sel = document.querySelector('.lang-item.selected');
-            if (sel) {
-                const file = sel.dataset.file;
-
-                // 1. Keep your existing localStorage logic
-                localStorage.setItem('selectedLangFile', file);
-
-                // 2. Sync with Android so other folders (like hotel_info) can see it
-                if (window.AndroidBridge && window.AndroidBridge.setLanguage) {
-                    window.AndroidBridge.setLanguage(file);
-                }
-
-                window.location.href = 'index.html';
-            }
-        };
-        applyBtn.onkeydown = e => {
-            if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                const items = document.querySelectorAll('.lang-item');
-                if (items.length > 0) items[items.length - 1].focus();
-            }
-            if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                cancelBtn.focus();
-            }
-        };
-
-        cancelBtn.onclick = () => window.location.href = 'index.html';
-
-        cancelBtn.onkeydown = e => {
-            if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                applyBtn.focus();
-            }
-            if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                const items = document.querySelectorAll('.lang-item');
-                if (items.length > 0) items[items.length - 1].focus();
-            }
-        };
-    </script>
-
 </body>
-
 </html>

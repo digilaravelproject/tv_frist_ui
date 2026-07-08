@@ -1,0 +1,109 @@
+/* ============================================================
+   ADVANCED CONFIG PAGE STYLES
+   ============================================================ */
+.config-card { 
+    background: rgba(0,0,0,0.95); 
+    padding: 15px; 
+    border: 2px solid var(--house-gold); 
+    border-radius: 12px; 
+    width: 580px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px; 
+}
+.header-title { 
+    color: var(--house-gold); 
+    text-align: center; 
+    font-weight: bold; 
+    font-size: 0.95rem; 
+    text-transform: uppercase; 
+    margin-bottom: 10px; 
+}
+.main-layout { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
+.left-col { width: 340px; }
+.right-col { width: 210px; }
+.field-box { margin-bottom: 8px; }
+.field-box label { color: var(--house-gold); font-size: 0.65rem; font-weight: bold; margin-bottom: 2px; display: block; }
+.input-styled, .themed-list, .hw-info { width: 100%; box-sizing: border-box; border: 1px solid var(--house-gold); background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+.input-styled { color: white; padding: 10px; font-size: 1.1rem; text-align: center; height: 44px; }
+
+/* STYLES FOR IPTV AND TV APP (Standard 320px) */
+.list-item, .package-item { padding: 8px 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); outline: none; cursor: pointer; font-size: 1rem; color: white; }
+.tick { display: none; float: right; color: var(--house-gold); }
+.list-item.selected .tick { display: inline; }
+.list-item:focus, .package-item:focus, .key-btn:focus, .side-btn:focus, .btn-act:focus, 
+.list-item.active-focus, .package-item.active-focus, .key-btn.active-focus, .side-btn.active-focus, .btn-act.active-focus { 
+    background: var(--house-gold) !important; color: white !important; outline: 2px solid white; 
+}
+
+.num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.key-btn { background: rgba(179, 138, 45, 0.1); border: 1px solid var(--house-gold); color: white; padding: 12px 0; border-radius: 4px; font-size: 1rem; outline: none; min-height: 45px;}
+
+.hw-info { padding: 8px; font-size: 0.70rem; display: flex; gap: 5px; height: 85px; }
+.hw-sub-col { flex: 1; }
+.hw-row { display: flex; padding: 1px 0; white-space: nowrap; }
+.label-hw { color: var(--house-gold); font-weight: bold; width: 45px; }
+
+.side-btn-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.side-btn { width: 100%; height: 38px; background: transparent; border: 1px solid var(--house-gold); color: white; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+.action-row { width: 100%; margin-top: 10px; display: flex; gap: 10px; }
+.btn-act { flex: 1; height: 45px; background: transparent; border: 1px solid var(--house-gold); color: white; font-weight: bold; border-radius: 4px; text-transform: uppercase; cursor: pointer; }
+
+/* OVERLAY MODALS */
+.package-box { 
+    background: #000; 
+    border: 3px solid var(--house-gold); 
+    width: 320px; 
+    border-radius: 12px; 
+    box-shadow: 0 0 20px rgba(0,0,0,1);
+}
+
+.hdmi-box { 
+    width: 520px !important; 
+    height: 480px; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+}
+
+#hdmiBox { overflow-y: auto; flex: 1; }
+#hdmiBox::-webkit-scrollbar { width: 8px; }
+#hdmiBox::-webkit-scrollbar-thumb { background: var(--house-gold); border-radius: 4px; }
+
+/* HDMI Row Layout */
+.hdmi-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #222;
+    outline: none;
+    cursor: pointer;
+}
+.hdmi-list-row:focus, .hdmi-list-row.active-focus { background: rgba(179, 138, 45, 0.3); }
+.model-name-text { font-size: 1.1rem; color: white; flex-grow: 1; text-align: left; }
+
+.test-btn-inline {
+    background: var(--house-gold);
+    color: black;
+    border: none;
+    padding: 6px 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+.test-btn-inline:focus, .test-btn-inline.active-focus { 
+    background-color: var(--house-gold) !important; 
+    color: black !important; 
+    outline: 2px solid white; 
+    box-shadow: 0 0 10px var(--house-gold);
+}
+
+.model-name-text:focus, .model-name-text.active-focus {
+    background: rgba(179, 138, 45, 0.2);
+    color: var(--house-gold);
+    outline: white;
+    border-radius: 4px;
+}

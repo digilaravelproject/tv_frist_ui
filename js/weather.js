@@ -272,3 +272,4 @@
     };
 
 })();
+window.onTVBack = function() { window.location.href = '../index.html'; return true; };

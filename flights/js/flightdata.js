@@ -376,3 +376,4 @@ window.onload = async () => {
     const nextBtn = document.getElementById('nextBtn');
     if (nextBtn) nextBtn.focus();
 };
+window.onTVBack = function() { window.location.href = '../index.html'; return true; };

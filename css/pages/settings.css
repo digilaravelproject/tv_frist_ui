@@ -1,0 +1,59 @@
+/* ============================================================
+   SETTINGS & LOGIN PAGE STYLES
+   ============================================================ */
+.login-card {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border: 2px solid var(--house-gold);
+    border-radius: 15px;
+    width: 300px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.login-title {
+    color: var(--house-gold);
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+#passDisplay {
+    background: #000;
+    color: var(--house-gold);
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin-bottom: 20px;
+    border: 1px solid var(--house-gold);
+    border-radius: 5px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 12px;
+}
+
+.num-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.num-btn {
+    background: rgba(179, 138, 45, 0.1);
+    border: 1px solid var(--house-gold);
+    color: white;
+    font-size: 1.2rem;
+    padding: 15px;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.num-btn:focus, .num-btn.active-focus {
+    background: var(--house-gold);
+    color: white !important;
+    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
+    transform: scale(1.08);
+}

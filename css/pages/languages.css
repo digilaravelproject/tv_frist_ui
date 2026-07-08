@@ -1,0 +1,81 @@
+/* ============================================================
+   LANGUAGES PAGE STYLES
+   ============================================================ */
+.lang-card {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border: 2px solid var(--house-gold);
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
+}
+
+.header-title {
+    color: var(--house-gold);
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.lang-list {
+    height: 250px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid rgba(179, 138, 45, 0.3);
+    border-radius: 5px;
+}
+
+.lang-list::-webkit-scrollbar {
+    display: none;
+}
+
+.lang-item {
+    background: rgba(179, 138, 45, 0.1);
+    padding: 12px;
+    margin: 2px;
+    border-radius: 5px;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.lang-item:focus, .lang-item.active-focus {
+    background: var(--house-gold);
+    color: white;
+    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
+    transform: scale(1.02);
+}
+
+.tick {
+    visibility: hidden;
+}
+
+.lang-item.selected .tick {
+    visibility: visible;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    flex: 1;
+    background: rgba(179, 138, 45, 0.1);
+    border: 1px solid var(--house-gold);
+    color: white;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:focus, .btn.active-focus {
+    background: var(--house-gold);
+    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
+    transform: scale(1.05);
+}
