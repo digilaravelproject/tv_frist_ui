@@ -392,14 +392,17 @@ function updateGreetingDisplay() {
 
     const greetEl = document.getElementById('greeting');
     if (!greetEl) return;
-    const guest = window.guestName || "";
-    const comma = (currentData.direction === 'rtl') ? "، " : ", ";
-    var text = guest ? msg + comma + guest : msg;
 
     var cfg = typeof window.getFastConfig === 'function' ? window.getFastConfig() : null;
-    if (cfg && cfg.hotel && cfg.hotel.hotel_name) {
-        text = text + " | " + cfg.hotel.hotel_name;
+    let guest = "Guest";
+    if (cfg && cfg.guest_info && cfg.guest_info.name) {
+        guest = cfg.guest_info.name;
+    } else if (window.guestName) {
+        guest = window.guestName;
     }
+
+    const comma = (currentData.direction === 'rtl') ? "، " : ", ";
+    var text = msg + comma + guest;
 
     greetEl.textContent = text;
 }
@@ -504,15 +507,6 @@ function showExpiredOverlay() {
     var overlay = document.getElementById('planExpiredOverlay');
     if (!overlay) return;
     overlay.style.display = 'flex';
-    var btn = document.getElementById('planDismissBtn');
-    if (btn) {
-        btn.onclick = function () { overlay.style.display = 'none'; };
-    }
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-            overlay.style.display = 'none';
-        }
-    });
 }
 
 function showWarningToast(daysLeft) {

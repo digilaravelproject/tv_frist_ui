@@ -212,6 +212,11 @@
 
     // Global Key Down Listener
     window.addEventListener('keydown', function(e) {
+        var expiredOverlay = document.getElementById('planExpiredOverlay');
+        if (expiredOverlay && expiredOverlay.style.display === 'flex') {
+            e.preventDefault();
+            return;
+        }
         if (typeof window.onTVKeyDown === 'function') {
             if (window.onTVKeyDown(e)) return;
         }
