@@ -149,13 +149,17 @@ body.rtl-mode .menu-container {
     transition: all 0.3s ease;
 }
 
-.icon-item.active-focus {
+.icon-item.active-focus,
+.icon-item:focus,
+.icon-item:hover {
     opacity: 1.0;
     transform: scale(1.25);
     outline: none !important;
 }
 
-.icon-item.active-focus .icon-img {
+.icon-item.active-focus .icon-img,
+.icon-item:focus .icon-img,
+.icon-item:hover .icon-img {
     border: 4px solid #b38a2d;
     box-shadow: 0 0 30px rgba(179, 138, 45, 1.0);
     transform: translateY(-8px);
@@ -180,7 +184,9 @@ body.rtl-mode .menu-container {
     transition: color 0.3s ease;
 }
 
-.icon-item.active-focus .icon-label {
+.icon-item.active-focus .icon-label,
+.icon-item:focus .icon-label,
+.icon-item:hover .icon-label {
     color: #f5e985;
     font-weight: 600;
     text-shadow: 0 0 8px rgba(245, 233, 133, 0.5);
@@ -190,6 +196,8 @@ body.rtl-mode .menu-container {
    4. BOUNCE ANIMATION
    ============================================================ */
 .icon-item.active-focus .icon-img,
+.icon-item:focus .icon-img,
+.icon-item:hover .icon-img,
 .icon-img.bounce { 
     animation: macBounce 0.5s ease; 
 }
