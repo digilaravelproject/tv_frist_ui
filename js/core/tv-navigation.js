@@ -243,7 +243,7 @@
         LEFT: [37, 21, 29462, 65361],      // ArrowLeft, Android TV Left
         RIGHT: [39, 22, 29463, 65363],     // ArrowRight, Android TV Right
         ENTER: [13, 23, 66, 29443, 160, 108], // Enter/OK, Numpad Enter (108)
-        BACK: [8, 461, 4, 10009, 10182, 27, 220, 166] // Backspace, webOS back, Android TV back, Tizen back/exit, Escape, Roku back, BrowserBack (166)
+        BACK: [8, 461, 4, 10009, 10182, 27, 220] // Backspace, webOS back, Android TV back, Tizen back/exit, Escape, Roku back (keycode 166 removed to prevent conflicts on Android TV Channel Up)
     };
 
     function matchesKey(keyCode, keyName, eventKey) {
@@ -345,10 +345,17 @@
             }
         }
         
-        // Number keys for generic usage (e.g. settings numpad) - handles both top row (48-57) and numpad (96-105)
-        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105)) {
+        // Number keys for generic usage (e.g. settings numpad) - handles top row (48-57), numpad (96-105), and native Android TV keys (7-16)
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || (keyCode >= 7 && keyCode <= 16)) {
             if (typeof window.onTVNumberKey === 'function') {
-                var digit = (keyCode >= 96 && keyCode <= 105) ? String(keyCode - 96) : (e.key || String.fromCharCode(keyCode));
+                var digit;
+                if (keyCode >= 96 && keyCode <= 105) {
+                    digit = String(keyCode - 96);
+                } else if (keyCode >= 7 && keyCode <= 16) {
+                    digit = String(keyCode - 7);
+                } else {
+                    digit = e.key || String.fromCharCode(keyCode);
+                }
                 window.onTVNumberKey(digit);
             }
         }
