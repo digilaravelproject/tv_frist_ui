@@ -13,6 +13,8 @@
 
     var rectCache = { dirty: true, elements: [], rects: [] };
 
+    var lastDirectionTime = 0; // Throttle timestamp for directional repeats
+
     function markCacheDirty() {
         rectCache.dirty = true;
     }
@@ -21,8 +23,26 @@
     window.addEventListener('scroll', markCacheDirty, { passive: true });
     window.addEventListener('resize', markCacheDirty, { passive: true });
     if (typeof MutationObserver !== 'undefined') {
-        var obs = new MutationObserver(markCacheDirty);
-        obs.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+        var obs = new MutationObserver(function(mutations) {
+            for (var i = 0; i < mutations.length; i++) {
+                var m = mutations[i];
+                if (m.type === 'childList') {
+                    markCacheDirty();
+                    break;
+                }
+                // Ignore class changes (like active-focus) to prevent thrashing the cache on every navigate
+                if (m.type === 'attributes' && m.attributeName !== 'class') {
+                    markCacheDirty();
+                    break;
+                }
+            }
+        });
+        obs.observe(document.documentElement, { 
+            childList: true, 
+            subtree: true, 
+            attributes: true,
+            attributeFilter: ['style', 'disabled', 'tabindex', 'hidden']
+        });
     }
 
     function isVisible(el) {
@@ -222,8 +242,8 @@
         DOWN: [40, 20, 29461, 65364],      // ArrowDown, Android TV Down, Tizen/WebOS Down
         LEFT: [37, 21, 29462, 65361],      // ArrowLeft, Android TV Left
         RIGHT: [39, 22, 29463, 65363],     // ArrowRight, Android TV Right
-        ENTER: [13, 23, 66, 29443, 160],   // Enter/OK: standard Enter, Android TV DPAD_CENTER, webOS/Tizen Enter
-        BACK: [8, 461, 4, 10009, 10182, 27, 220, 166] // Backspace, webOS back, Android TV back, Tizen back, Tizen exit, Escape, Roku back/bracket, browser back
+        ENTER: [13, 23, 66, 29443, 160, 108], // Enter/OK, Numpad Enter (108)
+        BACK: [8, 461, 4, 10009, 10182, 27, 220, 166] // Backspace, webOS back, Android TV back, Tizen back/exit, Escape, Roku back, BrowserBack (166)
     };
 
     function matchesKey(keyCode, keyName, eventKey) {
@@ -235,14 +255,16 @@
             if (keyName === 'DOWN' && (ek === 'arrowdown' || ek === 'down')) return true;
             if (keyName === 'LEFT' && (ek === 'arrowleft' || ek === 'left')) return true;
             if (keyName === 'RIGHT' && (ek === 'arrowright' || ek === 'right')) return true;
-            if (keyName === 'ENTER' && (ek === 'enter' || ek === 'ok')) return true;
-            if (keyName === 'BACK' && (ek === 'backspace' || ek === 'escape' || ek === 'back' || ek === 'browserback')) return true;
+            if (keyName === 'ENTER' && (ek === 'enter' || ek === 'ok' || ek === 'select' || ek === 'accept')) return true;
+            if (keyName === 'BACK' && (ek === 'backspace' || ek === 'escape' || ek === 'back' || ek === 'browserback' || ek === 'goback' || ek === 'xf86back')) return true;
         }
         return false;
     }
 
     // Global Key Down Listener
     window.addEventListener('keydown', function(e) {
+        var active = document.activeElement; // Defined once at the top to fix scope hoisting bugs
+        
         var expiredOverlay = document.getElementById('planExpiredOverlay');
         if (expiredOverlay && expiredOverlay.style.display === 'flex') {
             e.preventDefault();
@@ -286,8 +308,17 @@
         }
 
         if (direction) {
+            // Apply repeat/double-click throttle for direction keys to prevent double jumping
+            if (direction !== 'enter') {
+                var nowDir = Date.now();
+                if (nowDir - lastDirectionTime < 120) {
+                    e.preventDefault();
+                    return;
+                }
+                lastDirectionTime = nowDir;
+            }
+
             if (direction === 'enter') {
-                var active = document.activeElement;
                 if (active && active !== document.body) {
                     e.preventDefault();
                     var now = Date.now();
@@ -314,10 +345,11 @@
             }
         }
         
-        // Number keys for generic usage (e.g. settings numpad)
-        if (keyCode >= 48 && keyCode <= 57) {
+        // Number keys for generic usage (e.g. settings numpad) - handles both top row (48-57) and numpad (96-105)
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105)) {
             if (typeof window.onTVNumberKey === 'function') {
-                window.onTVNumberKey(e.key || String.fromCharCode(keyCode));
+                var digit = (keyCode >= 96 && keyCode <= 105) ? String(keyCode - 96) : (e.key || String.fromCharCode(keyCode));
+                window.onTVNumberKey(digit);
             }
         }
     });
