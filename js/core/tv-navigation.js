@@ -311,19 +311,24 @@
 
                 // Back Action
                 if (KeycodeManager.matchesKey(keyCode, 'BACK', e.key)) {
-                    e.preventDefault();
-                    
-                    // Visual feedback: highlight the DEL button if present (e.g. settings numpad)
-                    var delBtn = document.querySelector('.num-btn[data-val="DEL"]');
-                    if (delBtn) {
-                        delBtn.focus();
-                    }
-
+                    var handled = false;
                     if (typeof window.onTVBack === 'function') {
-                        if (window.onTVBack()) return;
+                        if (window.onTVBack()) {
+                            handled = true;
+                        }
                     }
-                    if (!isIndex) {
+                    if (!handled && !isIndex) {
                         FocusEngine.goBack();
+                        handled = true;
+                    }
+                    if (handled) {
+                        e.preventDefault();
+                        
+                        // Visual feedback: highlight the DEL button if present (e.g. settings numpad)
+                        var delBtn = document.querySelector('.num-btn[data-val="DEL"]');
+                        if (delBtn) {
+                            delBtn.focus();
+                        }
                     }
                     return;
                 }
@@ -418,6 +423,13 @@
     };
 
     // Initialize systems
+    try {
+        if (window.tizen && window.tizen.tvinputdevice && window.tizen.tvinputdevice.registerKey) {
+            window.tizen.tvinputdevice.registerKey("Return");
+        }
+    } catch(e) {
+        console.warn("Failed to register Tizen Return key:", e);
+    }
     CacheManager.init();
     NavigationController.init();
 
