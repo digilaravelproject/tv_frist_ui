@@ -246,6 +246,7 @@ async function initLanguage() {
                 if (config.hotel && config.hotel.media && config.hotel.media.slider_images) {
                     initSlider(config.hotel.media.slider_images);
                 }
+                updateGreetingDisplay();
             }
         }).catch(err => console.warn("Background fetch failed:", err));
 

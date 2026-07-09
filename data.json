@@ -50,11 +50,6 @@
         "expiry_date": "2026-08-07T13:25:50+05:30"
       }
     },
-    "guest_info": {
-      "name": "Sanket",
-      "mobile_number": "9876543210",
-      "check_in_datetime": "2026-07-08T19:43:00+05:30",
-      "check_out_datetime": null
-    }
+    "guest_info": null
   }
 }
