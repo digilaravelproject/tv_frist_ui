@@ -462,7 +462,7 @@ async function updateWeather() {
 var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
 
 
-window.onTVKeyDown = function(e) {
+window.onTVKeyDown = function (e) {
     var comingSoon = document.getElementById("comingSoonOverlay");
     if (comingSoon && comingSoon.style.display === "flex") {
         e.preventDefault();
@@ -472,7 +472,7 @@ window.onTVKeyDown = function(e) {
     return false;
 };
 
-window.onTVBack = function() {
+window.onTVBack = function () {
     var appsOverlay = document.getElementById("appsOverlay");
     if (appsOverlay && appsOverlay.classList.contains("show")) {
         closeAppsOverlay();
@@ -488,7 +488,7 @@ window.onTVBack = function() {
     return false;
 };
 
-window.onTVNavigate = function(direction, active) {
+window.onTVNavigate = function (direction, active) {
     var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
     if (isIndex && !window.__appsOverlayOpen) {
         if (direction === "left") {
@@ -536,299 +536,307 @@ function checkPlanStatus(plan) {
 
 window.onload = function () {
     try {
-            var bg = document.getElementById('bg-slider');
-            if (bg && !bg.style.backgroundImage) {
-                bg.style.backgroundImage = "url('images/main.jpg')";
-            }
-            initLanguage();
-            setInterval(updateDateTime, 1000);
-            setInterval(updateWeather, 900000);
-        
+        var bg = document.getElementById('bg-slider');
+        if (bg && !bg.style.backgroundImage) {
+            bg.style.backgroundImage = "url('images/main.jpg')";
+        }
+        initLanguage();
+        setInterval(updateDateTime, 1000);
+        setInterval(updateWeather, 900000);
+
     } catch (e) {
         console.error('Initialization failed:', e);
     }
 };        // --- 1. PREVENT ANDROID EXIT (Original Logic) ---
+window.history.pushState(null, "", window.location.href);
+window.onpopstate = function () {
+    var comingSoon = document.getElementById('comingSoonOverlay');
+    if (comingSoon && comingSoon.style.display === 'flex') {
+        comingSoon.style.display = 'none';
         window.history.pushState(null, "", window.location.href);
-        window.onpopstate = function () {
-            var comingSoon = document.getElementById('comingSoonOverlay');
-            if (comingSoon && comingSoon.style.display === 'flex') {
-                comingSoon.style.display = 'none';
-                window.history.pushState(null, "", window.location.href);
-                return;
-            }
-            var appsOverlay = document.getElementById('appsOverlay');
-            if (appsOverlay && appsOverlay.classList.contains('show')) {
-                closeAppsOverlay();
-                window.history.pushState(null, "", window.location.href);
-                return;
-            }
-            var overlay = document.getElementById('subPageOverlay');
-            if (overlay.style.display === 'block') {
-                closeSubPage();
-                window.history.pushState(null, "", window.location.href);
-            } else {
-                window.history.pushState(null, "", window.location.href);
-            }
-        };
+        return;
+    }
+    var appsOverlay = document.getElementById('appsOverlay');
+    if (appsOverlay && appsOverlay.classList.contains('show')) {
+        closeAppsOverlay();
+        window.history.pushState(null, "", window.location.href);
+        return;
+    }
+    var overlay = document.getElementById('subPageOverlay');
+    if (overlay.style.display === 'block') {
+        closeSubPage();
+        window.history.pushState(null, "", window.location.href);
+    } else {
+        window.history.pushState(null, "", window.location.href);
+    }
+};
 
-        
-        function openSubPage(url) {
-            var overlay = document.getElementById('subPageOverlay');
-            if (!overlay) return;
-            document.getElementById('subFrame').src = url;
-            overlay.style.display = 'block';
-            document.getElementById('mainUI').style.display = 'none';
-            window.history.pushState(null, "", window.location.href);
-            var subFrame = document.getElementById('subFrame');
-            if (subFrame) subFrame.focus();
-        }
-        window.openSubPage = openSubPage;
 
-        function closeSubPage() {
-            document.getElementById('subPageOverlay').style.display = 'none';
-            document.getElementById('subFrame').src = "";
-            document.getElementById('mainUI').style.display = 'block';
-            var items = document.querySelectorAll('.icon-item');
-            if (items[3]) items[3].focus();
-        }
+function openSubPage(url) {
+    var overlay = document.getElementById('subPageOverlay');
+    if (!overlay) return;
+    document.getElementById('subFrame').src = url;
+    overlay.style.display = 'block';
+    document.getElementById('mainUI').style.display = 'none';
+    window.history.pushState(null, "", window.location.href);
+    var subFrame = document.getElementById('subFrame');
+    if (subFrame) subFrame.focus();
+}
+window.openSubPage = openSubPage;
 
-        // =============================================================
-        // APPLICATIONS OVERLAY (Apps + TV Inputs)
-        // =============================================================
+function closeSubPage() {
+    document.getElementById('subPageOverlay').style.display = 'none';
+    document.getElementById('subFrame').src = "";
+    document.getElementById('mainUI').style.display = 'block';
+    var items = document.querySelectorAll('.icon-item');
+    if (items[3]) items[3].focus();
+}
 
-        var DEFAULT_APP_ICON = 'images/icons/apps.png';
+// =============================================================
+// APPLICATIONS OVERLAY (Apps + TV Inputs)
+// =============================================================
 
-        async function loadApplications() {
-            var container = document.getElementById('apps-container');
-            if (!container) return;
-            container.innerHTML = '<div style="color:#888;font-size:1.2vw;grid-column:1/-1;text-align:center;">Loading...</div>';
+var DEFAULT_APP_ICON = 'images/icons/apps.png';
 
-            try {
-                var bridge = window.flutterBridge;
-                var apps = await bridge.getInstalledApps();
-                if (!apps || apps.length === 0) throw new Error('No apps');
+async function loadApplications() {
+    var container = document.getElementById('apps-container');
+    if (!container) return;
+    container.innerHTML = '<div style="color:#888;font-size:1.2vw;grid-column:1/-1;text-align:center;">Loading...</div>';
 
-                container.innerHTML = '';
-                apps.forEach(function(app) {
-                    var pkg = app.packageName || app.package || app.id || '';
-                    var name = app.name || app.label || pkg;
-                    var icon = app.icon || '';
+    try {
+        var bridge = window.flutterBridge;
+        var apps = await bridge.getInstalledApps();
+        if (!apps || apps.length === 0) throw new Error('No apps');
 
-                    var card = document.createElement('div');
-                    card.className = 'app-card';
-                    card.tabIndex = 0;
-                    card.setAttribute('data-package', pkg);
+        container.innerHTML = '';
+        apps.forEach(function (app) {
+            var pkg = app.packageName || app.package || app.id || '';
+            var name = app.name || app.label || pkg;
+            var icon = app.icon || '';
 
-                    var img = document.createElement('img');
-                    img.src = icon || DEFAULT_APP_ICON;
-                    img.alt = name;
-                    img.onerror = function() { this.src = DEFAULT_APP_ICON; };
+            var card = document.createElement('div');
+            card.className = 'app-card';
+            card.tabIndex = 0;
+            card.setAttribute('data-package', pkg);
 
-                    var label = document.createElement('div');
-                    label.className = 'app-name';
-                    label.textContent = name;
+            var img = document.createElement('img');
+            img.src = icon || DEFAULT_APP_ICON;
+            img.alt = name;
+            img.onerror = function () { this.src = DEFAULT_APP_ICON; };
 
-                    card.appendChild(img);
-                    card.appendChild(label);
+            var label = document.createElement('div');
+            label.className = 'app-name';
+            label.textContent = name;
 
-                    card.addEventListener('click', function() {
-                        var p = this.getAttribute('data-package');
-                        if (p && window.flutterBridge && window.flutterBridge.launchApp) {
-                            window.flutterBridge.launchApp(p)['catch'](function(err) {
-                                console.error('Launch app failed:', err);
-                            });
-                        }
+            card.appendChild(img);
+            card.appendChild(label);
+
+            card.addEventListener('click', function () {
+                var p = this.getAttribute('data-package');
+                if (p && window.flutterBridge && window.flutterBridge.launchApp) {
+                    window.flutterBridge.launchApp(p)['catch'](function (err) {
+                        console.error('Launch app failed:', err);
                     });
-                    card.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter' || e.keyCode === 13) {
-                            this.click();
-                        }
-                    });
-
-                    container.appendChild(card);
-                });
-            } catch (e) {
-                container.innerHTML = '<div style="color:#888;font-size:1.2vw;grid-column:1/-1;text-align:center;">No applications available</div>';
-                console.error('loadApplications error:', e);
-            }
-        }
-
-        async function loadTvInputs() {
-            var container = document.getElementById('tv-inputs-container');
-            if (!container) return;
-
-            try {
-                var bridge = window.flutterBridge;
-                var inputs = await bridge.getTvInputs();
-                if (!inputs || inputs.length === 0) {
-                    container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
-                    return;
-                }
-
-                var lastPort = localStorage.getItem('selectedHdmiPort');
-                var deviceSerial = localStorage.getItem('deviceSerial');
-                if (deviceSerial) {
-                    try {
-                        var res = await fetch('/admin/devices/' + deviceSerial + '.json');
-                        if (res.ok) {
-                            var deviceData = await res.json();
-                            if (deviceData.hdmiPort) lastPort = deviceData.hdmiPort;
-                        }
-                    } catch (e) { /* fallback to local storage */ }
-                }
-
-                container.innerHTML = '';
-                inputs.forEach(function(input) {
-                    var btn = document.createElement('button');
-                    btn.className = 'tv-input-btn';
-                    btn.tabIndex = 0;
-                    var label = input.label || input.id || 'HDMI';
-                    btn.textContent = label;
-                    var modelId = input.id || '';
-                    btn.setAttribute('data-model', modelId);
-
-                    if (lastPort && (modelId.toLowerCase() === lastPort.toLowerCase() || label.toLowerCase() === lastPort.toLowerCase())) {
-                        btn.style.border = '2px solid #b38a2d';
-                        btn.style.background = 'rgba(179,138,45,0.2)';
-                        btn.style.boxShadow = 'inset 0 0 8px rgba(179,138,45,0.5)';
-                    }
-
-                    btn.addEventListener('click', function() {
-                        var model = this.getAttribute('data-model');
-                        var label = this.textContent;
-                        if (model) {
-                            localStorage.setItem('selectedHdmiPort', model);
-                        } else if (label) {
-                            localStorage.setItem('selectedHdmiPort', label);
-                        }
-                        loadTvInputs();
-                        closeAppsOverlay();
-                        if (model && window.flutterBridge && window.flutterBridge.launchHdmi) {
-                            window.flutterBridge.launchHdmi(model)['catch'](function(err) {
-                                console.error('Launch HDMI failed:', err);
-                            });
-                        }
-                    });
-                    btn.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter' || e.keyCode === 13) {
-                            this.click();
-                        }
-                    });
-
-                    container.appendChild(btn);
-                });
-            } catch (e) {
-                container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
-                console.error('loadTvInputs error:', e);
-            }
-        }
-
-        function openAppsOverlay() {
-            var overlay = document.getElementById('appsOverlay');
-            if (!overlay) return;
-            overlay.classList.add('show');
-            document.getElementById('mainUI').style.display = 'none';
-            window.history.pushState(null, "", window.location.href);
-            window.__appsOverlayOpen = true;
-
-            var appsTitle = overlay.querySelector('.apps-title');
-            if (appsTitle) appsTitle.textContent = 'Applications';
-
-            var section = document.getElementById('tv-inputs-section');
-            if (section) section.style.display = 'none';
-
-            var container = document.getElementById('tv-inputs-container');
-            if (container) container.style.display = 'none';
-
-            document.getElementById('apps-container').style.display = '';
-
-            loadApplications();
-
-            setTimeout(function() {
-                var firstCard = document.querySelector('.app-card');
-                if (firstCard) firstCard.focus();
-            }, 200);
-        }
-
-        function openLiveTVOverlay() {
-            var overlay = document.getElementById('appsOverlay');
-            if (!overlay) return;
-            overlay.classList.add('show');
-            document.getElementById('mainUI').style.display = 'none';
-            window.history.pushState(null, "", window.location.href);
-            window.__appsOverlayOpen = true;
-
-            var appsTitle = overlay.querySelector('.apps-title');
-            if (appsTitle) appsTitle.textContent = 'Live TV';
-
-            var section = document.getElementById('tv-inputs-section');
-            if (section) section.style.display = '';
-
-            var container = document.getElementById('tv-inputs-container');
-            if (container) container.style.display = '';
-
-            document.getElementById('apps-container').style.display = 'none';
-
-            loadTvInputs();
-
-            setTimeout(function() {
-                var firstInput = document.querySelector('.tv-input-btn');
-                if (firstInput) firstInput.focus();
-            }, 200);
-        }
-
-        function closeAppsOverlay() {
-            var overlay = document.getElementById('appsOverlay');
-            if (!overlay) return;
-            overlay.classList.remove('show');
-            window.__appsOverlayOpen = false;
-            document.getElementById('mainUI').style.display = 'block';
-            var items = document.querySelectorAll('.icon-item');
-            if (items[3]) items[3].focus();
-        }
-
-        
-
-        document.getElementById('appsCloseBtn').addEventListener('click', function() {
-            closeAppsOverlay();
-            window.history.pushState(null, "", window.location.href);
-        });
-
-        window.openAppsOverlay = openAppsOverlay;
-        window.closeAppsOverlay = closeAppsOverlay;
-        window.openLiveTVOverlay = openLiveTVOverlay;
-
-        var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
-
-        document.querySelectorAll('.icon-item').forEach(item => {
-            item.addEventListener('click', function () {
-                const action = this.getAttribute('data-action');
-                
-                if (action === "livetv") {
-                    if (typeof window.openLiveTVOverlay === 'function') window.openLiveTVOverlay();
-                    return;
-                }
-                if (action === "apps") {
-                    if (typeof window.openAppsOverlay === 'function') window.openAppsOverlay();
-                    return;
-                }
-                
-                const link = this.dataset.link || this.getAttribute('href');
-                
-                if (link && comingSoonLinks.indexOf(link) !== -1) {
-                    document.getElementById('comingSoonOverlay').style.display = 'flex';
-                    return;
-                }
-                
-                if (link) {
-                    window.location.href = link;
                 }
             });
+            card.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    this.click();
+                }
+            });
+
+            container.appendChild(card);
         });
 
-    
+        // Immediately focus the first card once rendered
+        var firstCard = container.querySelector('.app-card');
+        if (firstCard) firstCard.focus();
+    } catch (e) {
+        container.innerHTML = '<div style="color:#888;font-size:1.2vw;grid-column:1/-1;text-align:center;">No applications available</div>';
+        console.error('loadApplications error:', e);
+    }
+}
 
-window.onTVKeyDown = function(e) {
+async function loadTvInputs() {
+    var container = document.getElementById('tv-inputs-container');
+    if (!container) return;
+
+    try {
+        var bridge = window.flutterBridge;
+        var inputs = await bridge.getTvInputs();
+        if (!inputs || inputs.length === 0) {
+            container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
+            return;
+        }
+
+        var lastPort = localStorage.getItem('selectedHdmiPort');
+        var deviceSerial = localStorage.getItem('deviceSerial');
+        if (deviceSerial) {
+            try {
+                var res = await fetch('/admin/devices/' + deviceSerial + '.json');
+                if (res.ok) {
+                    var deviceData = await res.json();
+                    if (deviceData.hdmiPort) lastPort = deviceData.hdmiPort;
+                }
+            } catch (e) { /* fallback to local storage */ }
+        }
+
+        container.innerHTML = '';
+        inputs.forEach(function (input) {
+            var btn = document.createElement('button');
+            btn.className = 'tv-input-btn';
+            btn.tabIndex = 0;
+            var label = input.label || input.id || 'HDMI';
+            btn.textContent = label;
+            var modelId = input.id || '';
+            btn.setAttribute('data-model', modelId);
+
+            if (lastPort && (modelId.toLowerCase() === lastPort.toLowerCase() || label.toLowerCase() === lastPort.toLowerCase())) {
+                btn.style.border = '2px solid #b38a2d';
+                btn.style.background = 'rgba(179,138,45,0.2)';
+                btn.style.boxShadow = 'inset 0 0 8px rgba(179,138,45,0.5)';
+            }
+
+            btn.addEventListener('click', function () {
+                var model = this.getAttribute('data-model');
+                var label = this.textContent;
+                if (model) {
+                    localStorage.setItem('selectedHdmiPort', model);
+                } else if (label) {
+                    localStorage.setItem('selectedHdmiPort', label);
+                }
+                loadTvInputs();
+                closeAppsOverlay();
+                if (model && window.flutterBridge && window.flutterBridge.launchHdmi) {
+                    window.flutterBridge.launchHdmi(model)['catch'](function (err) {
+                        console.error('Launch HDMI failed:', err);
+                    });
+                }
+            });
+            btn.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    this.click();
+                }
+            });
+
+            container.appendChild(btn);
+        });
+
+        // Immediately focus the first input button once rendered
+        var firstInput = container.querySelector('.tv-input-btn');
+        if (firstInput) firstInput.focus();
+    } catch (e) {
+        container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
+        console.error('loadTvInputs error:', e);
+    }
+}
+
+function openAppsOverlay() {
+    var overlay = document.getElementById('appsOverlay');
+    if (!overlay) return;
+    overlay.classList.add('show');
+    document.getElementById('mainUI').style.display = 'none';
+    window.history.pushState(null, "", window.location.href);
+    window.__appsOverlayOpen = true;
+
+    var appsTitle = overlay.querySelector('.apps-title');
+    if (appsTitle) appsTitle.textContent = 'Applications';
+
+    var section = document.getElementById('tv-inputs-section');
+    if (section) section.style.display = 'none';
+
+    var container = document.getElementById('tv-inputs-container');
+    if (container) container.style.display = 'none';
+
+    document.getElementById('apps-container').style.display = '';
+
+    loadApplications();
+
+    setTimeout(function () {
+        var firstCard = document.querySelector('.app-card');
+        if (firstCard) firstCard.focus();
+    }, 200);
+}
+
+function openLiveTVOverlay() {
+    var overlay = document.getElementById('appsOverlay');
+    if (!overlay) return;
+    overlay.classList.add('show');
+    document.getElementById('mainUI').style.display = 'none';
+    window.history.pushState(null, "", window.location.href);
+    window.__appsOverlayOpen = true;
+
+    var appsTitle = overlay.querySelector('.apps-title');
+    if (appsTitle) appsTitle.textContent = 'Live TV';
+
+    var section = document.getElementById('tv-inputs-section');
+    if (section) section.style.display = '';
+
+    var container = document.getElementById('tv-inputs-container');
+    if (container) container.style.display = '';
+
+    document.getElementById('apps-container').style.display = 'none';
+
+    loadTvInputs();
+
+    setTimeout(function () {
+        var firstInput = document.querySelector('.tv-input-btn');
+        if (firstInput) firstInput.focus();
+    }, 200);
+}
+
+function closeAppsOverlay() {
+    var overlay = document.getElementById('appsOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('show');
+    window.__appsOverlayOpen = false;
+    document.getElementById('mainUI').style.display = 'block';
+    var items = document.querySelectorAll('.icon-item');
+    if (items[3]) items[3].focus();
+}
+
+
+
+document.getElementById('appsCloseBtn').addEventListener('click', function () {
+    closeAppsOverlay();
+    window.history.pushState(null, "", window.location.href);
+});
+
+window.openAppsOverlay = openAppsOverlay;
+window.closeAppsOverlay = closeAppsOverlay;
+window.openLiveTVOverlay = openLiveTVOverlay;
+
+var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
+
+document.querySelectorAll('.icon-item').forEach(item => {
+    item.addEventListener('click', function () {
+        const action = this.getAttribute('data-action');
+
+        if (action === "livetv") {
+            if (typeof window.openLiveTVOverlay === 'function') window.openLiveTVOverlay();
+            return;
+        }
+        if (action === "apps") {
+            if (typeof window.openAppsOverlay === 'function') window.openAppsOverlay();
+            return;
+        }
+
+        const link = this.dataset.link || this.getAttribute('href');
+
+        if (link && comingSoonLinks.indexOf(link) !== -1) {
+            document.getElementById('comingSoonOverlay').style.display = 'flex';
+            return;
+        }
+
+        if (link) {
+            window.location.href = link;
+        }
+    });
+});
+
+
+
+window.onTVKeyDown = function (e) {
     var comingSoon = document.getElementById("comingSoonOverlay");
     if (comingSoon && comingSoon.style.display === "flex") {
         e.preventDefault();
@@ -838,7 +846,7 @@ window.onTVKeyDown = function(e) {
     return false;
 };
 
-window.onTVBack = function() {
+window.onTVBack = function () {
     var appsOverlay = document.getElementById("appsOverlay");
     if (appsOverlay && appsOverlay.classList.contains("show")) {
         closeAppsOverlay();
@@ -854,7 +862,7 @@ window.onTVBack = function() {
     return false;
 };
 
-window.onTVNavigate = function(direction, active) {
+window.onTVNavigate = function (direction, active) {
     var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
     if (isIndex && !window.__appsOverlayOpen) {
         if (direction === "left") {

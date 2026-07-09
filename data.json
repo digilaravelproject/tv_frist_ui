@@ -1,19 +1,19 @@
 {
   "status": true,
-  "message": "TV logged in successfully.",
+  "message": "Template version details fetched successfully.",
   "data": {
     "auth": {
-      "token": "OIAGfCxZSzZLe8WokENniQSRysG6dDFj4mTQT0UwNZOu7qq4VXnlE1XzNKCckJKb4I5Ei1DkpiENHUyh"
+      "token": "3nRirFMZQsVujog2XBGO57W4X0VdjsDlpNuc7No8k99KRC1xYndkWskKUbvaajBL6tmuGMoKUFbQKUMS"
     },
     "template": {
-      "latest_version": "3.5",
-      "old_version": "3.0",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v3_5_1783428952.zip",
-      "uploaded_at": "2026-07-07T12:55:52+05:30",
+      "latest_version": "4.5",
+      "old_version": "4.0",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v4_5_1783581996.zip",
+      "uploaded_at": "2026-07-09T12:56:36+05:30",
       "is_update_available": false
     },
     "device": {
-      "room_no": "1503",
+      "room_no": "1519",
       "device_id": "6231A4D7B13402C5",
       "mac_address": "AA:BB:CC:DD:EE:FF",
       "ip_address": "192.168.1.100",
@@ -26,21 +26,14 @@
       "hotel_location": "Pune",
       "description": null,
       "owner_name": "Darshan Kondekar",
-      "email": "darshankondekar011@gmail.com",
+      "email": "darshankondekar01@gmail.com",
       "phone": "8975845684",
       "media": {
         "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1783173121_logo_7ANoXcRg.png",
         "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1783173121_image_sDTg0sZN.jpeg",
         "slider_images": [
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_bHnBDrLx.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_vy85lP9C.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_shoxzMjX.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_a69AOsrU.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_kF8Mq0Ej.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_CqDWMKn3.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_gAeyOBWM.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_WUP4MIAl.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783517781_slider_tLoZC6ZZ.jpg"
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783586203_slider_AL8302T7.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783586203_slider_hsAYx0Jh.jpg"
         ]
       },
       "active_plan": {
@@ -50,6 +43,11 @@
         "expiry_date": "2026-08-07T13:25:50+05:30"
       }
     },
-    "guest_info": null
+    "guest_info": {
+      "name": "abcdd",
+      "mobile_number": "2126",
+      "check_in_datetime": "2026-07-09T13:59:00+05:30",
+      "check_out_datetime": null
+    }
   }
 }

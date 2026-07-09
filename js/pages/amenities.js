@@ -65,11 +65,20 @@ let images = [];
             if (bgSliderIntervalId) clearInterval(bgSliderIntervalId);
             bgSlideImages = [];
 
+            const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
+            const basePath = isInSubfolder ? '../' : '';
+
             if (config && config.hotel && config.hotel.media) {
                 if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                    bgSlideImages = config.hotel.media.slider_images;
+                    bgSlideImages = config.hotel.media.slider_images.map(img => {
+                        return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
+                    });
                 } else if (config.hotel.media.cover_image) {
-                    bgSlideImages = [config.hotel.media.cover_image];
+                    let cover = config.hotel.media.cover_image;
+                    if (!cover.startsWith('http') && !cover.startsWith('/')) {
+                        cover = basePath + cover;
+                    }
+                    bgSlideImages = [cover];
                 }
             }
 
@@ -125,13 +134,22 @@ let images = [];
             const cachedConfig = (window.parent && window.parent.getFastConfig) ? window.parent.getFastConfig() : null;
             images = [];
 
+            const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
+            const basePath = isInSubfolder ? '../' : '';
+
             if (cachedConfig) {
                 initBackgroundSlider(cachedConfig);
                 if (cachedConfig.hotel && cachedConfig.hotel.media) {
                     if (cachedConfig.hotel.media.slider_images && cachedConfig.hotel.media.slider_images.length > 0) {
-                        images = cachedConfig.hotel.media.slider_images;
+                        images = cachedConfig.hotel.media.slider_images.map(img => {
+                            return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
+                        });
                     } else if (cachedConfig.hotel.media.cover_image) {
-                        images = [cachedConfig.hotel.media.cover_image];
+                        let cover = cachedConfig.hotel.media.cover_image;
+                        if (!cover.startsWith('http') && !cover.startsWith('/')) {
+                            cover = basePath + cover;
+                        }
+                        images = [cover];
                     }
                 }
             } else {
@@ -147,9 +165,15 @@ let images = [];
                     let newImages = [];
                     if (config.hotel && config.hotel.media) {
                         if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                            newImages = config.hotel.media.slider_images;
+                            newImages = config.hotel.media.slider_images.map(img => {
+                                return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
+                            });
                         } else if (config.hotel.media.cover_image) {
-                            newImages = [config.hotel.media.cover_image];
+                            let cover = config.hotel.media.cover_image;
+                            if (!cover.startsWith('http') && !cover.startsWith('/')) {
+                                cover = basePath + cover;
+                            }
+                            newImages = [cover];
                         }
                     }
                     if (newImages.length > 0 && JSON.stringify(newImages) !== JSON.stringify(images)) {

@@ -94,7 +94,7 @@ body.rtl-mode #header-right {
 
 
 #greeting { 
-    top: 13vh; 
+    top: 17vh; 
     width: 100%; 
     text-align: center; 
     font-size: 2.2vw; 
@@ -290,11 +290,11 @@ body.rtl-mode .menu-container {
 .app-card:hover,
 .app-card:focus,
 .app-card.active-focus {
-    background: rgba(179,138,45,0.25) !important;
-    border-color: #b38a2d !important;
+    background: rgba(179,138,45,0.4) !important;
+    border: 3px solid #f5e985 !important;
     outline: none !important;
-    box-shadow: 0 0 15px rgba(179,138,45,0.6);
-    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(179,138,45,0.9), inset 0 0 10px rgba(245, 233, 133, 0.4);
+    transform: scale(1.08);
 }
 
 .app-card img {
@@ -341,10 +341,10 @@ body.rtl-mode .menu-container {
 .tv-input-btn:hover,
 .tv-input-btn:focus,
 .tv-input-btn.active-focus {
-    background: rgba(179,138,45,0.4) !important;
-    border-color: #b38a2d !important;
-    box-shadow: 0 0 15px rgba(179,138,45,0.7) !important;
-    transform: scale(1.05) !important;
+    background: rgba(179,138,45,0.5) !important;
+    border: 3px solid #f5e985 !important;
+    box-shadow: 0 0 25px rgba(179,138,45,0.9), inset 0 0 10px rgba(245, 233, 133, 0.4) !important;
+    transform: scale(1.08) !important;
     outline: none !important;
 }
 

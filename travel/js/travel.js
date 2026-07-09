@@ -14,11 +14,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function setupGallery(config) {
+        const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
+        const basePath = isInSubfolder ? '../' : '';
+
         if (config && config.hotel && config.hotel.media) {
             if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                images = config.hotel.media.slider_images;
+                images = config.hotel.media.slider_images.map(img => {
+                    return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
+                });
             } else if (config.hotel.media.cover_image) {
-                images = [config.hotel.media.cover_image];
+                let cover = config.hotel.media.cover_image;
+                if (!cover.startsWith('http') && !cover.startsWith('/')) {
+                    cover = basePath + cover;
+                }
+                images = [cover];
             }
         }
 

@@ -85,17 +85,24 @@ window.TVCore = {
         if (this.bgSliderIntervalId) clearInterval(this.bgSliderIntervalId);
         this.bgSlideImages = [];
 
+        const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
+        const basePath = isInSubfolder ? '../' : '';
+
         if (config && config.hotel && config.hotel.media) {
             if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                this.bgSlideImages = config.hotel.media.slider_images;
+                this.bgSlideImages = config.hotel.media.slider_images.map(function(img) {
+                    return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
+                });
             } else if (config.hotel.media.cover_image) {
-                this.bgSlideImages = [config.hotel.media.cover_image];
+                var cover = config.hotel.media.cover_image;
+                if (!cover.startsWith('http') && !cover.startsWith('/')) {
+                    cover = basePath + cover;
+                }
+                this.bgSlideImages = [cover];
             }
         }
 
         if (this.bgSlideImages.length === 0) {
-            const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
-            const basePath = isInSubfolder ? '../' : '';
             this.bgSlideImages = [fallbackImage || `${basePath}images/main.jpg`];
         }
 
@@ -110,8 +117,6 @@ window.TVCore = {
             slides[1].classList.remove('active');
         };
         tempImg1.onerror = () => {
-            const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
-            const basePath = isInSubfolder ? '../' : '';
             slides[0].style.backgroundImage = `url('${basePath}images/main.jpg')`;
             slides[0].classList.add('active');
             slides[1].classList.remove('active');
@@ -135,8 +140,6 @@ window.TVCore = {
                     this.bgActiveSlideIndex = nextSlideIndex;
                 };
                 tempImgNext.onerror = () => {
-                    const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
-                    const basePath = isInSubfolder ? '../' : '';
                     slides[nextSlideIndex].style.backgroundImage = `url('${basePath}images/main.jpg')`;
                     slides[nextSlideIndex].classList.add('active');
                     slides[this.bgActiveSlideIndex].classList.remove('active');
@@ -188,7 +191,14 @@ window.TVCore = {
 
                 const img = document.createElement('img');
                 img.id = 'global-hotel-logo';
-                img.src = config.hotel.media.logo_image;
+                
+                let logoSrc = config.hotel.media.logo_image;
+                if (logoSrc && !logoSrc.startsWith('http') && !logoSrc.startsWith('/')) {
+                    const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
+                    const basePath = isInSubfolder ? '../' : '';
+                    logoSrc = basePath + logoSrc;
+                }
+                img.src = logoSrc;
                 img.alt = config.hotel.hotel_name || 'Hotel Logo';
 
                 container.appendChild(img);
