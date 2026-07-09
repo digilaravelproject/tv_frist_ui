@@ -53,7 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Auto-focus the first language item after rendering
                 var firstLang = container.querySelector('.lang-item');
                 if (firstLang) {
+                    if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                        window.TVNavigation.markDirty();
+                    }
                     firstLang.focus();
+                    firstLang.classList.add('active-focus');
                 }
 
                 // Set up focus wrapping for action buttons

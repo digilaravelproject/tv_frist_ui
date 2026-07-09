@@ -267,20 +267,41 @@
         },
 
         handleInitialFocus: function() {
-            var focusables = CacheManager.getFocusableElements();
-            if (focusables.length && (document.activeElement === document.body || !document.activeElement)) {
-                var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
-                if (isIndex) {
-                    var allIcons = document.querySelectorAll('.icon-item');
-                    if (allIcons.length > 3) {
-                        allIcons[3].focus();
-                    } else if (allIcons.length > 0) {
-                        allIcons[0].focus();
+            var retries = [150, 500, 1000, 2000];
+            var attempt = 0;
+            
+            function tryFocus() {
+                var focusables = CacheManager.getFocusableElements();
+                if (focusables.length) {
+                    var active = document.activeElement;
+                    if (!active || active === document.body || focusables.indexOf(active) === -1) {
+                        var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
+                        var target = null;
+                        if (isIndex) {
+                            var allIcons = document.querySelectorAll('.icon-item');
+                            if (allIcons.length > 3) {
+                                target = allIcons[3];
+                            } else if (allIcons.length > 0) {
+                                target = allIcons[0];
+                            }
+                        }
+                        if (!target) {
+                            target = focusables[0];
+                        }
+                        if (target) {
+                            target.focus();
+                            target.classList.add('active-focus');
+                        }
                     }
-                } else {
-                    focusables[0].focus();
+                }
+                
+                if (attempt < retries.length - 1) {
+                    attempt++;
+                    setTimeout(tryFocus, retries[attempt]);
                 }
             }
+            
+            tryFocus();
         }
     };
 
@@ -452,6 +473,29 @@
         getCenter: FocusEngine.getCenter.bind(FocusEngine),
         goBack: FocusEngine.goBack.bind(FocusEngine),
         navigate: FocusEngine.navigate.bind(FocusEngine),
-        handleInitialFocus: FocusEngine.handleInitialFocus.bind(FocusEngine)
+        handleInitialFocus: FocusEngine.handleInitialFocus.bind(FocusEngine),
+        markDirty: CacheManager.markDirty.bind(CacheManager)
+    };
+
+    // Global hooks for native bridge wrapper
+    window.triggerTVBack = function() {
+        var handled = false;
+        if (typeof window.onTVBack === 'function') {
+            if (window.onTVBack()) {
+                handled = true;
+            }
+        }
+        var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
+        if (!handled && !isIndex) {
+            FocusEngine.goBack();
+            handled = true;
+        }
+        return handled;
+    };
+
+    window.triggerTVKey = function(keyCode, keyName) {
+        if (window.TVKeyInjector && typeof window.TVKeyInjector.triggerKey === 'function') {
+            window.TVKeyInjector.triggerKey(keyCode, keyName);
+        }
     };
 })();

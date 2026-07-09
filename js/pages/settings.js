@@ -120,6 +120,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Set initial focus on Settings page keypad
+    var firstBtn = document.querySelector('.num-btn');
+    if (firstBtn) {
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
+        firstBtn.focus();
+        firstBtn.classList.add('active-focus');
+    }
+
     history.pushState(null, '', location.href);
     window.onpopstate = () => TVNavigation.goBack();
 });

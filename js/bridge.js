@@ -323,6 +323,28 @@
 })();
 
 // Expose global configuration file name for easy external adjustments
+window.TVKeyInjector = {
+    triggerBack: function () {
+        this.triggerKey(8, 'Backspace'); // standard back
+    },
+    triggerNumber: function (digit) {
+        var num = parseInt(digit, 10);
+        if (num >= 0 && num <= 9) {
+            this.triggerKey(48 + num, digit);
+        }
+    },
+    triggerKey: function (keyCode, keyName) {
+        var event = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            keyCode: keyCode,
+            which: keyCode,
+            key: keyName || ''
+        });
+        window.dispatchEvent(event);
+    }
+};
+
 window.HOTEL_DATA_FILE = "data.json";
 
 // Centralized instant-load offline helper
