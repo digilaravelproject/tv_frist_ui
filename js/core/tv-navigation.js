@@ -71,6 +71,12 @@
         },
 
         goBack: function() {
+            // If running inside an iframe, close the subpage in the parent window instead of nesting
+            if (window.parent && window.parent !== window && typeof window.parent.closeSubPage === 'function') {
+                window.parent.closeSubPage();
+                return;
+            }
+            
             // Global Back Navigation Handler
             var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
             
@@ -210,6 +216,31 @@
         }
     };
 
+    // Centralized Universal Keycode Mapping for Smart TVs (Android TV, Tizen, webOS, Apple TV, Panasonic, standard PCs)
+    var Keys = {
+        UP: [38, 19, 29460, 65362],        // ArrowUp, Android TV Up, Tizen/WebOS Up
+        DOWN: [40, 20, 29461, 65364],      // ArrowDown, Android TV Down, Tizen/WebOS Down
+        LEFT: [37, 21, 29462, 65361],      // ArrowLeft, Android TV Left
+        RIGHT: [39, 22, 29463, 65363],     // ArrowRight, Android TV Right
+        ENTER: [13, 23, 66, 29443, 160],   // Enter/OK: standard Enter, Android TV DPAD_CENTER, webOS/Tizen Enter
+        BACK: [8, 461, 4, 10009, 10182, 27, 220, 166] // Backspace, webOS back, Android TV back, Tizen back, Tizen exit, Escape, Roku back/bracket, browser back
+    };
+
+    function matchesKey(keyCode, keyName, eventKey) {
+        var list = Keys[keyName] || [];
+        if (list.indexOf(keyCode) !== -1) return true;
+        if (eventKey) {
+            var ek = eventKey.toLowerCase();
+            if (keyName === 'UP' && (ek === 'arrowup' || ek === 'up')) return true;
+            if (keyName === 'DOWN' && (ek === 'arrowdown' || ek === 'down')) return true;
+            if (keyName === 'LEFT' && (ek === 'arrowleft' || ek === 'left')) return true;
+            if (keyName === 'RIGHT' && (ek === 'arrowright' || ek === 'right')) return true;
+            if (keyName === 'ENTER' && (ek === 'enter' || ek === 'ok')) return true;
+            if (keyName === 'BACK' && (ek === 'backspace' || ek === 'escape' || ek === 'back' || ek === 'browserback')) return true;
+        }
+        return false;
+    }
+
     // Global Key Down Listener
     window.addEventListener('keydown', function(e) {
         var expiredOverlay = document.getElementById('planExpiredOverlay');
@@ -224,8 +255,8 @@
         var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
         var keyCode = e.keyCode || e.which;
         
-        // Global Back Navigation Handler (4 = Android back, 8 = Backspace, 461 = webOS back, 10009 = Tizen back, 10182 = Tizen exit, 27 = Escape)
-        if (keyCode === 8 || keyCode === 461 || keyCode === 4 || keyCode === 10009 || keyCode === 10182 || keyCode === 27 || e.key === 'Backspace' || e.key === 'Escape') {
+        // Global Back Navigation Handler
+        if (matchesKey(keyCode, 'BACK', e.key)) {
             e.preventDefault();
             
             // Allow page to handle back key specifically (e.g., closing overlays)
@@ -241,16 +272,16 @@
         
         var direction = null;
 
-        // Map D-pad and arrow key events
-        if (keyCode === 37 || keyCode === 21 || e.key === 'ArrowLeft' || e.key === 'Left') {
+        // Map D-pad and arrow key events using universal keys
+        if (matchesKey(keyCode, 'LEFT', e.key)) {
             direction = 'left';
-        } else if (keyCode === 39 || keyCode === 22 || e.key === 'ArrowRight' || e.key === 'Right') {
+        } else if (matchesKey(keyCode, 'RIGHT', e.key)) {
             direction = 'right';
-        } else if (keyCode === 38 || keyCode === 19 || e.key === 'ArrowUp' || e.key === 'Up') {
+        } else if (matchesKey(keyCode, 'UP', e.key)) {
             direction = 'up';
-        } else if (keyCode === 40 || keyCode === 20 || e.key === 'ArrowDown' || e.key === 'Down') {
+        } else if (matchesKey(keyCode, 'DOWN', e.key)) {
             direction = 'down';
-        } else if (keyCode === 13 || keyCode === 23 || keyCode === 66 || e.key === 'Enter') {
+        } else if (matchesKey(keyCode, 'ENTER', e.key)) {
             direction = 'enter';
         }
 
