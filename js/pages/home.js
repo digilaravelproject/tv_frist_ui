@@ -549,8 +549,11 @@ window.onload = function () {
         if (subFrame) {
             subFrame.addEventListener('load', function() {
                 try {
-                    if (subFrame.contentWindow && subFrame.contentWindow.TVNavigation) {
-                        subFrame.contentWindow.TVNavigation.handleInitialFocus();
+                    if (subFrame.contentWindow) {
+                        subFrame.contentWindow.focus();
+                        if (subFrame.contentWindow.TVNavigation) {
+                            subFrame.contentWindow.TVNavigation.handleInitialFocus();
+                        }
                     }
                 } catch(e) {
                     console.warn("Iframe focus sync error:", e);
@@ -594,7 +597,14 @@ function openSubPage(url) {
     document.getElementById('mainUI').style.display = 'none';
     window.history.pushState(null, "", window.location.href);
     var subFrame = document.getElementById('subFrame');
-    if (subFrame) subFrame.focus();
+    if (subFrame) {
+        subFrame.focus();
+        try {
+            if (subFrame.contentWindow) {
+                subFrame.contentWindow.focus();
+            }
+        } catch(e) {}
+    }
 }
 window.openSubPage = openSubPage;
 
