@@ -1,19 +1,19 @@
 {
   "status": true,
-  "message": "Template version details fetched successfully.",
+  "message": "TV logged in successfully.",
   "data": {
     "auth": {
-      "token": "3nRirFMZQsVujog2XBGO57W4X0VdjsDlpNuc7No8k99KRC1xYndkWskKUbvaajBL6tmuGMoKUFbQKUMS"
+      "token": "NPB5oZQPMKRLl2qaO0g6omuNit1ERHqHc9JwGWi1wNLkLoxwXeatxl1ftCTyRrOs2xjTYk4BAh8e0PLz"
     },
     "template": {
-      "latest_version": "4.5",
-      "old_version": "4.0",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v4_5_1783581996.zip",
-      "uploaded_at": "2026-07-09T12:56:36+05:30",
+      "latest_version": "6.0",
+      "old_version": "5.5",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v6_0_1783595353.zip",
+      "uploaded_at": "2026-07-09T16:39:13+05:30",
       "is_update_available": false
     },
     "device": {
-      "room_no": "1519",
+      "room_no": "101",
       "device_id": "6231A4D7B13402C5",
       "mac_address": "AA:BB:CC:DD:EE:FF",
       "ip_address": "192.168.1.100",
@@ -32,8 +32,8 @@
         "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1783173121_logo_7ANoXcRg.png",
         "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1783173121_image_sDTg0sZN.jpeg",
         "slider_images": [
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783586203_slider_AL8302T7.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783586203_slider_hsAYx0Jh.jpg"
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783594989_slider_oLZH7gj8.png",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783595348_slider_BSfhCjmW.png"
         ]
       },
       "active_plan": {
@@ -44,9 +44,9 @@
       }
     },
     "guest_info": {
-      "name": "abcdd",
-      "mobile_number": "2126",
-      "check_in_datetime": "2026-07-09T13:59:00+05:30",
+      "name": "LMNOPQ",
+      "mobile_number": "98765402",
+      "check_in_datetime": "2026-07-09T12:44:00+05:30",
       "check_out_datetime": null
     }
   }

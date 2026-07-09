@@ -544,6 +544,20 @@ window.onload = function () {
         setInterval(updateDateTime, 1000);
         setInterval(updateWeather, 900000);
 
+        // Auto-focus synchronization for subpages loaded inside the iframe
+        var subFrame = document.getElementById('subFrame');
+        if (subFrame) {
+            subFrame.addEventListener('load', function() {
+                try {
+                    if (subFrame.contentWindow && subFrame.contentWindow.TVNavigation) {
+                        subFrame.contentWindow.TVNavigation.handleInitialFocus();
+                    }
+                } catch(e) {
+                    console.warn("Iframe focus sync error:", e);
+                }
+            });
+        }
+
     } catch (e) {
         console.error('Initialization failed:', e);
     }

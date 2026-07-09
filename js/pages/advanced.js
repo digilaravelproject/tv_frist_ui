@@ -183,27 +183,66 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.loadHW = function() {
-        if (window.Android && window.Android.getDeviceInfo) {
-            try {
-                const deviceInfo = JSON.parse(window.Android.getDeviceInfo());
-                displayHWData(deviceInfo);
-                return;
-            } catch (e) {
-                console.error("APK Bridge Error, falling back to PHP:", e);
-            }
-        }
+        // Fetch from dynamic hotel config (which loads data.json)
+        TVCore.fetchHotelConfig().then(config => {
+            if (config && config.device) {
+                var d = {
+                    serial: config.device.device_id || "UNKNOWN",
+                    ip: config.device.ip_address || "...",
+                    gateway: config.device.gateway || "...",
+                    mac: config.device.mac_address || "...",
+                    subnet: config.device.subnet_mask || "...",
+                    dns: config.device.dns || "...",
+                    model: config.device.model || "...",
+                    android: config.device.android_version || "11",
+                    room: config.device.room_no || ""
+                };
+                
+                // Add version if template version exists
+                if (config.template && config.template.latest_version) {
+                    d.version = config.template.latest_version;
+                }
+                
+                displayHWData(d);
+            } else {
+                // Fallback: Android Bridge
+                if (window.Android && window.Android.getDeviceInfo) {
+                    try {
+                        const deviceInfo = JSON.parse(window.Android.getDeviceInfo());
+                        displayHWData(deviceInfo);
+                        return;
+                    } catch (e) {
+                        console.error("APK Bridge Error, falling back to PHP:", e);
+                    }
+                }
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "admin/identify_device.php?t=" + new Date().getTime(), true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                try {
-                    var d = JSON.parse(xhr.responseText);
-                    displayHWData(d);
-                } catch(e) {}
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "admin/identify_device.php?t=" + new Date().getTime(), true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        try {
+                            var d = JSON.parse(xhr.responseText);
+                            displayHWData(d);
+                        } catch(e) {}
+                    }
+                };
+                xhr.send();
             }
-        };
-        xhr.send();
+        }).catch(err => {
+            console.error("Error fetching config, falling back to standard PHP detection:", err);
+            // Fallback: standard detection
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "admin/identify_device.php?t=" + new Date().getTime(), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    try {
+                        var d = JSON.parse(xhr.responseText);
+                        displayHWData(d);
+                    } catch(e) {}
+                }
+            };
+            xhr.send();
+        });
     };
 
     function displayHWData(d) {
@@ -212,11 +251,19 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('v-gateway').innerText = d.gateway || "...";
         document.getElementById('v-mac').innerText = d.mac || "...";
         document.getElementById('v-subnet').innerText = d.subnet || "...";
-        document.getElementById('v-dns').innerText = d.DNS || d.dns || "...";
+        document.getElementById('v-dns').innerText = d.dns || d.DNS || "...";
         document.getElementById('v-model').innerText = d.model || "...";
         document.getElementById('v-android').innerText = d.android || d.Andrd || "11"; 
         
-        if(d.room && d.room !== "---" && room) room.value = d.room;
+        // Populate Template Version if present
+        var verEl = document.getElementById('v-version');
+        if (verEl) {
+            verEl.innerText = d.version || "6.0";
+        }
+        
+        if (d.room && d.room !== "---" && room) {
+            room.value = d.room;
+        }
         
         setTimeout(() => { let k1 = document.getElementById('key1'); if(k1) k1.focus(); }, 300);
     }

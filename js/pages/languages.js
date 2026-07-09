@@ -50,6 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     container.appendChild(btn);
                 });
 
+                // Auto-focus the first language item after rendering
+                var firstLang = container.querySelector('.lang-item');
+                if (firstLang) {
+                    firstLang.focus();
+                }
+
                 // Set up focus wrapping for action buttons
                 const applyBtn = document.getElementById('applyBtn');
                 const cancelBtn = document.getElementById('cancelBtn');
