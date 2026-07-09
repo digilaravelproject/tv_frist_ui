@@ -672,9 +672,15 @@ async function loadApplications() {
             container.appendChild(card);
         });
 
-        // Immediately focus the first card once rendered
+        // Mark focus cache dirty and focus the first card once rendered
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
         var firstCard = container.querySelector('.app-card');
-        if (firstCard) firstCard.focus();
+        if (firstCard) {
+            firstCard.focus();
+            firstCard.classList.add('active-focus');
+        }
     } catch (e) {
         container.innerHTML = '<div style="color:#888;font-size:1.2vw;grid-column:1/-1;text-align:center;">No applications available</div>';
         console.error('loadApplications error:', e);
@@ -746,9 +752,15 @@ async function loadTvInputs() {
             container.appendChild(btn);
         });
 
-        // Immediately focus the first input button once rendered
+        // Mark focus cache dirty and focus the first input button once rendered
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
         var firstInput = container.querySelector('.tv-input-btn');
-        if (firstInput) firstInput.focus();
+        if (firstInput) {
+            firstInput.focus();
+            firstInput.classList.add('active-focus');
+        }
     } catch (e) {
         container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
         console.error('loadTvInputs error:', e);
@@ -848,7 +860,20 @@ document.querySelectorAll('.icon-item').forEach(item => {
         const link = this.dataset.link || this.getAttribute('href');
 
         if (link && comingSoonLinks.indexOf(link) !== -1) {
-            document.getElementById('comingSoonOverlay').style.display = 'flex';
+            var overlay = document.getElementById('comingSoonOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                setTimeout(function() {
+                    if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                        window.TVNavigation.markDirty();
+                    }
+                    var btn = overlay.querySelector('.cs-close-btn');
+                    if (btn) {
+                        btn.focus();
+                        btn.classList.add('active-focus');
+                    }
+                }, 100);
+            }
             return;
         }
 
@@ -865,12 +890,22 @@ window.onTVKeyDown = function (e) {
     if (comingSoon && comingSoon.style.display === "flex") {
         e.preventDefault();
         comingSoon.style.display = "none";
+        var items = document.querySelectorAll('.icon-item');
+        if (items[3]) items[3].focus();
         return true;
     }
     return false;
 };
 
 window.onTVBack = function () {
+    var comingSoon = document.getElementById("comingSoonOverlay");
+    if (comingSoon && comingSoon.style.display === "flex") {
+        comingSoon.style.display = "none";
+        var items = document.querySelectorAll('.icon-item');
+        if (items[3]) items[3].focus();
+        window.history.pushState(null, "", window.location.href);
+        return true;
+    }
     var appsOverlay = document.getElementById("appsOverlay");
     if (appsOverlay && appsOverlay.classList.contains("show")) {
         closeAppsOverlay();

@@ -368,6 +368,29 @@
                 box-shadow: 0 0 20px rgba(179, 138, 45, 0.9);\
                 transform: scale(1.08);\
             }\
+            .cs-close-btn {\
+                margin-top: 25px;\
+                padding: 10px 25px;\
+                background: rgba(0, 0, 0, 0.6);\
+                border: 2px solid #b38a2d;\
+                border-radius: 30px;\
+                color: #fff;\
+                font-family: sans-serif;\
+                font-size: 14px;\
+                font-weight: bold;\
+                text-transform: uppercase;\
+                letter-spacing: 1px;\
+                cursor: pointer;\
+                outline: none;\
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);\
+                transition: all 0.2s ease;\
+            }\
+            .cs-close-btn:focus, .cs-close-btn.active-focus {\
+                background: #b38a2d;\
+                color: #000 !important;\
+                box-shadow: 0 0 20px rgba(179, 138, 45, 0.9);\
+                transform: scale(1.08);\
+            }\
         ';
         document.head.appendChild(style);
 
@@ -393,12 +416,15 @@
             var comingSoon = document.getElementById('comingSoonOverlay');
             if (comingSoon) {
                 var csClose = document.createElement('button');
-                csClose.className = 'tv-floating-back-btn';
-                csClose.innerHTML = '<span>&#8592;</span> CLOSE';
+                csClose.className = 'cs-close-btn';
+                csClose.innerHTML = 'CLOSE';
                 csClose.setAttribute('tabindex', '0');
                 csClose.addEventListener('click', function(e) {
                     e.preventDefault();
                     comingSoon.style.display = 'none';
+                    // Restore focus to home page carousel item
+                    var items = document.querySelectorAll('.icon-item');
+                    if (items[3]) items[3].focus();
                 });
                 comingSoon.appendChild(csClose);
             }

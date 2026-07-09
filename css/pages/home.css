@@ -293,6 +293,7 @@ body.rtl-mode .menu-container {
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
+    margin: 8px; /* Safe visual spacing backup for TV WebViews ignoring grid-gap */
 }
 
 .app-card:hover,
@@ -344,6 +345,7 @@ body.rtl-mode .menu-container {
     font-size: 1.1vw;
     cursor: pointer;
     transition: all 0.2s ease;
+    margin: 6px; /* Safe visual spacing backup for TV WebViews ignoring flex-gap */
 }
 
 .tv-input-btn:hover,
@@ -356,4 +358,4 @@ body.rtl-mode .menu-container {
     outline: none !important;
 }
 
-#appsCloseBtn { display: none !important; }
+/* appsCloseBtn display: none removed to allow visual close action */
