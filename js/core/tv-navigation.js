@@ -293,6 +293,18 @@
         init: function() {
             var self = this;
             
+            // Temporary on-screen debug key logger for physical TV testing
+            (function() {
+                var box = document.createElement('div');
+                box.id = 'tv-debug-logger';
+                box.style.cssText = 'position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.85);color:#00ff00;font-size:14px;padding:8px 12px;border:1px solid #00ff00;border-radius:4px;z-index:999999;font-family:monospace;pointer-events:none;';
+                box.textContent = 'Key Logger: Press any remote button...';
+                document.body.appendChild(box);
+                window.addEventListener('keydown', function(e) {
+                    box.textContent = 'keyCode: ' + (e.keyCode || e.which) + ' | key: ' + e.key;
+                }, true);
+            })();
+            
             // Central event key listeners
             window.addEventListener('keydown', function(e) {
                 var active = document.activeElement;
