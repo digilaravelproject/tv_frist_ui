@@ -305,6 +305,106 @@
         }
     };
 
+    function injectVisualBackButtons() {
+        var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
+
+        // Inject Stylesheet
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = '\
+            .tv-floating-back-btn {\
+                position: fixed;\
+                top: 25px;\
+                left: 25px;\
+                padding: 10px 20px;\
+                background: rgba(0, 0, 0, 0.75);\
+                border: 2px solid #b38a2d;\
+                border-radius: 30px;\
+                color: #fff;\
+                font-family: sans-serif;\
+                font-size: 14px;\
+                font-weight: bold;\
+                text-transform: uppercase;\
+                letter-spacing: 1px;\
+                cursor: pointer;\
+                z-index: 999999;\
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);\
+                display: flex;\
+                align-items: center;\
+                gap: 8px;\
+                outline: none;\
+                transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);\
+            }\
+            .tv-floating-back-btn:focus, .tv-floating-back-btn.active-focus {\
+                background: #b38a2d;\
+                color: #000 !important;\
+                box-shadow: 0 0 20px rgba(179, 138, 45, 0.9);\
+                transform: scale(1.08);\
+            }\
+            /* Overlay close overrides for index page */\
+            #appsOverlay .close-btn-premium {\
+                position: absolute;\
+                top: 25px;\
+                right: 25px;\
+                padding: 10px 20px;\
+                background: rgba(0, 0, 0, 0.75);\
+                border: 2px solid #b38a2d;\
+                border-radius: 30px;\
+                color: #fff;\
+                font-family: sans-serif;\
+                font-size: 14px;\
+                font-weight: bold;\
+                text-transform: uppercase;\
+                letter-spacing: 1px;\
+                cursor: pointer;\
+                z-index: 999999;\
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);\
+                outline: none;\
+                transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);\
+            }\
+            #appsOverlay .close-btn-premium:focus, #appsOverlay .close-btn-premium.active-focus {\
+                background: #b38a2d;\
+                color: #000 !important;\
+                box-shadow: 0 0 20px rgba(179, 138, 45, 0.9);\
+                transform: scale(1.08);\
+            }\
+        ';
+        document.head.appendChild(style);
+
+        if (!isIndex) {
+            // For sub-pages, inject the floating back button
+            var btn = document.createElement('button');
+            btn.className = 'tv-floating-back-btn';
+            btn.innerHTML = '<span>&#8592;</span> BACK';
+            btn.setAttribute('tabindex', '0');
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                FocusEngine.goBack();
+            });
+            document.body.appendChild(btn);
+        } else {
+            // For index page, let's enhance the close button in #appsOverlay and #comingSoonOverlay
+            var appsClose = document.getElementById('appsCloseBtn');
+            if (appsClose) {
+                appsClose.className = 'close-btn-premium';
+                appsClose.innerHTML = 'CLOSE';
+            }
+
+            var comingSoon = document.getElementById('comingSoonOverlay');
+            if (comingSoon) {
+                var csClose = document.createElement('button');
+                csClose.className = 'tv-floating-back-btn';
+                csClose.innerHTML = '<span>&#8592;</span> CLOSE';
+                csClose.setAttribute('tabindex', '0');
+                csClose.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    comingSoon.style.display = 'none';
+                });
+                comingSoon.appendChild(csClose);
+            }
+        }
+    }
+
     /**
      * 4. NavigationController: Handlers, event throttle and event listeners
      */
@@ -444,13 +544,16 @@
                 }
             });
 
-            // Auto-focus triggers
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(FocusEngine.handleInitialFocus, 150);
-                });
-            } else {
+            // Auto-focus and Back Button triggers
+            function initPageElements() {
+                injectVisualBackButtons();
                 setTimeout(FocusEngine.handleInitialFocus, 150);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initPageElements);
+            } else {
+                initPageElements();
             }
         }
     };
