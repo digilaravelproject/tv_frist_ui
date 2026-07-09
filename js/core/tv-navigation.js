@@ -39,6 +39,9 @@
         },
 
         getDigit: function(keyCode, eventKey) {
+            // Guard: prevent standard control keys on keyboard from conflicting with native Android TV keycodes
+            if (eventKey === 'Tab' || eventKey === 'Backspace' || eventKey === 'Enter') return null;
+
             if (keyCode >= 48 && keyCode <= 57) return String(keyCode - 48);
             if (keyCode >= 96 && keyCode <= 105) return String(keyCode - 96);
             if (keyCode >= 7 && keyCode <= 16) return String(keyCode - 7);
@@ -309,6 +312,13 @@
                 // Back Action
                 if (KeycodeManager.matchesKey(keyCode, 'BACK', e.key)) {
                     e.preventDefault();
+                    
+                    // Visual feedback: highlight the DEL button if present (e.g. settings numpad)
+                    var delBtn = document.querySelector('.num-btn[data-val="DEL"]');
+                    if (delBtn) {
+                        delBtn.focus();
+                    }
+
                     if (typeof window.onTVBack === 'function') {
                         if (window.onTVBack()) return;
                     }
@@ -363,6 +373,12 @@
                 // Number Inputs
                 var digit = KeycodeManager.getDigit(keyCode, e.key);
                 if (digit !== null) {
+                    // Visual feedback: find the corresponding number button and focus/highlight it
+                    var btn = document.querySelector('.num-btn[data-val="' + digit + '"]');
+                    if (btn) {
+                        btn.focus();
+                    }
+
                     if (typeof window.onTVNumberKey === 'function') {
                         window.onTVNumberKey(digit);
                     }
