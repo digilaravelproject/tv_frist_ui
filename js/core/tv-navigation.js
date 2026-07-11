@@ -262,7 +262,7 @@
                 if (prevActive) prevActive.classList.remove('active-focus');
                 bestCandidate.classList.add('active-focus');
                 
-                bestCandidate.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                bestCandidate.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
             }
         },
 
@@ -436,6 +436,7 @@
      */
     var NavigationController = {
         lastDirectionTime: 0,
+        lastKeyPressTime: 0,
 
         init: function() {
             var self = this;
@@ -454,6 +455,26 @@
             
             // Central event key listeners
             window.addEventListener('keydown', function(e) {
+                var keyCode = e.keyCode || e.which;
+                
+                // Only throttle navigation and action keys (UP, DOWN, LEFT, RIGHT, ENTER, BACK)
+                var isNavKey = KeycodeManager.matchesKey(keyCode, 'UP', e.key) ||
+                               KeycodeManager.matchesKey(keyCode, 'DOWN', e.key) ||
+                               KeycodeManager.matchesKey(keyCode, 'LEFT', e.key) ||
+                               KeycodeManager.matchesKey(keyCode, 'RIGHT', e.key) ||
+                               KeycodeManager.matchesKey(keyCode, 'ENTER', e.key) ||
+                               KeycodeManager.matchesKey(keyCode, 'BACK', e.key);
+
+                if (isNavKey) {
+                    var nowTime = Date.now();
+                    if (nowTime - self.lastKeyPressTime < 220) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        return;
+                    }
+                    self.lastKeyPressTime = nowTime;
+                }
+
                 var active = document.activeElement;
                 var expiredOverlay = document.getElementById('planExpiredOverlay');
                 if (expiredOverlay && expiredOverlay.style.display === 'flex') {
@@ -523,6 +544,7 @@
                     } else {
                         if (typeof window.onTVNavigate === 'function') {
                             if (window.onTVNavigate(direction, active)) {
+                                e.preventDefault();
                                 return;
                             }
                         }

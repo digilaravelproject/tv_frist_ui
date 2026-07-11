@@ -105,8 +105,17 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     };
 
-    // Attach click listeners to num-btns
+    // Attach focus, blur, and click listeners to num-btns
     document.querySelectorAll('.num-btn').forEach(btn => {
+        btn.addEventListener('focus', function() {
+            // Focus aane par baki buttons se active class hatayein aur ispe lagayein
+            document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('active-focus'));
+            this.classList.add('active-focus');
+        });
+        btn.addEventListener('blur', function() {
+            // Focus hatne par class remove karein
+            this.classList.remove('active-focus');
+        });
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const val = this.dataset.val;

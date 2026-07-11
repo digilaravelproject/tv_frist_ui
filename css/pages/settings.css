@@ -52,7 +52,8 @@
     transition: all 0.2s ease;
 }
 
-.num-btn:focus, .num-btn.active-focus {
+/* Settings Page Keypad Hover/Focus Highlight */
+.num-btn:hover, .num-btn:focus, .num-btn.active-focus {
     background: var(--house-gold);
     color: white !important;
     box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);

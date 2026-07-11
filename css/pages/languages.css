@@ -42,7 +42,8 @@
     cursor: pointer;
 }
 
-.lang-item:focus, .lang-item.active-focus {
+/* Language List Hover/Focus Highlight */
+.lang-item:hover, .lang-item:focus, .lang-item.active-focus {
     background: var(--house-gold);
     color: white;
     box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);

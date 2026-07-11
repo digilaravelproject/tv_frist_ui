@@ -5,13 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hotel UI</title>
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/pages/home.css">
-    <script src="js/bridge.js" defer></script>
-    <script src="js/core/tv-core.js" defer></script>
-    <script src="js/core/tv-navigation.js" defer></script>
-    <script src="js/pages/home.js" defer></script>
-    
+    <link rel="stylesheet" href="css/global.css?v=1.0.1">
+    <link rel="stylesheet" href="css/pages/home.css?v=1.0.1">
+    <script src="js/bridge.js?v=1.0.1" defer></script>
+    <script src="js/core/tv-core.js?v=1.0.1" defer></script>
+    <script src="js/core/tv-navigation.js?v=1.0.1" defer></script>
+    <script src="js/pages/home.js?v=1.0.1" defer></script>
+
 </head>
 
 <body>
@@ -94,29 +94,36 @@
         </div>
     </div>
 
-    <div id="comingSoonOverlay" class="overlay-fullscreen overlay-glass" style="display:none; flex-direction:column; justify-content:center; align-items:center;">
+    <div id="comingSoonOverlay" class="overlay-fullscreen overlay-glass"
+        style="display:none; flex-direction:column; justify-content:center; align-items:center;">
         <div class="cs-icon">&#9203;</div>
         <div class="cs-title">Coming Soon</div>
         <div class="cs-sub">Press BACK or ENTER to continue</div>
     </div>
 
     <!-- Plan Expired Overlay -->
-    <div id="planExpiredOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif;">
+    <div id="planExpiredOverlay"
+        style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif;">
         <div style="background:#1a1a2e;padding:40px;border-radius:16px;text-align:center;max-width:350px;margin:20px;">
             <div style="font-size:48px;margin-bottom:16px;">⏰</div>
             <div style="color:#fff;font-size:20px;font-weight:700;margin-bottom:8px;">Plan Expired</div>
-            <div style="color:#aaa;font-size:14px;margin-bottom:24px;">Your hotel plan has expired. Please contact the administrator to renew.</div>
-            
+            <div style="color:#aaa;font-size:14px;margin-bottom:24px;">Your hotel plan has expired. Please contact the
+                administrator to renew.</div>
+
         </div>
     </div>
 
     <!-- Plan Warning Toast -->
-    <div id="planWarningToast" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9998;max-width:360px;background:#1a1a2e;border-left:4px solid #f0a500;border-radius:8px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,0.4);font-family:sans-serif;animation:slideInRight 0.3s ease;">
+    <div id="planWarningToast"
+        style="display:none;position:fixed;bottom:24px;right:24px;z-index:9998;max-width:360px;background:#1a1a2e;border-left:4px solid #f0a500;border-radius:8px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,0.4);font-family:sans-serif;animation:slideInRight 0.3s ease;">
         <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="font-size:24px;flex-shrink:0;">⚠️</div>
             <div>
-                <div id="planWarningTitle" style="color:#fff;font-size:15px;font-weight:700;margin-bottom:4px;">Plan Expiring Soon</div>
-                <div id="planWarningBody" style="color:#ccc;font-size:13px;line-height:1.4;">Your plan will expire in <strong>X days</strong>. Please renew to avoid interruption.</div>
+                <div id="planWarningTitle" style="color:#fff;font-size:15px;font-weight:700;margin-bottom:4px;">Plan
+                    Expiring Soon</div>
+                <div id="planWarningBody" style="color:#ccc;font-size:13px;line-height:1.4;">Your plan will expire in
+                    <strong>X days</strong>. Please renew to avoid interruption.
+                </div>
             </div>
         </div>
     </div>

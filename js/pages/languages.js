@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (index < langs.length - 1) btn.setAttribute('data-nav-down', 'lang_' + (index + 1));
                     else btn.setAttribute('data-nav-down', 'applyBtn'); // Last item goes to Apply
                     
+                    btn.addEventListener('focus', function() {
+                        document.querySelectorAll('.lang-item').forEach(b => b.classList.remove('active-focus'));
+                        this.classList.add('active-focus');
+                    });
+                    btn.addEventListener('blur', function() {
+                        this.classList.remove('active-focus');
+                    });
                     btn.addEventListener('click', function(e) {
                         e.preventDefault();
                         document.querySelectorAll('.lang-item').forEach(el => el.classList.remove('selected'));
