@@ -408,19 +408,28 @@ function updateGreetingDisplay() {
     greetEl.textContent = text;
 }
 
-let owmApiKey = null;
-async function getApiKey() {
-    if (owmApiKey) return owmApiKey;
+async function fetchCoordinates(city) {
     try {
-        const response = await fetch('admin/config.json?v=' + Date.now());
-        if (response.ok) {
-            const config = await response.json();
-            owmApiKey = config.OWM_API_KEY;
+        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
+        const res = await fetch(geoUrl);
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.results && data.results.length > 0) {
+                return {
+                    lat: data.results[0].latitude,
+                    lon: data.results[0].longitude,
+                    timezone: data.results[0].timezone || "auto"
+                };
+            }
         }
     } catch (e) {
-        console.warn("Could not load OWM_API_KEY from config.json", e);
+        console.warn("Geocoding lookup failed, using fallback coordinates:", e);
     }
-    return owmApiKey || "95265a9bc38d5d5ec7092f78a9fa8c2d";
+    return {
+        lat: 19.0760,
+        lon: 72.8777,
+        timezone: "Asia/Kolkata"
+    };
 }
 
 async function fetchIpLocation() {
@@ -500,29 +509,14 @@ async function updateWeather() {
 
     try {
         const city = await resolveLocation();
-        const apiKey = await getApiKey();
+        const coords = await fetchCoordinates(city);
 
-        if (!apiKey || apiKey === "YOUR_OPENWEATHERMAP_API_KEY") {
-            console.warn("No valid OWM API key configured. Using local fallback data.");
-            const response = await fetch('weather/weather_data.json?v=' + Date.now());
-            if (!response.ok) throw new Error("Weather file not found");
-
-            const data = await response.json();
-            const tempC = Math.round(data.extracted_data.temp);
-            const tempF = Math.round((tempC * 9 / 5) + 32);
-            const tempString = `${tempC}°C / ${tempF}°F`;
-            const isRTL = document.body.classList.contains('rtl-mode');
-            tempEl.textContent = isRTL ? `${tempString} ${city}` : `${city} ${tempString}`;
-            tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
-            return;
-        }
-
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m&timezone=${encodeURIComponent(coords.timezone)}`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error("OWM API Request failed");
+        if (!response.ok) throw new Error("Open-Meteo Forecast Request failed");
 
         const data = await response.json();
-        const tempC = Math.round(data.main.temp);
+        const tempC = Math.round(data.current.temperature_2m);
         const tempF = Math.round((tempC * 9 / 5) + 32);
         const tempString = `${tempC}°C / ${tempF}°F`;
 
@@ -546,6 +540,24 @@ async function updateWeather() {
             const isRTL = document.body.classList.contains('rtl-mode');
             tempEl.textContent = isRTL ? `${cachedTemp} ${cachedCity}` : `${cachedCity} ${cachedTemp}`;
             tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
+            return;
+        }
+
+        // Try local fallback file weather/weather_data.json
+        try {
+            const response = await fetch('weather/weather_data.json?v=' + Date.now());
+            if (response.ok) {
+                const data = await response.json();
+                const city = await resolveLocation();
+                const tempC = Math.round(data.extracted_data.temp);
+                const tempF = Math.round((tempC * 9 / 5) + 32);
+                const tempString = `${tempC}°C / ${tempF}°F`;
+                const isRTL = document.body.classList.contains('rtl-mode');
+                tempEl.textContent = isRTL ? `${tempString} ${city}` : `${city} ${tempString}`;
+                tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
+            }
+        } catch (fallbackErr) {
+            console.warn("Local fallback load failed on home page:", fallbackErr);
         }
     }
 }
