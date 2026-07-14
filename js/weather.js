@@ -6,12 +6,12 @@
  * No external API calls from the frontend - sync is handled by Flutter/Dart background isolate.
  */
 
-(function() {
+(function () {
     'use strict';
 
     const CACHE_KEY = 'weather_cache';
     const CACHE_TIMESTAMP_KEY = 'weather_cache_timestamp';
-    const MAX_CACHE_AGE_MS = 30 * 60 * 1000; // 30 minutes
+    const MAX_CACHE_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
 
     let currentLanguageData = null;
 
@@ -57,7 +57,7 @@
         const aqiVal = parseInt(ext.aqi) || 0;
         const aqiTextEl = document.getElementById('aqi-text');
         const aqiNumEl = document.getElementById('cur-aqi');
-        
+
         let statusKey = "";
         let color = "#00b050";
 
@@ -182,7 +182,7 @@
             if (response.ok) {
                 currentLanguageData = await response.json();
                 if (currentLanguageData.direction === 'rtl') document.body.classList.add('rtl-mode');
-                
+
                 // Update static labels
                 const labels = {
                     'label-feels': 'feels_like',
@@ -192,14 +192,14 @@
                     'label-sunrise': 'sunrise',
                     'label-sunset': 'sunset'
                 };
-                
+
                 Object.entries(labels).forEach(([elId, dataKey]) => {
                     const el = document.getElementById(elId);
                     if (el && currentLanguageData[dataKey]) el.innerText = currentLanguageData[dataKey];
                 });
             }
-        } catch (e) { 
-            console.error("Weather: Lang Load Failed", e); 
+        } catch (e) {
+            console.error("Weather: Lang Load Failed", e);
         }
     }
 
@@ -289,7 +289,7 @@
     async function resolveLocation() {
         let cachedCity = localStorage.getItem('weather_city');
         let city = cachedCity || "Mumbai";
-        
+
         // Normalize Mumbai suburbs
         const mumbaiSuburbs = ['borivali', 'andheri', 'bandra', 'thane', 'navi mumbai', 'mulund', 'kandivali', 'malad', 'goregaon', 'dahisar', 'chembur', 'kurla', 'ghatkopar', 'mumbai suburb'];
         const cleanCity = city.trim().toLowerCase();
@@ -311,7 +311,7 @@
     function mapOwmToWmo(curData, pollutionData, forecastData) {
         const lat = curData.coord.lat;
         const lon = curData.coord.lon;
-        
+
         let aqiVal = 50;
         if (pollutionData && pollutionData.list && pollutionData.list[0]) {
             const pAqi = pollutionData.list[0].main.aqi;
@@ -442,7 +442,7 @@
                 try {
                     const polRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${curData.coord.lat}&lon=${curData.coord.lon}&appid=${apiKey}`);
                     if (polRes.ok) pollutionData = await polRes.json();
-                } catch(e) { console.warn("AQI fetch failed:", e); }
+                } catch (e) { console.warn("AQI fetch failed:", e); }
             }
 
             // C. Fetch 5-day / 3-hour forecast
@@ -515,7 +515,7 @@
     function updateClock() {
         const clockEl = document.getElementById('live-clock');
         if (!clockEl) return;
-        clockEl.innerText = formatDate(new Date()) + " | " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true}).toUpperCase();
+        clockEl.innerText = formatDate(new Date()) + " | " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
     }
 
     // Public API
@@ -533,24 +533,24 @@
                     if (config.hotel && config.hotel.media && config.hotel.media.slider_images) {
                         sliderImages = config.hotel.media.slider_images;
                     }
-                } catch(e){}
+                } catch (e) { }
             }
             initSlider(sliderImages);
 
             updateWeather();
-            
+
             setInterval(updateClock, 1000);
             setInterval(updateWeather, 1800000); // Check weather every 30 minutes
 
             // Bind D-pad retry button action
             const retryBtn = document.getElementById('retry-btn');
             if (retryBtn) {
-                retryBtn.addEventListener('click', function() {
+                retryBtn.addEventListener('click', function () {
                     updateWeather();
                 });
             }
         },
-        
+
         onSyncComplete(data) {
             saveToCache(data);
             renderWeather(data, false);
@@ -558,4 +558,4 @@
     };
 
 })();
-window.onTVBack = function() { window.location.href = '../index.html'; return true; };
+window.onTVBack = function () { window.location.href = '../index.html'; return true; };

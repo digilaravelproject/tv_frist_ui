@@ -597,7 +597,7 @@ window.onload = function () {
         }
         initLanguage();
         setInterval(updateDateTime, 1000);
-        setInterval(updateWeather, 1800000); // Check weather every 30 minutes
+        setInterval(updateWeather, 900000); // Check weather every 15 minutes
 
         // Auto-focus synchronization for subpages loaded inside the iframe
         var subFrame = document.getElementById('subFrame');
