@@ -11,7 +11,7 @@
 
     const CACHE_KEY = 'weather_cache';
     const CACHE_TIMESTAMP_KEY = 'weather_cache_timestamp';
-    const MAX_CACHE_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+    const MAX_CACHE_AGE_MS = 30 * 60 * 1000; // 30 minutes
 
     let currentLanguageData = null;
 
@@ -540,7 +540,7 @@
             updateWeather();
             
             setInterval(updateClock, 1000);
-            setInterval(updateWeather, 300000); // 5 minutes
+            setInterval(updateWeather, 1800000); // Check weather every 30 minutes
 
             // Bind D-pad retry button action
             const retryBtn = document.getElementById('retry-btn');
