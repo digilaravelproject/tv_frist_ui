@@ -248,25 +248,25 @@
         activeSlideIndex = 0;
 
         if (slideImages.length > 1) {
+            const preloader = new Image();
             sliderIntervalId = setInterval(() => {
                 currentImageIndex = (currentImageIndex + 1) % slideImages.length;
                 const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
                 const targetUrl = slideImages[currentImageIndex];
 
-                const tempImgNext = new Image();
-                tempImgNext.onload = () => {
+                preloader.onload = () => {
                     slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
                     slides[nextSlideIndex].classList.add('active');
                     slides[activeSlideIndex].classList.remove('active');
                     activeSlideIndex = nextSlideIndex;
                 };
-                tempImgNext.onerror = () => {
+                preloader.onerror = () => {
                     slides[nextSlideIndex].style.backgroundImage = "url('../images/main.jpg')";
                     slides[nextSlideIndex].classList.add('active');
                     slides[activeSlideIndex].classList.remove('active');
                     activeSlideIndex = nextSlideIndex;
                 };
-                tempImgNext.src = targetUrl;
+                preloader.src = targetUrl;
             }, 5000);
         }
     }

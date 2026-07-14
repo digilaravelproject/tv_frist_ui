@@ -424,11 +424,21 @@ async function getApiKey() {
 }
 
 async function fetchIpLocation() {
+    const cachedIpCity = localStorage.getItem('cached_ip_city');
+    const cachedIpTime = parseInt(localStorage.getItem('cached_ip_city_time') || '0');
+    if (cachedIpCity && (Date.now() - cachedIpTime < 24 * 60 * 60 * 1000)) {
+        return cachedIpCity;
+    }
+
     try {
         const res = await fetch('https://ipinfo.io/json');
         if (res.ok) {
             const data = await res.json();
-            if (data && data.city) return data.city;
+            if (data && data.city) {
+                localStorage.setItem('cached_ip_city', data.city);
+                localStorage.setItem('cached_ip_city_time', Date.now().toString());
+                return data.city;
+            }
         }
     } catch (e) {
         console.warn("ipinfo.io failed, trying fallback:", e);
@@ -437,7 +447,11 @@ async function fetchIpLocation() {
         const res = await fetch('https://ipapi.co/json/');
         if (res.ok) {
             const data = await res.json();
-            if (data && data.city) return data.city;
+            if (data && data.city) {
+                localStorage.setItem('cached_ip_city', data.city);
+                localStorage.setItem('cached_ip_city_time', Date.now().toString());
+                return data.city;
+            }
         }
     } catch (e) {
         console.warn("ipapi.co failed:", e);
