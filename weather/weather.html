@@ -15,6 +15,25 @@
 </head>
 <body>
 
+    <div id="bg-slider">
+        <div class="slide active"></div>
+        <div class="slide"></div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="weather-loading" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26,26,46,0.95); justify-content: center; align-items: center; z-index: 1000; flex-direction: column;">
+        <div class="spinner"></div>
+        <div style="color: white; margin-top: 20px; font-size: 1.5vw; font-family: sans-serif;">Fetching Weather Forecast...</div>
+    </div>
+
+    <!-- Error/Offline overlay -->
+    <div id="weather-error" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26,26,46,0.95); justify-content: center; align-items: center; z-index: 1001; flex-direction: column; font-family: sans-serif; color: white;">
+        <div style="font-size: 4vw; margin-bottom: 20px;">⚠️</div>
+        <h2 id="error-message-title" style="margin-bottom: 10px; font-size: 2vw; color: #b38a2d;">No Internet Connection</h2>
+        <p id="error-message-body" style="color: #ccc; margin-bottom: 30px; font-size: 1.2vw; max-width: 450px; text-align: center;">Unable to fetch weather data. Please check your network connectivity.</p>
+        <button id="retry-btn" tabindex="0" class="btn-act">Retry</button>
+    </div>
+
     <div class="top-row">
         <div class="left-branding">
             <h1 class="city" id="city-name">MUMBAI</h1>

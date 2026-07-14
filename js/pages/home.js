@@ -408,43 +408,118 @@ function updateGreetingDisplay() {
     greetEl.textContent = text;
 }
 
+let owmApiKey = null;
+async function getApiKey() {
+    if (owmApiKey) return owmApiKey;
+    try {
+        const response = await fetch('admin/config.json?v=' + Date.now());
+        if (response.ok) {
+            const config = await response.json();
+            owmApiKey = config.OWM_API_KEY;
+        }
+    } catch (e) {
+        console.warn("Could not load OWM_API_KEY from config.json", e);
+    }
+    return owmApiKey || "95265a9bc38d5d5ec7092f78a9fa8c2d";
+}
+
+async function fetchIpLocation() {
+    try {
+        const res = await fetch('https://ipinfo.io/json');
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.city) return data.city;
+        }
+    } catch (e) {
+        console.warn("ipinfo.io failed, trying fallback:", e);
+    }
+    try {
+        const res = await fetch('https://ipapi.co/json/');
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.city) return data.city;
+        }
+    } catch (e) {
+        console.warn("ipapi.co failed:", e);
+    }
+    return null;
+}
+
+async function resolveLocation() {
+    // 1. Manual override takes highest priority
+    let cachedCity = localStorage.getItem('weather_city');
+    let isManual = localStorage.getItem('weather_city_manual') === 'true';
+    if (cachedCity && isManual) return cachedCity;
+
+    // 2. data.json (hotel_location)
+    try {
+        const cachedConfigStr = localStorage.getItem('cachedHotelData');
+        let config = null;
+        if (cachedConfigStr) {
+            config = JSON.parse(cachedConfigStr);
+        }
+        if (!config && typeof window.getFastConfig === 'function') {
+            config = window.getFastConfig();
+        }
+        if (config && config.hotel && config.hotel.hotel_location) {
+            const loc = config.hotel.hotel_location;
+            localStorage.setItem('weather_city', loc);
+            // Ensure manual flag is false since it's an auto-detected/configured hotel location
+            localStorage.setItem('weather_city_manual', 'false');
+            return loc;
+        }
+    } catch (e) {
+        console.warn("Failed resolving hotel_location", e);
+    }
+
+    // 3. Fallback to cached city (even if not manual)
+    if (cachedCity) return cachedCity;
+
+    // 4. IP Geolocation fallback
+    const ipCity = await fetchIpLocation();
+    if (ipCity) {
+        localStorage.setItem('weather_city', ipCity);
+        localStorage.setItem('weather_city_manual', 'false');
+        return ipCity;
+    }
+
+    // 5. Ultimate Fallback
+    return "Mumbai";
+}
+
 async function updateWeather() {
     const tempEl = document.getElementById('temp');
     if (!tempEl) return;
 
     try {
-        // Use the offline-capable weather module if available
-        if (window.WeatherModule && typeof window.WeatherModule.getDisplayData === 'function') {
-            const weatherData = await window.WeatherModule.getDisplayData();
-            if (weatherData) {
-                const { tempString, city, isRTL } = weatherData;
-                if (isRTL) {
-                    tempEl.textContent = `${tempString} ${city}`;
-                    tempEl.style.direction = 'rtl';
-                } else {
-                    tempEl.textContent = `${city} ${tempString}`;
-                    tempEl.style.direction = 'ltr';
-                }
-                return;
-            }
+        const city = await resolveLocation();
+        const apiKey = await getApiKey();
+
+        if (!apiKey || apiKey === "YOUR_OPENWEATHERMAP_API_KEY") {
+            console.warn("No valid OWM API key configured. Using local fallback data.");
+            const response = await fetch('weather/weather_data.json?v=' + Date.now());
+            if (!response.ok) throw new Error("Weather file not found");
+
+            const data = await response.json();
+            const tempC = Math.round(data.extracted_data.temp);
+            const tempF = Math.round((tempC * 9 / 5) + 32);
+            const tempString = `${tempC}°C / ${tempF}°F`;
+            const isRTL = document.body.classList.contains('rtl-mode');
+            tempEl.textContent = isRTL ? `${tempString} ${city}` : `${city} ${tempString}`;
+            tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
+            return;
         }
 
-        // Fallback: direct fetch (will work if cached, show error gracefully if not)
-        const response = await fetch('weather/weather_data.json?v=' + Date.now());
-        if (!response.ok) throw new Error("Weather file not found");
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("OWM API Request failed");
 
         const data = await response.json();
-        const tempC = Math.round(data.extracted_data.temp);
+        const tempC = Math.round(data.main.temp);
         const tempF = Math.round((tempC * 9 / 5) + 32);
         const tempString = `${tempC}°C / ${tempF}°F`;
 
-        let city = "Mumbai";
-        if (typeof currentData !== 'undefined' && currentData.city_name) {
-            city = currentData.city_name;
-        }
-
         const isRTL = document.body.classList.contains('rtl-mode');
-
         if (isRTL) {
             tempEl.textContent = `${tempString} ${city}`;
             tempEl.style.direction = 'rtl';
@@ -452,56 +527,213 @@ async function updateWeather() {
             tempEl.textContent = `${city} ${tempString}`;
             tempEl.style.direction = 'ltr';
         }
+
+        localStorage.setItem('cached_temp_string', tempString);
+        localStorage.setItem('cached_temp_city', city);
+
     } catch (error) {
         console.error("Weather Update Error:", error);
-        // Silent fail - temp element keeps previous value or shows nothing
+        const cachedTemp = localStorage.getItem('cached_temp_string');
+        const cachedCity = localStorage.getItem('cached_temp_city');
+        if (cachedTemp && cachedCity) {
+            const isRTL = document.body.classList.contains('rtl-mode');
+            tempEl.textContent = isRTL ? `${cachedTemp} ${cachedCity}` : `${cachedCity} ${cachedTemp}`;
+            tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
+        }
+    }
+}
+
+let allCitiesList = [];
+async function loadCitiesList() {
+    try {
+        const langFile = localStorage.getItem('selectedLangFile') || 'english.json';
+        const langName = langFile.replace('.json', '');
+        const response = await fetch(`admin/cities/${langName}_cities.json`);
+        if (response.ok) {
+            allCitiesList = await response.json();
+        } else {
+            const fallbackRes = await fetch('admin/cities/english_cities.json');
+            if (fallbackRes.ok) {
+                allCitiesList = await fallbackRes.json();
+            }
+        }
+    } catch (e) {
+        console.warn("Failed to load cities list", e);
+    }
+}
+
+function initCitySelector() {
+    const tempEl = document.getElementById('temp');
+    const overlay = document.getElementById('citySelectorOverlay');
+    const closeBtn = document.getElementById('city-selector-close-btn');
+    const customInput = document.getElementById('custom-city-input');
+    const customSaveBtn = document.getElementById('custom-city-save-btn');
+    const statusEl = document.getElementById('current-location-status');
+    const autoDetectBtn = document.getElementById('auto-detect-location-btn');
+    const suggestionsContainer = document.getElementById('city-suggestions-container');
+
+    if (!tempEl || !overlay) return;
+
+    // Load cities list dynamically on init
+    loadCitiesList();
+
+    async function showOverlay() {
+        overlay.style.display = 'flex';
+        document.body.classList.add('overlay-active');
+        window.__citySelectorOpen = true;
+
+        const currentLoc = await resolveLocation();
+        if (statusEl) statusEl.textContent = `Current: ${currentLoc}`;
+
+        // Clear previous input & suggestions
+        if (customInput) customInput.value = '';
+        if (suggestionsContainer) {
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = 'none';
+        }
+
+        setTimeout(() => {
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+            const firstBtn = overlay.querySelector('.city-btn');
+            if (firstBtn) {
+                firstBtn.focus();
+                firstBtn.classList.add('active-focus');
+            }
+        }, 100);
+    }
+
+    function hideOverlay() {
+        overlay.style.display = 'none';
+        document.body.classList.remove('overlay-active');
+        window.__citySelectorOpen = false;
+        setTimeout(() => {
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+            tempEl.focus();
+            tempEl.classList.add('active-focus');
+        }, 100);
+    }
+
+    // Auto-Detect Click Handler
+    if (autoDetectBtn) {
+        autoDetectBtn.addEventListener('click', async function() {
+            if (statusEl) statusEl.textContent = "Current: Detecting location...";
+            const ipCity = await fetchIpLocation();
+            if (ipCity) {
+                localStorage.setItem('weather_city', ipCity);
+                localStorage.setItem('weather_city_manual', 'true');
+                await updateWeather();
+                hideOverlay();
+                return;
+            }
+            if (statusEl) statusEl.textContent = "Current: Auto Detect Failed";
+        });
+    }
+
+    tempEl.addEventListener('click', showOverlay);
+    tempEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            showOverlay();
+        }
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', hideOverlay);
+
+    const cityButtons = overlay.querySelectorAll('.city-btn');
+    cityButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const city = btn.getAttribute('data-city');
+            if (city) {
+                localStorage.setItem('weather_city', city);
+                localStorage.setItem('weather_city_manual', 'true');
+                updateWeather();
+                hideOverlay();
+            }
+        });
+    });
+
+    // Handle suggestions on input typing
+    if (customInput && suggestionsContainer) {
+        customInput.addEventListener('input', function() {
+            const query = customInput.value.trim().toLowerCase();
+            if (query.length < 1) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            // Filter cities from json
+            const matches = allCitiesList.filter(item => {
+                const eng = (item.english_name || '').toLowerCase();
+                const loc = (item.local_name || '').toLowerCase();
+                return eng.includes(query) || loc.includes(query);
+            }).slice(0, 5); // Max 5 suggestions
+
+            if (matches.length === 0) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = 'block';
+
+            matches.forEach(match => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.tabIndex = 0;
+                div.textContent = match.local_name || match.english_name;
+                div.setAttribute('data-english', match.english_name);
+                
+                div.addEventListener('click', function() {
+                    const selectedCity = div.getAttribute('data-english');
+                    localStorage.setItem('weather_city', selectedCity);
+                    localStorage.setItem('weather_city_manual', 'true');
+                    updateWeather();
+                    hideOverlay();
+                });
+
+                div.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        div.click();
+                    }
+                });
+
+                suggestionsContainer.appendChild(div);
+            });
+
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+        });
+    }
+
+    if (customSaveBtn && customInput) {
+        customSaveBtn.addEventListener('click', function () {
+            const val = customInput.value.trim();
+            if (val) {
+                localStorage.setItem('weather_city', val);
+                localStorage.setItem('weather_city_manual', 'true');
+                updateWeather();
+                hideOverlay();
+            }
+        });
+        customInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                customSaveBtn.click();
+            }
+        });
     }
 }
 
 /* ================= 4. COMING SOON ================= */
-var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
-
-
-window.onTVKeyDown = function (e) {
-    var comingSoon = document.getElementById("comingSoonOverlay");
-    if (comingSoon && comingSoon.style.display === "flex") {
-        e.preventDefault();
-        comingSoon.style.display = "none";
-        return true;
-    }
-    return false;
-};
-
-window.onTVBack = function () {
-    var appsOverlay = document.getElementById("appsOverlay");
-    if (appsOverlay && appsOverlay.classList.contains("show")) {
-        closeAppsOverlay();
-        window.history.pushState(null, "", window.location.href);
-        return true;
-    }
-    var overlay = document.getElementById("subPageOverlay");
-    if (overlay && overlay.style.display === "block") {
-        closeSubPage();
-        window.history.pushState(null, "", window.location.href);
-        return true;
-    }
-    return false;
-};
-
-window.onTVNavigate = function (direction, active) {
-    var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
-    if (isIndex && !window.__appsOverlayOpen) {
-        if (direction === "left") {
-            rotate("left");
-            return true;
-        }
-        if (direction === "right") {
-            rotate("right");
-            return true;
-        }
-    }
-    return false;
-};
+var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html'];
 
 /* ================= 5. LISTENERS ================= */
 function showExpiredOverlay() {
@@ -541,13 +773,14 @@ window.onload = function () {
             bg.style.backgroundImage = "url('images/main.jpg')";
         }
         initLanguage();
+        initCitySelector();
         setInterval(updateDateTime, 1000);
         setInterval(updateWeather, 900000);
 
         // Auto-focus synchronization for subpages loaded inside the iframe
         var subFrame = document.getElementById('subFrame');
         if (subFrame) {
-            subFrame.addEventListener('load', function() {
+            subFrame.addEventListener('load', function () {
                 try {
                     if (subFrame.contentWindow) {
                         subFrame.contentWindow.focus();
@@ -555,7 +788,7 @@ window.onload = function () {
                             subFrame.contentWindow.TVNavigation.handleInitialFocus();
                         }
                     }
-                } catch(e) {
+                } catch (e) {
                     console.warn("Iframe focus sync error:", e);
                 }
             });
@@ -603,7 +836,7 @@ function openSubPage(url) {
             if (subFrame.contentWindow) {
                 subFrame.contentWindow.focus();
             }
-        } catch(e) {}
+        } catch (e) { }
     }
 }
 window.openSubPage = openSubPage;
@@ -771,6 +1004,7 @@ function openAppsOverlay() {
     var overlay = document.getElementById('appsOverlay');
     if (!overlay) return;
     overlay.classList.add('show');
+    document.body.classList.add('overlay-active');
     document.getElementById('mainUI').style.display = 'none';
     window.history.pushState(null, "", window.location.href);
     window.__appsOverlayOpen = true;
@@ -798,6 +1032,7 @@ function openLiveTVOverlay() {
     var overlay = document.getElementById('appsOverlay');
     if (!overlay) return;
     overlay.classList.add('show');
+    document.body.classList.add('overlay-active');
     document.getElementById('mainUI').style.display = 'none';
     window.history.pushState(null, "", window.location.href);
     window.__appsOverlayOpen = true;
@@ -825,6 +1060,7 @@ function closeAppsOverlay() {
     var overlay = document.getElementById('appsOverlay');
     if (!overlay) return;
     overlay.classList.remove('show');
+    document.body.classList.remove('overlay-active');
     window.__appsOverlayOpen = false;
     document.getElementById('mainUI').style.display = 'block';
     var items = document.querySelectorAll('.icon-item');
@@ -842,7 +1078,7 @@ window.openAppsOverlay = openAppsOverlay;
 window.closeAppsOverlay = closeAppsOverlay;
 window.openLiveTVOverlay = openLiveTVOverlay;
 
-var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html', './weather/weather.html'];
+var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html'];
 
 document.querySelectorAll('.icon-item').forEach(item => {
     item.addEventListener('click', function () {
@@ -863,7 +1099,7 @@ document.querySelectorAll('.icon-item').forEach(item => {
             var overlay = document.getElementById('comingSoonOverlay');
             if (overlay) {
                 overlay.style.display = 'flex';
-                setTimeout(function() {
+                setTimeout(function () {
                     if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
                         window.TVNavigation.markDirty();
                     }
@@ -898,6 +1134,21 @@ window.onTVKeyDown = function (e) {
 };
 
 window.onTVBack = function () {
+    var citySelector = document.getElementById("citySelectorOverlay");
+    if (citySelector && citySelector.style.display === "flex") {
+        citySelector.style.display = "none";
+        window.__citySelectorOpen = false;
+        var tempEl = document.getElementById('temp');
+        if (tempEl) {
+            tempEl.focus();
+            tempEl.classList.add('active-focus');
+        }
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
+        window.history.pushState(null, "", window.location.href);
+        return true;
+    }
     var comingSoon = document.getElementById("comingSoonOverlay");
     if (comingSoon && comingSoon.style.display === "flex") {
         comingSoon.style.display = "none";

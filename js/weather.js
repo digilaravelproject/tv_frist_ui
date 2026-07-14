@@ -106,7 +106,7 @@
         const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
         row.innerHTML = '';
 
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < Math.min(7, data.daily.time.length); i++) {
             const date = new Date(data.daily.time[i]);
             const key = dayKeys[date.getDay()];
             const dayName = (currentLanguageData && currentLanguageData.days_short && currentLanguageData.days_short[key])
@@ -157,11 +157,15 @@
         }
     }
 
-    function getFromCache() {
+    function getFromCache(city) {
         try {
             const timestamp = parseInt(localStorage.getItem(CACHE_TIMESTAMP_KEY) || '0');
+            const cachedCity = localStorage.getItem('cached_temp_city');
             if (Date.now() - timestamp > MAX_CACHE_AGE_MS) {
                 return null; // Cache expired
+            }
+            if (cachedCity !== city) {
+                return null; // Location changed
             }
             const cached = localStorage.getItem(CACHE_KEY);
             return cached ? JSON.parse(cached) : null;
@@ -180,9 +184,6 @@
                 if (currentLanguageData.direction === 'rtl') document.body.classList.add('rtl-mode');
                 
                 // Update static labels
-                const cityEl = document.getElementById('city-name');
-                if (cityEl) cityEl.innerText = currentLanguageData.city_name || "MUMBAI";
-                
                 const labels = {
                     'label-feels': 'feels_like',
                     'label-humidity': 'humidity',
@@ -202,31 +203,295 @@
         }
     }
 
-    async function updateWeather() {
-        // Try to fetch fresh data from local JSON (updated by Flutter background sync)
-        try {
-            const response = await fetch('weather_data.json?v=' + Date.now());
-            if (response.ok) {
-                const data = await response.json();
-                saveToCache(data);
-                renderWeather(data, false);
-                return;
+    // Background slider logic for weather forecast page
+    let slideImages = [];
+    let currentImageIndex = 0;
+    let activeSlideIndex = 0;
+    let sliderIntervalId = null;
+
+    function initSlider(images) {
+        if (sliderIntervalId) clearInterval(sliderIntervalId);
+        slideImages = images || [];
+
+        // Fallback: Try cover or main.jpg
+        if (slideImages.length === 0) {
+            const cached = localStorage.getItem('cachedHotelData');
+            if (cached) {
+                try {
+                    const config = JSON.parse(cached);
+                    if (config.hotel && config.hotel.media && config.hotel.media.cover_image) {
+                        slideImages = [config.hotel.media.cover_image];
+                    }
+                } catch (e) { }
             }
-        } catch (e) {
-            console.warn('Weather: Fresh fetch failed, trying cache...', e);
         }
 
-        // Fallback to localStorage cache
-        const cached = getFromCache();
+        if (slideImages.length === 0) {
+            slideImages = ['../images/main.jpg'];
+        }
+
+        const slides = document.querySelectorAll('#bg-slider .slide');
+        if (slides.length < 2) return;
+
+        slides[0].style.backgroundImage = "url('../images/main.jpg')";
+        slides[0].classList.add('active');
+        slides[1].classList.remove('active');
+        if (slideImages[0] && slideImages[0] !== '../images/main.jpg') {
+            const tempImg1 = new Image();
+            tempImg1.onload = () => {
+                slides[0].style.backgroundImage = `url('${slideImages[0]}')`;
+            };
+            tempImg1.src = slideImages[0];
+        }
+
+        currentImageIndex = 0;
+        activeSlideIndex = 0;
+
+        if (slideImages.length > 1) {
+            sliderIntervalId = setInterval(() => {
+                currentImageIndex = (currentImageIndex + 1) % slideImages.length;
+                const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
+                const targetUrl = slideImages[currentImageIndex];
+
+                const tempImgNext = new Image();
+                tempImgNext.onload = () => {
+                    slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+                    slides[nextSlideIndex].classList.add('active');
+                    slides[activeSlideIndex].classList.remove('active');
+                    activeSlideIndex = nextSlideIndex;
+                };
+                tempImgNext.onerror = () => {
+                    slides[nextSlideIndex].style.backgroundImage = "url('../images/main.jpg')";
+                    slides[nextSlideIndex].classList.add('active');
+                    slides[activeSlideIndex].classList.remove('active');
+                    activeSlideIndex = nextSlideIndex;
+                };
+                tempImgNext.src = targetUrl;
+            }, 5000);
+        }
+    }
+
+    let owmApiKey = null;
+    async function getApiKey() {
+        if (owmApiKey) return owmApiKey;
+        try {
+            const response = await fetch('../admin/config.json?v=' + Date.now());
+            if (response.ok) {
+                const config = await response.json();
+                owmApiKey = config.OWM_API_KEY;
+            }
+        } catch (e) {
+            console.warn("Could not load OWM_API_KEY from config.json", e);
+        }
+        return owmApiKey || "95265a9bc38d5d5ec7092f78a9fa8c2d";
+    }
+
+    async function resolveLocation() {
+        let cachedCity = localStorage.getItem('weather_city');
+        let city = cachedCity || "Mumbai";
+        
+        // Normalize Mumbai suburbs
+        const mumbaiSuburbs = ['borivali', 'andheri', 'bandra', 'thane', 'navi mumbai', 'mulund', 'kandivali', 'malad', 'goregaon', 'dahisar', 'chembur', 'kurla', 'ghatkopar', 'mumbai suburb'];
+        const cleanCity = city.trim().toLowerCase();
+        if (mumbaiSuburbs.indexOf(cleanCity) !== -1) {
+            return "Mumbai";
+        }
+        return city;
+    }
+
+    function owmIdToWmoCode(id) {
+        if (id === 800) return 0;
+        if (id >= 801 && id <= 804) return 2;
+        if (id >= 500 && id <= 531) return 51;
+        if (id >= 300 && id <= 321) return 51;
+        if (id >= 200 && id <= 232) return 95;
+        return 0;
+    }
+
+    function mapOwmToWmo(curData, pollutionData, forecastData) {
+        const lat = curData.coord.lat;
+        const lon = curData.coord.lon;
+        
+        let aqiVal = 50;
+        if (pollutionData && pollutionData.list && pollutionData.list[0]) {
+            const pAqi = pollutionData.list[0].main.aqi;
+            if (pAqi === 1) aqiVal = 35;
+            else if (pAqi === 2) aqiVal = 75;
+            else if (pAqi === 3) aqiVal = 150;
+            else if (pAqi === 4) aqiVal = 250;
+            else if (pAqi === 5) aqiVal = 350;
+        }
+
+        const dailyMap = {};
+        if (forecastData && forecastData.list) {
+            forecastData.list.forEach(item => {
+                const dateStr = item.dt_txt.split(' ')[0];
+                if (!dailyMap[dateStr]) {
+                    dailyMap[dateStr] = { temps: [], weatherCodes: [] };
+                }
+                dailyMap[dateStr].temps.push(item.main.temp);
+                if (item.weather && item.weather[0]) {
+                    dailyMap[dateStr].weatherCodes.push(owmIdToWmoCode(item.weather[0].id));
+                }
+            });
+        }
+
+        const dailyTimes = Object.keys(dailyMap).sort().slice(0, 7);
+        const dailyMaxTemps = [];
+        const dailyCodes = [];
+        dailyTimes.forEach(day => {
+            const dayData = dailyMap[day];
+            const maxTemp = Math.max(...dayData.temps);
+            dailyMaxTemps.push(maxTemp);
+            dailyCodes.push(dayData.weatherCodes[0] || 0);
+        });
+
+        const sunriseIso = new Date(curData.sys.sunrise * 1000).toISOString();
+        const sunsetIso = new Date(curData.sys.sunset * 1000).toISOString();
+
+        return {
+            latitude: lat,
+            longitude: lon,
+            current: {
+                temperature_2m: curData.main.temp,
+                relative_humidity_2m: curData.main.humidity,
+                surface_pressure: curData.main.pressure,
+                wind_speed_10m: curData.wind.speed * 3.6,
+                weather_code: owmIdToWmoCode(curData.weather[0].id)
+            },
+            daily: {
+                time: dailyTimes,
+                temperature_2m_max: dailyMaxTemps,
+                sunrise: dailyTimes.map(() => sunriseIso),
+                sunset: dailyTimes.map(() => sunsetIso),
+                weather_code: dailyCodes
+            },
+            extracted_data: {
+                temp: curData.main.temp,
+                humidity: curData.main.humidity,
+                pressure: curData.main.pressure,
+                wind: curData.wind.speed * 3.6,
+                sunrise: sunriseIso,
+                sunset: sunsetIso,
+                aqi: aqiVal
+            }
+        };
+    }
+
+    async function updateWeather() {
+        const loadingOverlay = document.getElementById('weather-loading');
+        const errorOverlay = document.getElementById('weather-error');
+
+        const city = await resolveLocation();
+
+        // Dynamically update city title name in viewport
+        const cityEl = document.getElementById('city-name');
+        if (cityEl) cityEl.innerText = city.toUpperCase();
+
+        // 1. Cache-freshness check: load instantly if valid
+        const cached = getFromCache(city);
         if (cached) {
-            renderWeather(cached, true);
+            console.log("Weather: Loaded fresh cache for " + city);
+            renderWeather(cached, false);
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+            if (errorOverlay) errorOverlay.style.display = 'none';
             return;
         }
 
-        // Ultimate fallback: show placeholder
-        console.error('Weather: No data available (fresh fetch failed, no valid cache)');
-        showOfflineBanner();
-        setPlaceholderValues();
+        // Cache missing or expired — fetch fresh data
+        if (loadingOverlay) loadingOverlay.style.display = 'flex';
+        if (errorOverlay) errorOverlay.style.display = 'none';
+
+        // Offline Mode Fallback Check
+        if (!navigator.onLine) {
+            console.warn("Weather: Device is offline. Fetching from cache.");
+            const cachedOffline = getFromCache(city);
+            if (cachedOffline) {
+                renderWeather(cachedOffline, true);
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                return;
+            }
+            showErrorUI("No Internet Connection", "Unable to fetch weather data. Please check your connectivity and try again.");
+            return;
+        }
+
+        try {
+            const apiKey = await getApiKey();
+
+            if (!apiKey || apiKey === "YOUR_OPENWEATHERMAP_API_KEY") {
+                const response = await fetch('weather_data.json?v=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    saveToCache(data);
+                    renderWeather(data, false);
+                } else {
+                    throw new Error("Local fallback file not found");
+                }
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                return;
+            }
+
+            // A. Fetch current weather conditions
+            const curRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`);
+            if (!curRes.ok) throw new Error(`Weather API failed with status ${curRes.status}`);
+            const curData = await curRes.json();
+
+            // B. Fetch Air Pollution AQI data using coordinates
+            let pollutionData = null;
+            if (curData.coord) {
+                try {
+                    const polRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${curData.coord.lat}&lon=${curData.coord.lon}&appid=${apiKey}`);
+                    if (polRes.ok) pollutionData = await polRes.json();
+                } catch(e) { console.warn("AQI fetch failed:", e); }
+            }
+
+            // C. Fetch 5-day / 3-hour forecast
+            const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`);
+            if (!forecastRes.ok) throw new Error(`Forecast API failed with status ${forecastRes.status}`);
+            const forecastData = await forecastRes.json();
+
+            // D. Map OpenWeatherMap API payload to expected WMO format
+            const mappedData = mapOwmToWmo(curData, pollutionData, forecastData);
+
+            saveToCache(mappedData);
+            localStorage.setItem('cached_temp_city', city);
+            renderWeather(mappedData, false);
+
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+        } catch (e) {
+            console.error("Weather Fetch Error:", e);
+            const cachedOffline = getFromCache(city);
+            if (cachedOffline) {
+                renderWeather(cachedOffline, true);
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                return;
+            }
+            showErrorUI("Unable to Fetch Weather", "There was an issue contacting the weather service. Please try again.");
+        }
+    }
+
+    function showErrorUI(title, body) {
+        const loadingOverlay = document.getElementById('weather-loading');
+        const errorOverlay = document.getElementById('weather-error');
+        const errTitle = document.getElementById('error-message-title');
+        const errBody = document.getElementById('error-message-body');
+        const retryBtn = document.getElementById('retry-btn');
+
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        if (errorOverlay) errorOverlay.style.display = 'flex';
+        if (errTitle) errTitle.textContent = title;
+        if (errBody) errBody.textContent = body;
+
+        setTimeout(() => {
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+            if (retryBtn) {
+                retryBtn.focus();
+                retryBtn.classList.add('active-focus');
+            }
+        }, 100);
     }
 
     function setPlaceholderValues() {
@@ -257,14 +522,35 @@
     window.WeatherModule = {
         init() {
             loadLanguage();
-            updateWeather();
             updateClock();
+
+            // Load background slider slides
+            let sliderImages = [];
+            const cached = localStorage.getItem('cachedHotelData');
+            if (cached) {
+                try {
+                    const config = JSON.parse(cached);
+                    if (config.hotel && config.hotel.media && config.hotel.media.slider_images) {
+                        sliderImages = config.hotel.media.slider_images;
+                    }
+                } catch(e){}
+            }
+            initSlider(sliderImages);
+
+            updateWeather();
             
             setInterval(updateClock, 1000);
             setInterval(updateWeather, 300000); // 5 minutes
+
+            // Bind D-pad retry button action
+            const retryBtn = document.getElementById('retry-btn');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', function() {
+                    updateWeather();
+                });
+            }
         },
         
-        // Called by Flutter when fresh sync completes
         onSyncComplete(data) {
             saveToCache(data);
             renderWeather(data, false);

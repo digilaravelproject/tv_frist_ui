@@ -26,7 +26,7 @@
         </div>
         <div id="header-right">
             <div id="room"></div>
-            <div id="temp"></div>
+            <div id="temp" tabindex="0"></div>
         </div>
     </div>
     <div id="greeting"></div>
@@ -124,6 +124,36 @@
                 <div id="planWarningBody" style="color:#ccc;font-size:13px;line-height:1.4;">Your plan will expire in
                     <strong>X days</strong>. Please renew to avoid interruption.
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- City Selector Overlay -->
+    <div id="citySelectorOverlay" class="overlay-fullscreen overlay-glass" style="display:none; flex-direction:column; justify-content:center; align-items:center; z-index: 10000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);">
+        <div class="city-selector-content" style="background: rgba(26, 26, 46, 0.95); padding: 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); width: 85%; max-width: 650px; text-align: center; color: white; display: flex; flex-direction: column; gap: 15px;">
+            <h2 style="margin: 0; font-size: 2.2vw; color: #b38a2d;">Select Location</h2>
+            <div id="current-location-status" style="font-size: 1.2vw; opacity: 0.8;">Current: Loading...</div>
+            
+            <div class="city-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 10px 0;">
+                <button class="city-btn" tabindex="0" data-city="Pune">Pune</button>
+                <button class="city-btn" tabindex="0" data-city="Mumbai">Mumbai</button>
+                <button class="city-btn" tabindex="0" data-city="Delhi">Delhi</button>
+                <button class="city-btn" tabindex="0" data-city="Bangalore">Bangalore</button>
+                <button class="city-btn" tabindex="0" data-city="Hyderabad">Hyderabad</button>
+                <button class="city-btn" tabindex="0" data-city="Chennai">Chennai</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 10px;">
+                <input type="text" id="custom-city-input" placeholder="Enter City Name" tabindex="0" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; font-size: 1.2vw; width: 45%; text-align: center;">
+                <button id="custom-city-save-btn" class="city-action-btn" tabindex="0" style="background: #00b050; border-color: #00b050; padding: 12px 20px; font-size: 1.1vw;">Apply</button>
+                <button id="auto-detect-location-btn" class="city-action-btn" tabindex="0" style="background: #b38a2d; border-color: #b38a2d; padding: 12px 20px; font-size: 1.1vw;">Auto Detect</button>
+            </div>
+
+            <!-- Auto-suggestions Container -->
+            <div id="city-suggestions-container" style="display: none; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; max-height: 150px; overflow-y: auto; text-align: left; padding: 5px;"></div>
+            
+            <div style="margin-top: 10px;">
+                <button id="city-selector-close-btn" class="city-action-btn" tabindex="0" style="padding: 10px 20px;">Cancel</button>
             </div>
         </div>
     </div>

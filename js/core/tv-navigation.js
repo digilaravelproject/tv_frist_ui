@@ -95,10 +95,34 @@
             var style = window.getComputedStyle(el);
             if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
             
-            var parentOverlay = el.closest('.overlay-fullscreen, .overlay-container, #appsOverlay');
+            var parentOverlay = el.closest('.overlay-fullscreen, .overlay-container, #appsOverlay, #citySelectorOverlay, #planExpiredOverlay');
             if (parentOverlay) {
                 var os = window.getComputedStyle(parentOverlay);
                 if (os.display === 'none' || os.visibility === 'hidden') return false;
+            }
+            
+            // Focus trapping: If there is an active (visible) overlay, only allow elements inside it to be focusable
+            var overlays = document.querySelectorAll('.overlay-fullscreen, .overlay-container, #appsOverlay, #citySelectorOverlay, #planExpiredOverlay');
+            var openOverlay = null;
+            for (var i = 0; i < overlays.length; i++) {
+                var ov = overlays[i];
+                var ovStyle = window.getComputedStyle(ov);
+                if (ovStyle.display !== 'none' && ovStyle.visibility !== 'hidden' && ovStyle.opacity !== '0') {
+                    // Check if appsOverlay actually has the class 'show' to be active, or others have display flex/block
+                    if (ov.id === 'appsOverlay') {
+                        if (ov.classList.contains('show')) {
+                            openOverlay = ov;
+                            break;
+                        }
+                    } else {
+                        openOverlay = ov;
+                        break;
+                    }
+                }
+            }
+            
+            if (openOverlay && !openOverlay.contains(el)) {
+                return false;
             }
             
             var rect = el.getBoundingClientRect();
@@ -573,6 +597,45 @@
 
             // Focus and Blur active style class synchronization
             document.addEventListener('focus', function(e) {
+                // Focus trap for active overlays
+                var overlays = document.querySelectorAll('.overlay-fullscreen, .overlay-container, #appsOverlay, #citySelectorOverlay, #planExpiredOverlay');
+                var openOverlay = null;
+                for (var i = 0; i < overlays.length; i++) {
+                    var ov = overlays[i];
+                    var ovStyle = window.getComputedStyle(ov);
+                    if (ovStyle.display !== 'none' && ovStyle.visibility !== 'hidden' && ovStyle.opacity !== '0') {
+                        if (ov.id === 'appsOverlay') {
+                            if (ov.classList.contains('show')) {
+                                openOverlay = ov;
+                                break;
+                            }
+                        } else {
+                            openOverlay = ov;
+                            break;
+                        }
+                    }
+                }
+                
+                if (openOverlay && !openOverlay.contains(e.target)) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var focusables = openOverlay.querySelectorAll('button, a, input, select, textarea, [tabindex="0"], .app-card, .tv-input-btn, .city-btn, .city-action-btn');
+                    if (focusables.length > 0) {
+                        // Find the first visible/focusable element inside the overlay
+                        for (var j = 0; j < focusables.length; j++) {
+                            var fEl = focusables[j];
+                            if (fEl.tabIndex !== -1 && window.getComputedStyle(fEl).display !== 'none') {
+                                fEl.focus();
+                                return;
+                            }
+                        }
+                        focusables[0].focus();
+                    } else {
+                        openOverlay.focus();
+                    }
+                    return;
+                }
+
                 var focusables = document.querySelectorAll('.active-focus');
                 for (var i = 0; i < focusables.length; i++) {
                     focusables[i].classList.remove('active-focus');

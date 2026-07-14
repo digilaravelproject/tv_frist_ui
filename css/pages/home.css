@@ -356,4 +356,92 @@ body.rtl-mode .menu-container {
     outline: none !important;
 }
 
+/* ================= WEATHER & CITY SELECTOR STYLES ================= */
+#temp[tabindex="0"] {
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 2px 8px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+#temp[tabindex="0"]:focus,
+#temp[tabindex="0"].active-focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: #fff !important;
+    outline: none !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6) !important;
+    transform: scale(1.05);
+}
+
+.city-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.city-btn:focus,
+.city-btn.active-focus {
+    background: rgba(0, 176, 80, 0.2) !important;
+    border-color: #00b050 !important;
+    box-shadow: 0 0 20px rgba(0, 176, 80, 0.7) !important;
+    transform: scale(1.05);
+    outline: none !important;
+}
+
+.city-action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.city-action-btn:focus,
+.city-action-btn.active-focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: #fff !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5) !important;
+    transform: scale(1.05);
+    outline: none !important;
+}
+
+#custom-city-input:focus {
+    border-color: #00b050 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    outline: none !important;
+    box-shadow: 0 0 10px rgba(0, 176, 80, 0.5) !important;
+}
+
+/* Disable pointer interactions and clicks on background when overlay is active */
+body.overlay-active .top-header,
+body.overlay-active #mainUI {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+/* Dynamic City Suggestion Dropdown Styles */
+.suggestion-item {
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    border: 2px solid transparent;
+}
+.suggestion-item:focus,
+.suggestion-item.active-focus {
+    background: rgba(179, 138, 45, 0.2) !important;
+    border-color: #b38a2d !important;
+    outline: none !important;
+}
+
 /* appsCloseBtn display: none removed to allow visual close action */
