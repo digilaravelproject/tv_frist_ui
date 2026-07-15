@@ -409,6 +409,13 @@ function updateGreetingDisplay() {
 }
 
 async function fetchCoordinates(city) {
+    if (!navigator.onLine) {
+        return {
+            lat: 19.0760,
+            lon: 72.8777,
+            timezone: "Asia/Kolkata"
+        };
+    }
     try {
         const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
         const res = await fetch(geoUrl);
@@ -433,6 +440,9 @@ async function fetchCoordinates(city) {
 }
 
 async function fetchIpLocation() {
+    if (!navigator.onLine) {
+        return null;
+    }
     const cachedIpCity = localStorage.getItem('cached_ip_city');
     const cachedIpTime = parseInt(localStorage.getItem('cached_ip_city_time') || '0');
     if (cachedIpCity && (Date.now() - cachedIpTime < 24 * 60 * 60 * 1000)) {
@@ -506,6 +516,51 @@ async function resolveLocation() {
 async function updateWeather() {
     const tempEl = document.getElementById('temp');
     if (!tempEl) return;
+
+    if (!navigator.onLine) {
+        console.warn("Weather: Device is offline on home page. Loading cache directly.");
+        const cachedTemp = localStorage.getItem('cached_temp_string');
+        const cachedCity = localStorage.getItem('cached_temp_city') || "Mumbai";
+        if (cachedTemp) {
+            const isRTL = document.body.classList.contains('rtl-mode');
+            tempEl.textContent = isRTL ? `${cachedTemp} ${cachedCity}` : `${cachedCity} ${cachedTemp}`;
+            tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
+            return;
+        }
+
+        // Try local fallback file weather/weather_data.json
+        try {
+            const response = await fetch('weather/weather_data.json?v=' + Date.now());
+            if (response.ok) {
+                const data = await response.json();
+                let city = "Mumbai";
+                try {
+                    const cachedConfigStr = localStorage.getItem('cachedHotelData');
+                    if (cachedConfigStr) {
+                        const config = JSON.parse(cachedConfigStr);
+                        if (config.hotel && config.hotel.hotel_location) {
+                            city = config.hotel.hotel_location;
+                        }
+                    } else if (typeof window.getFastConfig === 'function') {
+                        const config = window.getFastConfig();
+                        if (config && config.hotel && config.hotel.hotel_location) {
+                            city = config.hotel.hotel_location;
+                        }
+                    }
+                } catch (e) {}
+
+                const tempC = Math.round(data.extracted_data.temp);
+                const tempF = Math.round((tempC * 9 / 5) + 32);
+                const tempString = `${tempC}°C / ${tempF}°F`;
+                const isRTL = document.body.classList.contains('rtl-mode');
+                tempEl.textContent = isRTL ? `${tempString} ${city}` : `${city} ${tempString}`;
+                tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
+            }
+        } catch (fallbackErr) {
+            console.warn("Local fallback load failed on home page:", fallbackErr);
+        }
+        return;
+    }
 
     try {
         const city = await resolveLocation();

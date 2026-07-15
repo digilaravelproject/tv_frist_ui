@@ -278,6 +278,13 @@
     }
 
     async function fetchCoordinates(city) {
+        if (!navigator.onLine) {
+            return {
+                lat: 19.0760,
+                lon: 72.8777,
+                timezone: "Asia/Kolkata"
+            };
+        }
         try {
             const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
             const res = await fetch(geoUrl);
@@ -362,6 +369,34 @@
         if (cityEl) cityEl.innerText = city.toUpperCase();
         document.title = `${city.charAt(0).toUpperCase() + city.slice(1)} Weather`;
 
+        // Offline Mode Fallback Check
+        if (!navigator.onLine) {
+            console.warn("Weather: Device is offline. Fetching from cache.");
+            const cachedOffline = getFromCache(city);
+            if (cachedOffline) {
+                renderWeather(cachedOffline, true);
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                if (errorOverlay) errorOverlay.style.display = 'none';
+                return;
+            }
+            // Attempt to load from the local fallback JSON file
+            try {
+                const response = await fetch('weather_data.json?v=' + Date.now());
+                if (response.ok) {
+                    const fallbackData = await response.json();
+                    saveToCache(fallbackData);
+                    renderWeather(fallbackData, false);
+                    if (loadingOverlay) loadingOverlay.style.display = 'none';
+                    if (errorOverlay) errorOverlay.style.display = 'none';
+                    return;
+                }
+            } catch (fallbackErr) {
+                console.warn("Local fallback load failed:", fallbackErr);
+            }
+            showErrorUI("No Internet Connection", "Unable to fetch weather data. Please check your connectivity and try again.");
+            return;
+        }
+
         // 1. Cache-freshness check: load instantly if valid (skip if force=true)
         if (!force) {
             const cached = getFromCache(city);
@@ -377,19 +412,6 @@
         // Cache missing or expired — fetch fresh data
         if (loadingOverlay) loadingOverlay.style.display = 'flex';
         if (errorOverlay) errorOverlay.style.display = 'none';
-
-        // Offline Mode Fallback Check
-        if (!navigator.onLine) {
-            console.warn("Weather: Device is offline. Fetching from cache.");
-            const cachedOffline = getFromCache(city);
-            if (cachedOffline) {
-                renderWeather(cachedOffline, true);
-                if (loadingOverlay) loadingOverlay.style.display = 'none';
-                return;
-            }
-            showErrorUI("No Internet Connection", "Unable to fetch weather data. Please check your connectivity and try again.");
-            return;
-        }
 
         try {
             // A. Resolve city to geographic coordinates
