@@ -11,7 +11,7 @@
 
     const CACHE_KEY = 'weather_cache';
     const CACHE_TIMESTAMP_KEY = 'weather_cache_timestamp';
-    const MAX_CACHE_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+    const MAX_CACHE_AGE_MS = 30 * 60 * 1000; // 30 minutes
 
     let currentLanguageData = null;
 
