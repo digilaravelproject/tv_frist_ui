@@ -39,7 +39,19 @@ html, body {
     bottom: 0;
     z-index: -1;
     overflow: hidden;
-    background-color: transparent; /* Changed based on user feedback */
+    background-color: #000;
+}
+
+#bg-slider::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.6) 100%);
+    z-index: 10;
+    pointer-events: none;
 }
 
 .slide {
@@ -183,8 +195,20 @@ html, body {
 
 /* TV Hardware/GPU Acceleration Optimizations for Focusable Elements */
 button, a, input, select, textarea, [tabindex="0"], 
-[class*="-item"], [class*="-btn"], .btn, .btn-act, .hdmi-list-row, .model-name-text, .test-btn-inline {
+[class*="-item"], [class*="-btn"], .btn, .btn-act, .hdmi-list-row, .model-name-text, .test-btn-inline, .app-card, .tv-input-btn, .close-btn, .close-btn-standalone {
     will-change: transform, box-shadow;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
+    outline: none;
+}
+
+/* Universal Glowing D-Pad TV Focus Highlight */
+:focus:not(.icon-item),
+.active-focus:not(.icon-item) {
+    outline: 3px solid #b38a2d !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 16px rgba(179, 138, 45, 0.8) !important;
+    transform: scale(1.05) translate3d(0, 0, 0) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    z-index: 10 !important;
 }

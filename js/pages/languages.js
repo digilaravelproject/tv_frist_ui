@@ -53,6 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.querySelectorAll('.lang-item').forEach(el => el.classList.remove('selected'));
                         this.classList.add('selected');
                     });
+                    btn.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.keyCode === 13) {
+                            this.click();
+                        }
+                    });
                     
                     container.appendChild(btn);
                 });

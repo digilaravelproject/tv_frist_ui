@@ -25,9 +25,9 @@ window.TVCore = {
     },
 
     /**
-     * Fetch hotel configuration from JSON, with offline fallback
+     * Fetch hotel configuration from JSON or Remote API via Bearer Token, with offline fallback
      */
-    fetchHotelConfig: async function () {
+    fetchHotelConfig: async function (forceApi = false) {
         // Fallback for injected data from parent frame if any
         if (window.tvLoginData) {
             const normalized = window.tvLoginData.data || window.tvLoginData;
@@ -41,21 +41,24 @@ window.TVCore = {
         }
 
         const filename = (window.parent && window.parent.HOTEL_DATA_FILE) || window.HOTEL_DATA_FILE || 'data.json';
-        
-        // Define paths considering if we are in a subfolder or root
         const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
         const basePath = isInSubfolder ? '../' : '';
         const paths = [`${basePath}${filename}`, filename, `${basePath}data.json`, 'data.json'];
         
         let config = null;
+        let token = localStorage.getItem('authToken');
 
+        // Step 1: Read local JSON file first to extract config and Bearer Token
         for (let path of paths) {
             try {
                 const res = await fetch(`${path}?t=${Date.now()}`);
                 if (res.ok) {
-                    config = await res.json();
-                    config = config.data || config;
-                    localStorage.setItem('cachedHotelData', JSON.stringify(config));
+                    const rawData = await res.json();
+                    config = rawData.data || rawData;
+                    if (config.auth && config.auth.token) {
+                        token = config.auth.token;
+                        localStorage.setItem('authToken', token);
+                    }
                     break;
                 }
             } catch (e) {
@@ -63,7 +66,45 @@ window.TVCore = {
             }
         }
 
-        if (!config) {
+        // Step 2: If forceApi is true or if online, hit the check-version remote API using Authorization Bearer token
+        if ((forceApi || !config) && navigator.onLine && token) {
+            try {
+                const apiRes = await fetch("https://tvapp.digiemperor.com/api/tv/template/check-version", {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (apiRes.ok) {
+                    const apiData = await apiRes.json();
+                    const freshConfig = apiData.data || apiData;
+                    if (freshConfig && (freshConfig.hotel || freshConfig.guest_info)) {
+                        config = freshConfig;
+                        if (!config.auth) config.auth = { token: token };
+                        const fullPayload = { status: true, message: "TV data updated.", data: config };
+                        const payloadStr = JSON.stringify(fullPayload, null, 2);
+
+                        localStorage.setItem('cachedHotelData', JSON.stringify(config));
+                        
+                        // Send to Flutter Native bridge to update & write data.json on device disk
+                        if (window.flutterBridge && typeof window.flutterBridge.saveDeviceConfig === 'function') {
+                            window.flutterBridge.saveDeviceConfig(fullPayload).catch(function(err){ console.warn('Bridge save file warn:', err); });
+                        }
+
+                        console.log("Successfully fetched fresh data from Remote check-version API");
+                    }
+                }
+            } catch (apiErr) {
+                console.warn("Remote check-version API fetch failed, falling back to local/cached data:", apiErr);
+            }
+        }
+
+        // Step 3: Cache sync fallback
+        if (config) {
+            localStorage.setItem('cachedHotelData', JSON.stringify(config));
+        } else {
             const cached = localStorage.getItem('cachedHotelData');
             if (cached) {
                 try {

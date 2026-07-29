@@ -127,6 +127,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 addDigit(val);
             }
         });
+        btn.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                this.click();
+            }
+        });
     });
 
     // Set initial focus on Settings page keypad

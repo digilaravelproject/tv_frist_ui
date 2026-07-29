@@ -481,13 +481,9 @@ async function fetchIpLocation() {
 async function resolveLocation() {
     // 1. data.json (hotel_location) takes highest priority
     try {
-        const cachedConfigStr = localStorage.getItem('cachedHotelData');
-        let config = null;
-        if (cachedConfigStr) {
-            config = JSON.parse(cachedConfigStr);
-        }
-        if (!config && typeof window.getFastConfig === 'function') {
-            config = window.getFastConfig();
+        let config = typeof window.getFastConfig === 'function' ? window.getFastConfig() : null;
+        if (!config && typeof fetchHotelConfig === 'function') {
+            config = await fetchHotelConfig();
         }
         if (config && config.hotel && config.hotel.hotel_location) {
             const loc = config.hotel.hotel_location;
@@ -498,19 +494,19 @@ async function resolveLocation() {
         console.warn("Failed resolving hotel_location", e);
     }
 
-    // 2. IP Geolocation fallback
+    // 2. Fallback to cached city from previous sessions
+    let cachedCity = localStorage.getItem('weather_city');
+    if (cachedCity) return cachedCity;
+
+    // 3. IP Geolocation fallback
     const ipCity = await fetchIpLocation();
     if (ipCity) {
         localStorage.setItem('weather_city', ipCity);
         return ipCity;
     }
 
-    // 3. Fallback to cached city from previous sessions
-    let cachedCity = localStorage.getItem('weather_city');
-    if (cachedCity) return cachedCity;
-
     // 4. Ultimate Fallback
-    return "Mumbai";
+    return "Pune";
 }
 
 async function updateWeather() {
@@ -977,9 +973,166 @@ document.getElementById('appsCloseBtn').addEventListener('click', function () {
     window.history.pushState(null, "", window.location.href);
 });
 
-window.openAppsOverlay = openAppsOverlay;
-window.closeAppsOverlay = closeAppsOverlay;
-window.openLiveTVOverlay = openLiveTVOverlay;
+function openInputOverlay() {
+    var overlay = document.getElementById('inputOverlay');
+    if (!overlay) return;
+    overlay.style.display = 'flex';
+    document.getElementById('mainUI').style.display = 'none';
+    window.history.pushState(null, "", window.location.href);
+    window.__inputOverlayOpen = true;
+
+    var container = document.getElementById('direct-tv-inputs-container');
+    if (container) {
+        container.innerHTML = '<div style="color:#888;font-size:1.1vw;">Loading inputs...</div>';
+    }
+
+    if (window.flutterBridge && typeof window.flutterBridge.getTvInputs === 'function') {
+        window.flutterBridge.getTvInputs().then(function(inputs) {
+            if (!container) return;
+            if (!inputs || inputs.length === 0) {
+                container.innerHTML = '<div style="color:#888;font-size:1.1vw;">HDMI 1, HDMI 2, AV</div>';
+                return;
+            }
+            container.innerHTML = '';
+            inputs.forEach(function(input) {
+                var btn = document.createElement('button');
+                btn.className = 'tv-input-btn';
+                btn.tabIndex = 0;
+                btn.style.padding = '12px 24px';
+                btn.style.background = 'rgba(255,255,255,0.1)';
+                btn.style.border = '1px solid #b38a2d';
+                btn.style.color = '#fff';
+                btn.style.borderRadius = '8px';
+                btn.style.fontSize = '1.1rem';
+                btn.style.cursor = 'pointer';
+                var label = input.label || input.id || 'HDMI';
+                btn.textContent = label;
+                var modelId = input.id || '';
+                btn.setAttribute('data-model', modelId);
+
+                btn.addEventListener('click', function() {
+                    var model = this.getAttribute('data-model') || label;
+                    closeInputOverlay();
+                    if (window.flutterBridge && window.flutterBridge.launchHdmi) {
+                        window.flutterBridge.launchHdmi(model).catch(function(err) {
+                            console.error('Launch HDMI failed:', err);
+                        });
+                    }
+                });
+                container.appendChild(btn);
+            });
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+            var firstInput = container.querySelector('.tv-input-btn');
+            if (firstInput) firstInput.focus();
+        }).catch(function() {
+            if (container) container.innerHTML = '<div style="color:#aaa;font-size:1.1vw;">HDMI 1 &bull; HDMI 2 &bull; AV</div>';
+        });
+    } else {
+        if (container) container.innerHTML = '<div style="color:#aaa;font-size:1.1vw;">HDMI 1 &bull; HDMI 2 &bull; AV</div>';
+    }
+
+    setTimeout(function () {
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
+        var btn = document.getElementById('inputCloseBtn');
+        if (btn) btn.focus();
+    }, 150);
+}
+
+function closeInputOverlay() {
+    var overlay = document.getElementById('inputOverlay');
+    if (!overlay) return;
+    overlay.style.display = 'none';
+    window.__inputOverlayOpen = false;
+    document.getElementById('mainUI').style.display = 'block';
+    var items = document.querySelectorAll('.icon-item');
+    if (items[3]) items[3].focus();
+}
+
+function openCastOverlay() {
+    var overlay = document.getElementById('castOverlay');
+    if (!overlay) return;
+    overlay.style.display = 'flex';
+    document.getElementById('mainUI').style.display = 'none';
+    window.history.pushState(null, "", window.location.href);
+    window.__castOverlayOpen = true;
+
+    var nameEl = document.getElementById('castDeviceName');
+    if (nameEl) {
+        var serial = localStorage.getItem('deviceSerial') || 'TV-101';
+        nameEl.textContent = 'Hotel TV (' + serial + ')';
+    }
+
+    setTimeout(function () {
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
+        var btn = document.getElementById('castCloseBtn');
+        if (btn) btn.focus();
+    }, 150);
+}
+
+function closeCastOverlay() {
+    var overlay = document.getElementById('castOverlay');
+    if (!overlay) return;
+    overlay.style.display = 'none';
+    window.__castOverlayOpen = false;
+    document.getElementById('mainUI').style.display = 'block';
+    var items = document.querySelectorAll('.icon-item');
+    if (items[3]) items[3].focus();
+}
+
+function triggerManualRefresh() {
+    // Clear dynamic local storage & caches
+    localStorage.removeItem('cachedHotelData');
+    localStorage.removeItem('cached_temp_string');
+    localStorage.removeItem('cached_ip_city');
+
+    // Show temporary feedback toast
+    var toast = document.createElement('div');
+    toast.style.position = 'fixed';
+    toast.style.top = '20px';
+    toast.style.right = '20px';
+    toast.style.background = '#b38a2d';
+    toast.style.color = '#fff';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '8px';
+    toast.style.zIndex = '99999';
+    toast.style.fontWeight = 'bold';
+    toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.5)';
+    toast.textContent = 'Refreshing fresh data...';
+    document.body.appendChild(toast);
+
+    // Perform fresh fetch with explicit remote API check-version call using Bearer Token
+    if (window.TVCore && typeof window.TVCore.fetchHotelConfig === 'function') {
+        window.TVCore.fetchHotelConfig(true).then(function() {
+            initLanguage();
+            updateDateTime();
+            updateWeather();
+            fetchGuestData();
+        });
+    } else {
+        initLanguage();
+        updateDateTime();
+        updateWeather();
+        fetchGuestData();
+    }
+
+    setTimeout(function() {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 2000);
+}
+
+document.getElementById('inputCloseBtn').addEventListener('click', closeInputOverlay);
+document.getElementById('castCloseBtn').addEventListener('click', closeCastOverlay);
+
+window.openInputOverlay = openInputOverlay;
+window.closeInputOverlay = closeInputOverlay;
+window.openCastOverlay = openCastOverlay;
+window.closeCastOverlay = closeCastOverlay;
 
 var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html'];
 
@@ -993,6 +1146,18 @@ document.querySelectorAll('.icon-item').forEach(item => {
         }
         if (action === "apps") {
             if (typeof window.openAppsOverlay === 'function') window.openAppsOverlay();
+            return;
+        }
+        if (action === "input") {
+            openInputOverlay();
+            return;
+        }
+        if (action === "cast") {
+            openCastOverlay();
+            return;
+        }
+        if (action === "refresh") {
+            triggerManualRefresh();
             return;
         }
 
@@ -1022,8 +1187,6 @@ document.querySelectorAll('.icon-item').forEach(item => {
     });
 });
 
-
-
 window.onTVKeyDown = function (e) {
     var comingSoon = document.getElementById("comingSoonOverlay");
     if (comingSoon && comingSoon.style.display === "flex") {
@@ -1037,6 +1200,18 @@ window.onTVKeyDown = function (e) {
 };
 
 window.onTVBack = function () {
+    var inputOverlay = document.getElementById("inputOverlay");
+    if (inputOverlay && inputOverlay.style.display === "flex") {
+        closeInputOverlay();
+        window.history.pushState(null, "", window.location.href);
+        return true;
+    }
+    var castOverlay = document.getElementById("castOverlay");
+    if (castOverlay && castOverlay.style.display === "flex") {
+        closeCastOverlay();
+        window.history.pushState(null, "", window.location.href);
+        return true;
+    }
     var citySelector = document.getElementById("citySelectorOverlay");
     if (citySelector && citySelector.style.display === "flex") {
         citySelector.style.display = "none";

@@ -8,7 +8,7 @@
     'use strict';
 
     // Focusable selector for actionable elements
-    var FOCUSABLE_SELECTOR = 'button, a, input, select, textarea, [tabindex="0"], .lang-item, .icon-item, .num-btn, .list-item, .package-item, .key-btn, .side-btn, .btn-act, .hdmi-list-row, .model-name-text, .test-btn-inline';
+    var FOCUSABLE_SELECTOR = 'button, a, input, select, textarea, [tabindex="0"], .lang-item, .icon-item, .num-btn, .list-item, .package-item, .key-btn, .side-btn, .btn-act, .hdmi-list-row, .model-name-text, .test-btn-inline, .app-card, .tv-input-btn, .close-btn, .close-btn-standalone';
 
     /**
      * 1. KeycodeManager: Encapsulates remote control and keyboard mappings
@@ -95,14 +95,14 @@
             var style = window.getComputedStyle(el);
             if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
             
-            var parentOverlay = el.closest('.overlay-fullscreen, .overlay-container, #appsOverlay, #citySelectorOverlay, #planExpiredOverlay');
+            var parentOverlay = el.closest('.overlay-fullscreen, .overlay-container, #appsOverlay, #inputOverlay, #castOverlay, #citySelectorOverlay, #planExpiredOverlay');
             if (parentOverlay) {
                 var os = window.getComputedStyle(parentOverlay);
                 if (os.display === 'none' || os.visibility === 'hidden') return false;
             }
             
             // Focus trapping: If there is an active (visible) overlay, only allow elements inside it to be focusable
-            var overlays = document.querySelectorAll('.overlay-fullscreen, .overlay-container, #appsOverlay, #citySelectorOverlay, #planExpiredOverlay');
+            var overlays = document.querySelectorAll('.overlay-fullscreen, .overlay-container, #appsOverlay, #inputOverlay, #castOverlay, #citySelectorOverlay, #planExpiredOverlay');
             var openOverlay = null;
             for (var i = 0; i < overlays.length; i++) {
                 var ov = overlays[i];

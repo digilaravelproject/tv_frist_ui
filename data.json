@@ -1,15 +1,15 @@
 {
   "status": true,
-  "message": "TV logged in successfully.",
+  "message": "Template version details fetched successfully.",
   "data": {
     "auth": {
       "token": "ugpm2JWeYoCmYsiTDFCpkUEanZg4VhsdF5SIu7gjdsO1LW7rBIdmjFjioiA4DZxK474mCuXs9eIDIGdS"
     },
     "template": {
-      "latest_version": "10.0",
-      "old_version": "9.5",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v10_0_1784019198.zip",
-      "uploaded_at": "2026-07-14T14:23:18+05:30",
+      "latest_version": "12.0",
+      "old_version": "11.5",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v12_0_1784114041.zip",
+      "uploaded_at": "2026-07-15T16:44:01+05:30",
       "is_update_available": false
     },
     "device": {
@@ -24,7 +24,7 @@
     "hotel": {
       "hotel_name": "Karnival Plaza",
       "hotel_location": "Pune",
-      "description": null,
+      "description": "Karnival Plaza Hotel",
       "owner_name": "Darshan Kondekar",
       "email": "darshankondekar01@gmail.com",
       "phone": "8975845684",
@@ -43,11 +43,6 @@
         "expiry_date": "2026-08-07T13:25:50+05:30"
       }
     },
-    "guest_info": {
-      "name": "LMNOPQ",
-      "mobile_number": "98765402",
-      "check_in_datetime": "2026-07-09T12:44:00+05:30",
-      "check_out_datetime": null
-    }
+    "guest_info": null
   }
 }
