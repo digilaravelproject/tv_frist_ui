@@ -39,18 +39,80 @@
     "welcome": "आमच्या हॉटेलान तुमचें स्वागत आसा"
   },
   "days": {
-    "sun": "आयतार", "mon": "सोमार", "tue": "मंगळार", "wed": "बुधवार", "thu": "बिरेस्तार", "fri": "शुक्रार", "sat": "शेनवार"
+    "sun": "आयतार",
+    "mon": "सोमार",
+    "tue": "मंगळार",
+    "wed": "बुधवार",
+    "thu": "बिरेस्तार",
+    "fri": "शुक्रार",
+    "sat": "शेनवार"
   },
   "days_short": {
-    "sun": "आय", "mon": "सोम", "tue": "मंग", "wed": "बुध", "thu": "बिरे", "fri": "शुक्र", "sat": "शेन"
+    "sun": "आय",
+    "mon": "सोम",
+    "tue": "मंग",
+    "wed": "बुध",
+    "thu": "बिरे",
+    "fri": "शुक्र",
+    "sat": "शेन"
   },
   "months": {
-    "jan": "जानेवारी", "feb": "फेब्रुवारी", "mar": "मार्च", "apr": "एप्रिल", "may": "मे", "jun": "जून", "jul": "जुलै", "aug": "ऑगस्ट", "sep": "सप्टेंबर", "oct": "ऑक्टोबर", "nov": "नोव्हेंबर", "dec": "डिसेंबर"
+    "jan": "जानेवारी",
+    "feb": "फेब्रुवारी",
+    "mar": "मार्च",
+    "apr": "एप्रिल",
+    "may": "मे",
+    "jun": "जून",
+    "jul": "जुलै",
+    "aug": "ऑगस्ट",
+    "sep": "सप्टेंबर",
+    "oct": "ऑक्टोबर",
+    "nov": "नोव्हेंबर",
+    "dec": "डिसेंबर"
   },
   "icons": {
-    "live_tv": "लाईव्ह टीव्ही", "room_service": "रूंम सर्विस", "house_keeping": "हाऊस कीपिंग", "amenities": "सोयी", "settings": "सेटिंग्स", "languages": "भासो", "applications": "ॲप्स", "weather": "हवामान", "travel": "भोंवडी", "hotel_info": "हॉटेलची माहिती", "wifi": "वायफाय", "parking": "पार्किंग", "metro": "मेट्रो", "railway": "रेल्वे", "taxi": "टॅक्सी", "rooms": "कुडां", "language": "भास", "restaurant": "रेस्टॉरंट", "coffee_shop": "कॉफी शॉप", "bar": "बार", "pool": "पूल", "gym": "जिम", "spa": "स्पा", "events": "सुवाळो", "weddings": "काजारां", "conferences": "परिषद", "attractions": "आकर्शणां", "sightseeing": "पर्यटन", "car_hire": "कार भाड्यार", "bike_hire": "बायकी भाड्यार", "medical": "वैजकी", "forex": "परकीय चलन", "flights": "विमानां", "our_city": "आमचें शहर"
+    "live_tv": "लाईव्ह टीव्ही",
+    "room_service": "रूंम सर्विस",
+    "house_keeping": "हाऊस कीपिंग",
+    "amenities": "सोयी",
+    "settings": "सेटिंग्स",
+    "languages": "भासो",
+    "applications": "ॲप्स",
+    "weather": "हवामान",
+    "travel": "भोंवडी",
+    "hotel_info": "हॉटेलची माहिती",
+    "wifi": "वायफाय",
+    "parking": "पार्किंग",
+    "metro": "मेट्रो",
+    "railway": "रेल्वे",
+    "taxi": "टॅक्सी",
+    "rooms": "कुडां",
+    "language": "भास",
+    "restaurant": "रेस्टॉरंट",
+    "coffee_shop": "कॉफी शॉप",
+    "bar": "बार",
+    "pool": "पूल",
+    "gym": "जिम",
+    "spa": "स्पा",
+    "events": "सुवाळो",
+    "weddings": "काजारां",
+    "conferences": "परिषद",
+    "attractions": "आकर्शणां",
+    "sightseeing": "पर्यटन",
+    "car_hire": "कार भाड्यार",
+    "bike_hire": "बायकी भाड्यार",
+    "medical": "वैजकी",
+    "forex": "परकीय चलन",
+    "flights": "विमानां",
+    "our_city": "आमचें शहर",
+    "input": "इनपुट",
+    "screen_cast": "स्क्रीन कास्ट",
+    "refresh": "रिफ्रेश"
   },
   "messages": {
-    "no_internet": "इंटरनेट कनेक्शन तपासात", "loading": "लोड जाता...", "emergency": "आणीबाणी", "fire_alert": "उज्याचो धोको"
+    "no_internet": "इंटरनेट कनेक्शन तपासात",
+    "loading": "लोड जाता...",
+    "emergency": "आणीबाणी",
+    "fire_alert": "उज्याचो धोको"
   }
 }

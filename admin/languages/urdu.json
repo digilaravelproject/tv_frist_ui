@@ -40,18 +40,80 @@
     "welcome": "ہمارے ہوٹل میں خوش آمدید"
   },
   "days": {
-    "sun": "اتوار", "mon": "پیر", "tue": "منگل", "wed": "بدھ", "thu": "جمعرات", "fri": "جمعہ", "sat": "ہفتہ"
+    "sun": "اتوار",
+    "mon": "پیر",
+    "tue": "منگل",
+    "wed": "بدھ",
+    "thu": "جمعرات",
+    "fri": "جمعہ",
+    "sat": "ہفتہ"
   },
   "days_short": {
-    "sun": "اتوار", "mon": "پیر", "tue": "منگل", "wed": "بدھ", "thu": "جمعرات", "fri": "جمعہ", "sat": "ہفتہ"
+    "sun": "اتوار",
+    "mon": "پیر",
+    "tue": "منگل",
+    "wed": "بدھ",
+    "thu": "جمعرات",
+    "fri": "جمعہ",
+    "sat": "ہفتہ"
   },
   "months": {
-    "jan": "جنوری", "feb": "فروری", "mar": "مارچ", "apr": "اپریل", "may": "مئی", "jun": "جون", "jul": "جولائی", "aug": "اگست", "sep": "ستمبر", "oct": "اکتوبر", "nov": "نومبر", "dec": "دسمبر"
+    "jan": "جنوری",
+    "feb": "فروری",
+    "mar": "مارچ",
+    "apr": "اپریل",
+    "may": "مئی",
+    "jun": "جون",
+    "jul": "جولائی",
+    "aug": "اگست",
+    "sep": "ستمبر",
+    "oct": "اکتوبر",
+    "nov": "نومبر",
+    "dec": "دسمبر"
   },
   "icons": {
-    "live_tv": "لائیو ٹی وی", "room_service": "روم سروس", "house_keeping": "ہاؤس کیپنگ", "amenities": "سہولیات", "settings": "سیٹنگز", "languages": "زبانیں", "applications": "ایپس", "weather": "موسم", "travel": "سفر", "hotel_info": "ہوٹل کی معلومات", "wifi": "وائی فائی", "parking": "پارکنگ", "metro": "میٹرو", "railway": "ریلوے", "taxi": "ٹیکسی", "rooms": "کمرے", "language": "زبان", "restaurant": "ریستوراں", "coffee_shop": "کافی شاپ", "bar": "بار", "pool": "پول", "gym": "جم", "spa": "اسپا", "events": "تقریبات", "weddings": "شادیاں", "conferences": "کانفرنس", "attractions": "کشش", "sightseeing": "سیر و تفریح", "car_hire": "کار کرایہ پر", "bike_hire": "بائیک کرایہ پر", "medical": "طبی", "forex": "زر مبادلہ", "flights": "پروازیں", "our_city": "ہمارਾ شہر"
+    "live_tv": "لائیو ٹی وی",
+    "room_service": "روم سروس",
+    "house_keeping": "ہاؤس کیپنگ",
+    "amenities": "سہولیات",
+    "settings": "سیٹنگز",
+    "languages": "زبانیں",
+    "applications": "ایپس",
+    "weather": "موسم",
+    "travel": "سفر",
+    "hotel_info": "ہوٹل کی معلومات",
+    "wifi": "وائی فائی",
+    "parking": "پارکنگ",
+    "metro": "میٹرو",
+    "railway": "ریلوے",
+    "taxi": "ٹیکسی",
+    "rooms": "کمرے",
+    "language": "زبان",
+    "restaurant": "ریستوراں",
+    "coffee_shop": "کافی شاپ",
+    "bar": "بار",
+    "pool": "پول",
+    "gym": "جم",
+    "spa": "اسپا",
+    "events": "تقریبات",
+    "weddings": "شادیاں",
+    "conferences": "کانفرنس",
+    "attractions": "کشش",
+    "sightseeing": "سیر و تفریح",
+    "car_hire": "کار کرایہ پر",
+    "bike_hire": "بائیک کرایہ پر",
+    "medical": "طبی",
+    "forex": "زر مبادلہ",
+    "flights": "پروازیں",
+    "our_city": "ہمارਾ شہر",
+    "input": "انپٹ",
+    "screen_cast": "اسکرین کاسٹ",
+    "refresh": "ریفریش"
   },
   "messages": {
-    "no_internet": "انٹرنیٹ چیک کریں", "loading": "لوڈ ہو رہا ہے...", "emergency": "ہنگامی", "fire_alert": "آگ کا الرٹ"
+    "no_internet": "انٹرنیٹ چیک کریں",
+    "loading": "لوڈ ہو رہا ہے...",
+    "emergency": "ہنگامی",
+    "fire_alert": "آگ کا الرٹ"
   }
 }

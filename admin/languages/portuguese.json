@@ -39,18 +39,80 @@
     "welcome": "Bem-vindo ao nosso hotel"
   },
   "days": {
-    "sun": "Domingo", "mon": "Segunda", "tue": "Terça", "wed": "Quarta", "thu": "Quinta", "fri": "Sexta", "sat": "Sábado"
+    "sun": "Domingo",
+    "mon": "Segunda",
+    "tue": "Terça",
+    "wed": "Quarta",
+    "thu": "Quinta",
+    "fri": "Sexta",
+    "sat": "Sábado"
   },
   "days_short": {
-    "sun": "Dom", "mon": "Seg", "tue": "Ter", "wed": "Qua", "thu": "Qui", "fri": "Sex", "sat": "Sáb"
+    "sun": "Dom",
+    "mon": "Seg",
+    "tue": "Ter",
+    "wed": "Qua",
+    "thu": "Qui",
+    "fri": "Sex",
+    "sat": "Sáb"
   },
   "months": {
-    "jan": "Janeiro", "feb": "Fevereiro", "mar": "Março", "apr": "Abril", "may": "Maio", "jun": "Junho", "jul": "Julho", "aug": "Agosto", "sep": "Setembro", "oct": "Outubro", "nov": "Novembro", "dec": "Dezembro"
+    "jan": "Janeiro",
+    "feb": "Fevereiro",
+    "mar": "Março",
+    "apr": "Abril",
+    "may": "Maio",
+    "jun": "Junho",
+    "jul": "Julho",
+    "aug": "Agosto",
+    "sep": "Setembro",
+    "oct": "Outubro",
+    "nov": "Novembro",
+    "dec": "Dezembro"
   },
   "icons": {
-    "live_tv": "TV ao vivo", "room_service": "Serviço de quarto", "house_keeping": "Limpeza", "amenities": "Comodidades", "settings": "Ajustes", "languages": "Idiomas", "applications": "Apps", "weather": "Clima", "travel": "Viagem", "hotel_info": "Info hotel", "wifi": "Wifi", "parking": "Estacionamento", "metro": "Metrô", "railway": "Comboio", "taxi": "Táxi", "rooms": "Quartos", "language": "Idioma", "restaurant": "Restaurante", "coffee_shop": "Cafetaria", "bar": "Bar", "pool": "Piscina", "gym": "Ginásio", "spa": "Spa", "events": "Eventos", "weddings": "Casamentos", "conferences": "Conferências", "attractions": "Atrações", "sightseeing": "Turismo", "car_hire": "Aluguel carros", "bike_hire": "Aluguel bikes", "medical": "Médico", "forex": "Câmbio", "flights": "Voos", "our_city": "Nossa cidade"
+    "live_tv": "TV ao vivo",
+    "room_service": "Serviço de quarto",
+    "house_keeping": "Limpeza",
+    "amenities": "Comodidades",
+    "settings": "Ajustes",
+    "languages": "Idiomas",
+    "applications": "Apps",
+    "weather": "Clima",
+    "travel": "Viagem",
+    "hotel_info": "Info hotel",
+    "wifi": "Wifi",
+    "parking": "Estacionamento",
+    "metro": "Metrô",
+    "railway": "Comboio",
+    "taxi": "Táxi",
+    "rooms": "Quartos",
+    "language": "Idioma",
+    "restaurant": "Restaurante",
+    "coffee_shop": "Cafetaria",
+    "bar": "Bar",
+    "pool": "Piscina",
+    "gym": "Ginásio",
+    "spa": "Spa",
+    "events": "Eventos",
+    "weddings": "Casamentos",
+    "conferences": "Conferências",
+    "attractions": "Atrações",
+    "sightseeing": "Turismo",
+    "car_hire": "Aluguel carros",
+    "bike_hire": "Aluguel bikes",
+    "medical": "Médico",
+    "forex": "Câmbio",
+    "flights": "Voos",
+    "our_city": "Nossa cidade",
+    "input": "Entrada",
+    "screen_cast": "Transmitir",
+    "refresh": "Atualizar"
   },
   "messages": {
-    "no_internet": "Verifique a conexão", "loading": "Carregando...", "emergency": "Emergência", "fire_alert": "Alerta de fogo"
+    "no_internet": "Verifique a conexão",
+    "loading": "Carregando...",
+    "emergency": "Emergência",
+    "fire_alert": "Alerta de fogo"
   }
 }
