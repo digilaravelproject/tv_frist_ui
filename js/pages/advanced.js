@@ -19,30 +19,59 @@ document.addEventListener('DOMContentLoaded', function() {
     window.openIptvMenu = function() {
         var box = document.getElementById('packageBox');
         box.querySelectorAll('.package-item').forEach(el => el.remove());
+        
+        function renderPackages(packages) {
+            box.querySelectorAll('.package-item').forEach(el => el.remove());
+            packages.forEach(pkg => {
+                var div = document.createElement('div'); 
+                div.className = 'package-item'; 
+                div.tabIndex = 0; 
+                div.innerText = pkg.name;
+                div.onclick = () => { 
+                    currentPkg = pkg.file; 
+                    currentSrc = "IPTV"; 
+                    document.getElementById('packageOverlay').style.display='none'; 
+                    updateUI('btn-iptv'); 
+                };
+                div.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.keyCode === 13) div.click();
+                };
+                box.appendChild(div);
+            });
+            document.getElementById('packageOverlay').style.display = 'flex';
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+            setTimeout(() => {
+                var first = box.querySelector('.package-item');
+                if (first) first.focus();
+            }, 100);
+        }
+
+        var fallbackPackages = [
+            { "name": "IPTV All Channels", "file": "iptv/all.json" },
+            { "name": "IPTV Sports Package", "file": "iptv/sports.json" },
+            { "name": "IPTV News & Movies", "file": "iptv/news_movies.json" }
+        ];
+
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "admin/iptv_packages.json?t=" + new Date().getTime(), true);
         xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                var data = JSON.parse(xhr.responseText);
-                data.available_packages.forEach(pkg => {
-                    var div = document.createElement('div'); 
-                    div.className = 'package-item'; 
-                    div.tabIndex = 0; 
-                    div.innerText = pkg.name;
-                    div.onclick = () => { 
-                        currentPkg = pkg.file; 
-                        currentSrc = "IPTV"; 
-                        document.getElementById('packageOverlay').style.display='none'; 
-                        updateUI('btn-iptv'); 
-                    };
-                    box.appendChild(div);
-                });
-                document.getElementById('packageOverlay').style.display = 'flex';
-                setTimeout(() => {
-                    var first = box.querySelector('.package-item');
-                    if (first) first.focus();
-                }, 100);
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        if (data && data.available_packages && data.available_packages.length > 0) {
+                            renderPackages(data.available_packages);
+                            return;
+                        }
+                    } catch (e) {}
+                }
+                renderPackages(fallbackPackages);
             }
+        };
+        xhr.onerror = function() {
+            renderPackages(fallbackPackages);
         };
         xhr.send();
     };
@@ -50,30 +79,60 @@ document.addEventListener('DOMContentLoaded', function() {
     window.openAppMenu = function() {
         var box = document.getElementById('appBox');
         box.querySelectorAll('.package-item').forEach(el => el.remove());
+        
+        function renderApps(apps) {
+            box.querySelectorAll('.package-item').forEach(el => el.remove());
+            apps.forEach(app => {
+                var div = document.createElement('div'); 
+                div.className = 'package-item'; 
+                div.tabIndex = 0; 
+                div.innerText = app.name;
+                div.onclick = () => { 
+                    currentPkg = app.process || app.package || app.id; 
+                    currentSrc = "TV APP"; 
+                    document.getElementById('appOverlay').style.display='none'; 
+                    updateUI('btn-tvapp'); 
+                };
+                div.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.keyCode === 13) div.click();
+                };
+                box.appendChild(div);
+            });
+            document.getElementById('appOverlay').style.display = 'flex';
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+            setTimeout(() => {
+                var first = box.querySelector('.package-item');
+                if (first) first.focus();
+            }, 100);
+        }
+
+        var fallbackApps = [
+            { "name": "YouTube", "process": "com.google.android.youtube.tv" },
+            { "name": "Netflix", "process": "com.netflix.ninja" },
+            { "name": "Prime Video", "process": "com.amazon.amazonvideo.livingroom" },
+            { "name": "Live TV App", "process": "com.google.android.tv" }
+        ];
+
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "admin/tv_apps.json?t=" + new Date().getTime(), true);
         xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                var data = JSON.parse(xhr.responseText);
-                data.available_tv_apps.forEach(app => {
-                    var div = document.createElement('div'); 
-                    div.className = 'package-item'; 
-                    div.tabIndex = 0; 
-                    div.innerText = app.name;
-                    div.onclick = () => { 
-                        currentPkg = app.process; 
-                        currentSrc = "TV APP"; 
-                        document.getElementById('appOverlay').style.display='none'; 
-                        updateUI('btn-tvapp'); 
-                    };
-                    box.appendChild(div);
-                });
-                document.getElementById('appOverlay').style.display = 'flex';
-                setTimeout(() => {
-                    var first = box.querySelector('.package-item');
-                    if (first) first.focus();
-                }, 100);
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        if (data && data.available_tv_apps && data.available_tv_apps.length > 0) {
+                            renderApps(data.available_tv_apps);
+                            return;
+                        }
+                    } catch (e) {}
+                }
+                renderApps(fallbackApps);
             }
+        };
+        xhr.onerror = function() {
+            renderApps(fallbackApps);
         };
         xhr.send();
     };
@@ -81,14 +140,34 @@ document.addEventListener('DOMContentLoaded', function() {
     window.openHdmiPort = function() {
         var ip = document.getElementById('v-ip').innerText;
         var model = document.getElementById('v-model').innerText.trim();
+        
+        var fallbackOptions = {
+            "Generic": {
+                "HDMI 1": "com.mediatek.tv.hdmi1",
+                "HDMI 2": "com.mediatek.tv.hdmi2",
+                "AV Input": "com.mediatek.tv.av"
+            }
+        };
+
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "admin/open_hdmi.php?ip=" + ip + "&model=" + model + "&t=" + new Date().getTime(), true);
         xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var res = JSON.parse(xhr.responseText);
-                var modelsList = res.options || res.available_models;
-                if (modelsList) showManualModelMenu(modelsList, model);
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        var res = JSON.parse(xhr.responseText);
+                        var modelsList = res.options || res.available_models;
+                        if (modelsList) {
+                            showManualModelMenu(modelsList, model);
+                            return;
+                        }
+                    } catch (e) {}
+                }
+                showManualModelMenu(fallbackOptions, "HDMI 1");
             }
+        };
+        xhr.onerror = function() {
+            showManualModelMenu(fallbackOptions, "HDMI 1");
         };
         xhr.send();
     };
@@ -149,8 +228,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         overlay.style.display = 'flex';
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
         setTimeout(() => { 
-            let firstTestBtn = box.querySelector('.test-btn-inline');
+            let firstTestBtn = box.querySelector('.test-btn-inline') || box.querySelector('.model-name-text');
             if(firstTestBtn) firstTestBtn.focus(); 
         }, 200);
     }
