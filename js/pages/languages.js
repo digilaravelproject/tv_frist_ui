@@ -4,14 +4,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     let configObj = null;
 
-    // Fetch config and init slider
+    // Immediately render languages list so screen is responsive on load
+    populateLanguages();
+
+    // Fetch config and init slider in background
     TVCore.fetchHotelConfig().then(config => {
         if (!TVCore.checkPlanExpiredRedirect(config)) {
             configObj = config;
             TVCore.initBackgroundSlider(config);
-            populateLanguages();
         }
-    });
+    }).catch(e => console.warn("Hotel config fetch failed in background:", e));
 
     function populateLanguages() {
         const container = document.getElementById('langList');

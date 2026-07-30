@@ -982,14 +982,20 @@ function openAppsOverlay() {
 }
 
 async function openLiveTVOverlay() {
-    // Agar direct bridge launch API method available hai:
-    if (window.flutterBridge && window.flutterBridge.launchLiveTv) {
-        window.flutterBridge.launchLiveTv().catch(function() {
-            // Fallback to overlay if multiple inputs
+    // Direct launch active connected TV setup box port / Live TV
+    if (window.flutterBridge && typeof window.flutterBridge.launchLiveTv === 'function') {
+        window.flutterBridge.launchLiveTv().catch(function(err) {
+            console.error('launchLiveTv failed:', err);
         });
+        return;
+    } else if (window.flutterBridge && typeof window.flutterBridge.launchHdmi === 'function') {
+        window.flutterBridge.launchHdmi().catch(function(err) {
+            console.error('launchHdmi failed:', err);
+        });
+        return;
     }
 
-    // For Live TV Menu Click: connected Set-top box / Dish TV port check
+    // For Live TV Menu Click: connected Set-top box / Dish TV port check fallback
     if (window.flutterBridge && window.flutterBridge.getLiveTvInputs) {
         try {
             var liveTvInputs = await window.flutterBridge.getLiveTvInputs();
