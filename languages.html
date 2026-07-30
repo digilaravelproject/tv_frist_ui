@@ -22,14 +22,26 @@
         <div class="slide"></div>
     </div>
 
-    <div class="lang-card">
-        <div class="header-title" id="titleText">Select Language</div>
+    <div class="lang-modal-container">
+        <div class="lang-header">
+            <div class="header-icon">🌐</div>
+            <div class="header-text-group">
+                <h1 class="header-title" id="titleText">SELECT LANGUAGE</h1>
+                <p class="header-subtitle" id="subtitleText">Choose your preferred system language</p>
+            </div>
+        </div>
 
-        <div class="lang-list" id="langList"></div>
+        <div class="lang-grid-container" id="langList"></div>
 
-        <div class="controls">
-            <button class="btn" id="applyBtn">Apply</button>
-            <button class="btn" id="cancelBtn">Cancel</button>
+        <div class="lang-actions">
+            <button class="btn btn-apply" id="applyBtn" tabindex="0">
+                <span class="btn-icon">✓</span>
+                <span id="btnApplyText">Apply & Continue</span>
+            </button>
+            <button class="btn btn-cancel" id="cancelBtn" tabindex="0">
+                <span class="btn-icon">✕</span>
+                <span id="btnCancelText">Back</span>
+            </button>
         </div>
     </div>
 </body>
