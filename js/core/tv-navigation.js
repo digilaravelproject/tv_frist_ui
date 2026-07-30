@@ -637,10 +637,12 @@
                 }
 
                 var focusables = document.querySelectorAll('.active-focus');
-                for (var i = 0; i < focusables.length; i++) {
-                    focusables[i].classList.remove('active-focus');
+                for (var k = 0; k < focusables.length; k++) {
+                    focusables[k].classList.remove('active-focus');
                 }
-                e.target.classList.add('active-focus');
+                if (e.target && e.target.classList) {
+                    e.target.classList.add('active-focus');
+                }
             }, true);
 
             document.addEventListener('blur', function(e) {

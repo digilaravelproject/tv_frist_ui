@@ -33,7 +33,12 @@
 .list-item.selected .tick { display: inline; }
 .list-item:focus, .package-item:focus, .key-btn:focus, .side-btn:focus, .btn-act:focus, 
 .list-item.active-focus, .package-item.active-focus, .key-btn.active-focus, .side-btn.active-focus, .btn-act.active-focus { 
-    background: var(--house-gold) !important; color: white !important; outline: 2px solid white; 
+    background: var(--house-gold) !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    outline: 2px solid white !important;
+    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9) !important;
+    transform: scale(1.08) !important;
 }
 
 .num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }

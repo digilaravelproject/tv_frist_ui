@@ -280,6 +280,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('.key-btn').forEach(function(b) {
         if(b.dataset.val) b.onclick = function(e) { e.preventDefault(); press(b.dataset.val); };
+        b.addEventListener('focus', function() {
+            document.querySelectorAll('.active-focus').forEach(el => el.classList.remove('active-focus'));
+            this.classList.add('active-focus');
+        });
+        b.addEventListener('blur', function() {
+            this.classList.remove('active-focus');
+        });
     });
 
     // Custom KeyDown Logic mapped into TVNavigation
@@ -340,22 +347,25 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     document.getElementById('saveBtn').onclick = function() {
-        if (isSaving || room.value.length < 3 || currentSrc == "") return;
+        if (isSaving || room.value.length < 3) return; // Allow save if room is selected
         isSaving = true;
-
         var payload = {
             room: room.value,
             serial: document.getElementById('v-serial').innerText,
             ip: document.getElementById('v-ip').innerText,
-            gateway: document.getElementById('v-gateway').innerText,
             mac: document.getElementById('v-mac').innerText,
-            subnet: document.getElementById('v-subnet').innerText,
-            DNS: document.getElementById('v-dns').innerText,
             model: document.getElementById('v-model').innerText,
-            android: document.getElementById('v-android').innerText,
-            tv_source: currentSrc,
+            tv_source: currentSrc || "HDMI",
             package: currentPkg
         };
+
+        if (window.flutterBridge && window.flutterBridge.saveDeviceConfig) {
+            window.flutterBridge.saveDeviceConfig(payload).then(function() {
+                localStorage.setItem('roomNo', payload.room);
+                window.location.href = 'index.html';
+            });
+            return;
+        }
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "admin/save_configuration.php", true);
@@ -374,7 +384,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     document.getElementById('androidBtn').onclick = function() {
-        if (window.Android && window.Android.openAndroidSettings) {
+        if (window.flutterBridge && window.flutterBridge.openSettings) {
+            window.flutterBridge.openSettings();
+        } else if (window.Android && window.Android.openAndroidSettings) {
             window.Android.openAndroidSettings();
         } else {
             console.log("Android Settings Bridge not found. Attempting PHP fallback...");
@@ -384,6 +396,13 @@ document.addEventListener('DOMContentLoaded', function() {
             xhr.send();
         }
     };
+
+    var refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.onclick = function() {
+            window.loadHW();
+        };
+    }
 
     document.getElementById('exitBtn').onclick = () => TVNavigation.goBack();
     document.getElementById('btn-esc').onclick = () => TVNavigation.goBack();

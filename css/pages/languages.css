@@ -44,10 +44,10 @@
 
 /* Language List Hover/Focus Highlight */
 .lang-item:hover, .lang-item:focus, .lang-item.active-focus {
-    background: var(--house-gold);
-    color: white;
-    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
-    transform: scale(1.02);
+    background: var(--house-gold) !important;
+    color: white !important;
+    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9) !important;
+    transform: scale(1.04) !important;
 }
 
 .tick {

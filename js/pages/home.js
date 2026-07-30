@@ -800,6 +800,16 @@ async function loadApplications() {
                     this.click();
                 }
             });
+            card.addEventListener('focus', function () {
+                var allFocus = document.querySelectorAll('.active-focus');
+                for (var i = 0; i < allFocus.length; i++) {
+                    allFocus[i].classList.remove('active-focus');
+                }
+                this.classList.add('active-focus');
+            });
+            card.addEventListener('blur', function () {
+                this.classList.remove('active-focus');
+            });
 
             container.appendChild(card);
         });
@@ -810,6 +820,10 @@ async function loadApplications() {
         }
         var firstCard = container.querySelector('.app-card');
         if (firstCard) {
+            var allFocus = document.querySelectorAll('.active-focus');
+            for (var k = 0; k < allFocus.length; k++) {
+                allFocus[k].classList.remove('active-focus');
+            }
             firstCard.focus();
             firstCard.classList.add('active-focus');
         }
@@ -830,6 +844,22 @@ async function loadTvInputs() {
             container.innerHTML = '<div style="color:#888;font-size:1.1vw;">No TV inputs available</div>';
             return;
         }
+
+        // --- WEB DEVELOPER ADDITION START ---
+        // Agar TV par sirf 1 active input (Set-top box / Airtel / Dish TV / Jio) connected hai,
+        // toh dialog box kholne ki jagah DIRECT Live TV source launch kar do.
+        if (inputs.length === 1) {
+            var singleInput = inputs[0];
+            var targetModel = singleInput.id || singleInput.model || singleInput.label;
+            closeAppsOverlay();
+            if (targetModel && bridge && bridge.launchHdmi) {
+                bridge.launchHdmi(targetModel).catch(function (err) {
+                    console.error('Auto launch HDMI failed:', err);
+                });
+            }
+            return;
+        }
+        // --- WEB DEVELOPER ADDITION END ---
 
         var lastPort = localStorage.getItem('selectedHdmiPort');
         var deviceSerial = localStorage.getItem('deviceSerial');
@@ -880,6 +910,16 @@ async function loadTvInputs() {
                     this.click();
                 }
             });
+            btn.addEventListener('focus', function () {
+                var allFocus = document.querySelectorAll('.active-focus');
+                for (var i = 0; i < allFocus.length; i++) {
+                    allFocus[i].classList.remove('active-focus');
+                }
+                this.classList.add('active-focus');
+            });
+            btn.addEventListener('blur', function () {
+                this.classList.remove('active-focus');
+            });
 
             container.appendChild(btn);
         });
@@ -890,6 +930,10 @@ async function loadTvInputs() {
         }
         var firstInput = container.querySelector('.tv-input-btn');
         if (firstInput) {
+            var allFocus = document.querySelectorAll('.active-focus');
+            for (var k = 0; k < allFocus.length; k++) {
+                allFocus[k].classList.remove('active-focus');
+            }
             firstInput.focus();
             firstInput.classList.add('active-focus');
         }
@@ -902,6 +946,13 @@ async function loadTvInputs() {
 function openAppsOverlay() {
     var overlay = document.getElementById('appsOverlay');
     if (!overlay) return;
+
+    // Clear active-focus from main UI items
+    var allFocus = document.querySelectorAll('.active-focus');
+    for (var i = 0; i < allFocus.length; i++) {
+        allFocus[i].classList.remove('active-focus');
+    }
+
     overlay.classList.add('show');
     document.body.classList.add('overlay-active');
     document.getElementById('mainUI').style.display = 'none';
@@ -923,13 +974,49 @@ function openAppsOverlay() {
 
     setTimeout(function () {
         var firstCard = document.querySelector('.app-card');
-        if (firstCard) firstCard.focus();
+        if (firstCard) {
+            firstCard.focus();
+            firstCard.classList.add('active-focus');
+        }
     }, 200);
 }
 
-function openLiveTVOverlay() {
+async function openLiveTVOverlay() {
+    // Agar direct bridge launch API method available hai:
+    if (window.flutterBridge && window.flutterBridge.launchLiveTv) {
+        window.flutterBridge.launchLiveTv().catch(function() {
+            // Fallback to overlay if multiple inputs
+        });
+    }
+
+    // For Live TV Menu Click: connected Set-top box / Dish TV port check
+    if (window.flutterBridge && window.flutterBridge.getLiveTvInputs) {
+        try {
+            var liveTvInputs = await window.flutterBridge.getLiveTvInputs();
+            if (liveTvInputs && liveTvInputs.length === 1) {
+                // Agar 1 connected STB input hai, toh Direct launch ho jayega
+                var targetId = liveTvInputs[0].id || liveTvInputs[0].model || liveTvInputs[0].label;
+                if (targetId && window.flutterBridge.launchHdmi) {
+                    window.flutterBridge.launchHdmi(targetId).catch(function(err) {
+                        console.error('Launch Live TV HDMI failed:', err);
+                    });
+                    return;
+                }
+            }
+        } catch (e) {
+            console.warn('getLiveTvInputs check failed:', e);
+        }
+    }
+
     var overlay = document.getElementById('appsOverlay');
     if (!overlay) return;
+
+    // Clear active-focus from main UI items
+    var allFocus = document.querySelectorAll('.active-focus');
+    for (var j = 0; j < allFocus.length; j++) {
+        allFocus[j].classList.remove('active-focus');
+    }
+
     overlay.classList.add('show');
     document.body.classList.add('overlay-active');
     document.getElementById('mainUI').style.display = 'none';
@@ -951,7 +1038,10 @@ function openLiveTVOverlay() {
 
     setTimeout(function () {
         var firstInput = document.querySelector('.tv-input-btn');
-        if (firstInput) firstInput.focus();
+        if (firstInput) {
+            firstInput.focus();
+            firstInput.classList.add('active-focus');
+        }
     }, 200);
 }
 
@@ -1053,6 +1143,13 @@ function closeInputOverlay() {
 }
 
 function openCastOverlay() {
+    // Native Screen Mirroring Trigger
+    if (window.flutterBridge && window.flutterBridge.launchCast) {
+        window.flutterBridge.launchCast().catch(function(err) {
+            console.error('Launch cast error:', err);
+        });
+    }
+
     var overlay = document.getElementById('castOverlay');
     if (!overlay) return;
     overlay.style.display = 'flex';
@@ -1086,12 +1183,12 @@ function closeCastOverlay() {
 }
 
 function triggerManualRefresh() {
-    // Clear dynamic local storage & caches
+    // 1. Clear dynamic local storage & caches
     localStorage.removeItem('cachedHotelData');
     localStorage.removeItem('cached_temp_string');
     localStorage.removeItem('cached_ip_city');
 
-    // Show temporary feedback toast
+    // 2. Show temporary feedback toast
     var toast = document.createElement('div');
     toast.style.position = 'fixed';
     toast.style.top = '20px';
@@ -1103,10 +1200,10 @@ function triggerManualRefresh() {
     toast.style.zIndex = '99999';
     toast.style.fontWeight = 'bold';
     toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.5)';
-    toast.textContent = 'Refreshing fresh data...';
+    toast.textContent = 'Refreshing fresh data & APIs...';
     document.body.appendChild(toast);
 
-    // Perform fresh fetch with explicit remote API check-version call using Bearer Token
+    // 3. Re-fetch all APIs (Hotel Config, Guest Data, Weather, Check-Version)
     if (window.TVCore && typeof window.TVCore.fetchHotelConfig === 'function') {
         window.TVCore.fetchHotelConfig(true).then(function() {
             initLanguage();
@@ -1119,6 +1216,13 @@ function triggerManualRefresh() {
         updateDateTime();
         updateWeather();
         fetchGuestData();
+    }
+
+    // 4. Trigger Flutter Native Full WebView Page Reload
+    if (window.flutterBridge && window.flutterBridge.refreshApp) {
+        setTimeout(function() {
+            window.flutterBridge.refreshApp();
+        }, 500);
     }
 
     setTimeout(function() {
