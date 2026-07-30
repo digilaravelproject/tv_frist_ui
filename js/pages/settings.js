@@ -16,7 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    let lastPressTime = 0;
+
     function addDigit(digit) {
+        const now = Date.now();
+        if (now - lastPressTime < 350) return;
+        lastPressTime = now;
+
         if (currentPin.length < 6 && !isProcessing) {
             const index = currentPin.length;
             currentPin += digit;
@@ -38,6 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleDel() {
+        const now = Date.now();
+        if (now - lastPressTime < 350) return;
+        lastPressTime = now;
+
         if (currentPin.length > 0 && !isProcessing) {
             currentPin = currentPin.slice(0, -1);
             maskedPin[currentPin.length] = "*";
@@ -128,11 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 TVNavigation.goBack();
             } else if (!isNaN(val)) {
                 addDigit(val);
-            }
-        });
-        btn.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.keyCode === 13) {
-                this.click();
             }
         });
     });

@@ -562,7 +562,7 @@
                             e.preventDefault();
                             var now = Date.now();
                             var last = parseInt(active.getAttribute('data-last-click') || '0', 10);
-                            if (now - last > 300) {
+                            if (now - last > 400) {
                                 active.setAttribute('data-last-click', now.toString());
                                 active.click();
                             }
@@ -585,14 +585,16 @@
                 // Number Inputs
                 var digit = KeycodeManager.getDigit(keyCode, e.key);
                 if (digit !== null) {
-                    // Visual feedback: find the corresponding number button and focus/highlight it
                     var btn = document.querySelector('.num-btn[data-val="' + digit + '"]');
                     if (btn) {
                         btn.focus();
                     }
 
                     if (typeof window.onTVNumberKey === 'function') {
-                        window.onTVNumberKey(digit);
+                        // Prevent double-dispatch if keydown target is already focused button that handles click
+                        if (!e.defaultPrevented) {
+                            window.onTVNumberKey(digit);
+                        }
                     }
                 }
             });
