@@ -1165,8 +1165,24 @@ function openCastOverlay() {
 
     var nameEl = document.getElementById('castDeviceName');
     if (nameEl) {
-        var serial = localStorage.getItem('deviceSerial') || 'TV-101';
-        nameEl.textContent = 'Hotel TV (' + serial + ')';
+        var roomNo = localStorage.getItem('roomNo') || '';
+        if (!roomNo && window.TVCore && typeof window.TVCore.getFastConfig === 'function') {
+            var cfg = window.TVCore.getFastConfig();
+            if (cfg && cfg.device && cfg.device.room_no) {
+                roomNo = cfg.device.room_no;
+            }
+        }
+        if (!roomNo) {
+            var stored = localStorage.getItem('cachedHotelData');
+            if (stored) {
+                try {
+                    var parsed = JSON.parse(stored);
+                    roomNo = (parsed.device && parsed.device.room_no) || parsed.room_no || '';
+                } catch(e) {}
+            }
+        }
+        var label = roomNo ? 'Hotel TV (Room ' + roomNo + ')' : (localStorage.getItem('deviceSerial') ? 'Hotel TV (' + localStorage.getItem('deviceSerial') + ')' : 'Hotel TV');
+        nameEl.textContent = label;
     }
 
     setTimeout(function () {

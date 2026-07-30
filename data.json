@@ -6,10 +6,10 @@
       "token": "ugpm2JWeYoCmYsiTDFCpkUEanZg4VhsdF5SIu7gjdsO1LW7rBIdmjFjioiA4DZxK474mCuXs9eIDIGdS"
     },
     "template": {
-      "latest_version": "12.0",
-      "old_version": "11.5",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v12_0_1784114041.zip",
-      "uploaded_at": "2026-07-15T16:44:01+05:30",
+      "latest_version": "14.0",
+      "old_version": "13.5",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v14_0_1785401037.zip",
+      "uploaded_at": "2026-07-30T14:13:57+05:30",
       "is_update_available": false
     },
     "device": {
@@ -29,11 +29,10 @@
       "email": "darshankondekar01@gmail.com",
       "phone": "8975845684",
       "media": {
-        "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1783694106_logo_qXd2oMrn.png",
+        "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1785401445_logo_N1ivTCOz.png",
         "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1783173121_image_sDTg0sZN.jpeg",
         "slider_images": [
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783594989_slider_oLZH7gj8.png",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1783595348_slider_BSfhCjmW.png"
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1785401361_slider_jbjZxuH2.png"
         ]
       },
       "active_plan": {
