@@ -110,6 +110,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (selected) {
                         const file = selected.dataset.file;
                         localStorage.setItem('selectedLangFile', file);
+
+                        if (window.flutterBridge && typeof window.flutterBridge.setLanguage === 'function') {
+                            window.flutterBridge.setLanguage(file).then(function() {
+                                window.location.href = 'index.html';
+                            }).catch(function() {
+                                window.location.href = 'index.html';
+                            });
+                            return;
+                        }
+
                         // Sync with Android Bridge if exists
                         if (window.AndroidBridge && typeof window.AndroidBridge.setLanguage === 'function') {
                             window.AndroidBridge.setLanguage(file);

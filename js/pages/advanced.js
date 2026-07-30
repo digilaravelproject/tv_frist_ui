@@ -265,8 +265,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.loadHW = function() {
-        // Fetch from dynamic hotel config (which loads data.json)
-        TVCore.fetchHotelConfig().then(config => {
+        // Query Flutter Bridge for live network hardware parameters
+        if (window.flutterBridge && typeof window.flutterBridge.identifyDevice === 'function') {
+            window.flutterBridge.identifyDevice().then(function(info) {
+                var d = (info && info.data) || (info && info.device) || info || {};
+                displayHWData({
+                    serial: d.serial || d.device_id || d.deviceId || "UNKNOWN",
+                    ip: d.ip || d.ip_address || d.ipAddress || "...",
+                    gateway: d.gateway || d.gway || "...",
+                    mac: d.mac || d.mac_address || d.macAddress || "...",
+                    subnet: d.subnet || d.subnet_mask || d.subnetMask || "...",
+                    dns: d.dns || d.DNS || "...",
+                    model: d.model || "...",
+                    android: d.android || d.os_version || d.osVersion || "11",
+                    room: d.room || d.room_no || ""
+                });
+            }).catch(function(err) {
+                console.error("Bridge identifyDevice failed:", err);
+                loadHWFromConfig();
+            });
+            return;
+        }
+        loadHWFromConfig();
+    };
+
+    function loadHWFromConfig() {
+        TVCore.fetchHotelConfig().then(function(config) {
             if (config && config.device) {
                 var d = {
                     serial: config.device.device_id || "UNKNOWN",
@@ -276,56 +300,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     subnet: config.device.subnet_mask || "...",
                     dns: config.device.dns || "...",
                     model: config.device.model || "...",
-                    android: config.device.android_version || "11",
+                    android: config.device.android_version || config.device.os_version || "11",
                     room: config.device.room_no || ""
                 };
-                
-                // Add version if template version exists
                 if (config.template && config.template.latest_version) {
                     d.version = config.template.latest_version;
                 }
-                
                 displayHWData(d);
-            } else {
-                // Fallback: Android Bridge
-                if (window.Android && window.Android.getDeviceInfo) {
-                    try {
-                        const deviceInfo = JSON.parse(window.Android.getDeviceInfo());
-                        displayHWData(deviceInfo);
-                        return;
-                    } catch (e) {
-                        console.error("APK Bridge Error, falling back to PHP:", e);
-                    }
-                }
-
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "admin/identify_device.php?t=" + new Date().getTime(), true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        try {
-                            var d = JSON.parse(xhr.responseText);
-                            displayHWData(d);
-                        } catch(e) {}
-                    }
-                };
-                xhr.send();
             }
-        }).catch(err => {
-            console.error("Error fetching config, falling back to standard PHP detection:", err);
-            // Fallback: standard detection
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "admin/identify_device.php?t=" + new Date().getTime(), true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    try {
-                        var d = JSON.parse(xhr.responseText);
-                        displayHWData(d);
-                    } catch(e) {}
-                }
-            };
-            xhr.send();
         });
-    };
+    }
 
     function displayHWData(d) {
         document.getElementById('v-serial').innerText = d.serial || "UNKNOWN";
