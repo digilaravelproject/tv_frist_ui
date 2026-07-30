@@ -472,6 +472,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('saveBtn').onclick = function() {
         if (isSaving || room.value.length < 3) return; // Allow save if room is selected
         isSaving = true;
+        var selectedPortId = currentPkg || currentSrc || "HDMI";
         var payload = {
             room: room.value,
             serial: document.getElementById('v-serial').innerText,
@@ -482,9 +483,19 @@ document.addEventListener('DOMContentLoaded', function() {
             package: currentPkg
         };
 
+        // Save selected Live TV port locally
+        localStorage.setItem('selectedLiveTvPort', selectedPortId);
+        localStorage.setItem('roomNo', payload.room);
+
+        // Notify Flutter Bridge of port preference
+        if (window.flutterBridge && typeof window.flutterBridge.savePortPreference === 'function') {
+            try { window.flutterBridge.savePortPreference(selectedPortId); } catch(e){}
+        }
+
         if (window.flutterBridge && window.flutterBridge.saveDeviceConfig) {
             window.flutterBridge.saveDeviceConfig(payload).then(function() {
-                localStorage.setItem('roomNo', payload.room);
+                window.location.href = 'index.html';
+            }).catch(function() {
                 window.location.href = 'index.html';
             });
             return;
@@ -496,7 +507,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                localStorage.setItem('roomNo', payload.room);
                 localStorage.setItem('deviceSerial', payload.serial);
                 localStorage.setItem('deviceIp', payload.ip);
                 window.location.href = 'index.html';

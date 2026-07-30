@@ -651,9 +651,10 @@
                 e.target.classList.remove('active-focus');
             }, true);
 
-            // Sync mouse hover with TV focus
+            // Sync mouse hover with TV focus (excluding homepage carousel icons to maintain center focus)
             document.addEventListener('mouseover', function (e) {
                 var el = e.target.closest(FOCUSABLE_SELECTOR);
+                if (el && el.classList.contains('icon-item')) return; // Ignore homepage carousel icons on mouseover
                 if (el && document.activeElement !== el) {
                     el.focus();
                 }
