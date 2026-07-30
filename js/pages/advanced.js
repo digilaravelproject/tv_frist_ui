@@ -16,6 +16,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Make functions globally available for inline onClick if needed, 
     // or attach them properly. We attach them globally so inline HTML handlers keep working.
+    window.openLiveTvInputsPopup = function() {
+        var box = document.getElementById('packageBox');
+        var header = document.getElementById('pkgHeader');
+        if (header) header.textContent = "SELECT TV INPUT SOURCE";
+        box.querySelectorAll('.package-item').forEach(el => el.remove());
+
+        function renderInputs(inputsList) {
+            box.querySelectorAll('.package-item').forEach(el => el.remove());
+            inputsList.forEach(item => {
+                var div = document.createElement('div');
+                div.className = 'package-item';
+                div.tabIndex = 0;
+                div.innerText = item.name || item.label || item.model || ("Input " + (item.id || item));
+                div.onclick = () => {
+                    currentPkg = item.id || item.package || item.file || item.name;
+                    currentSrc = item.name || item.label || "LIVE TV";
+                    document.getElementById('packageOverlay').style.display = 'none';
+                    updateUI('btn-livetv-popup');
+                };
+                div.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.keyCode === 13) div.click();
+                };
+                box.appendChild(div);
+            });
+            document.getElementById('packageOverlay').style.display = 'flex';
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
+            setTimeout(() => {
+                var first = box.querySelector('.package-item');
+                if (first) first.focus();
+            }, 100);
+        }
+
+        const defaultInputs = [
+            { "name": "Setup Box (HDMI 1)", "id": "HDMI_1" },
+            { "name": "HDMI 2", "id": "HDMI_2" },
+            { "name": "AV Input", "id": "AV" },
+            { "name": "IPTV Stream", "id": "IPTV" }
+        ];
+
+        if (window.flutterBridge && typeof window.flutterBridge.getLiveTvInputs === 'function') {
+            window.flutterBridge.getLiveTvInputs().then(function(res) {
+                if (res && res.length > 0) {
+                    renderInputs(res);
+                } else {
+                    renderInputs(defaultInputs);
+                }
+            }).catch(function() {
+                renderInputs(defaultInputs);
+            });
+            return;
+        }
+
+        renderInputs(defaultInputs);
+    };
+
     window.openIptvMenu = function() {
         var box = document.getElementById('packageBox');
         box.querySelectorAll('.package-item').forEach(el => el.remove());

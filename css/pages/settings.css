@@ -1,61 +1,103 @@
 /* ============================================================
-   SETTINGS & LOGIN PAGE STYLES
+   PREMIUM LUXURY ADMIN LOGIN / SETTINGS KEYPAD STYLES
    ============================================================ */
+:root {
+    --gold-primary: #b38a2d;
+    --gold-bright: #ffd700;
+    --gold-glow: rgba(255, 215, 0, 0.45);
+    --dark-glass: rgba(10, 12, 18, 0.92);
+    --border-glass: rgba(179, 138, 45, 0.45);
+}
+
+.page-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #000;
+}
+
 .login-card {
-    background: rgba(0, 0, 0, 0.9);
-    padding: 30px;
-    border: 2px solid var(--house-gold);
-    border-radius: 15px;
-    width: 300px;
+    background: var(--dark-glass);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    padding: 35px 30px;
+    border: 2px solid var(--border-glass);
+    border-radius: 20px;
+    width: 360px;
     text-align: center;
-    backdrop-filter: blur(10px);
-    margin-top: 60px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(179, 138, 45, 0.15);
+    animation: cardPopIn 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    box-sizing: border-box;
+}
+
+@keyframes cardPopIn {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .login-title {
-    color: var(--house-gold);
-    font-weight: bold;
-    margin-bottom: 15px;
+    color: var(--gold-bright);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
     text-transform: uppercase;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 #passDisplay {
-    background: #000;
-    color: var(--house-gold);
-    font-size: 1.2rem;
-    font-weight: normal;
-    margin-bottom: 20px;
-    border: 1px solid var(--house-gold);
-    border-radius: 5px;
-    height: 50px;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--gold-bright);
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 25px;
+    border: 2px solid var(--border-glass);
+    border-radius: 12px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
-    letter-spacing: 12px;
+    letter-spacing: 14px;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
 }
 
 .num-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 14px;
 }
 
 .num-btn {
-    background: rgba(179, 138, 45, 0.1);
-    border: 1px solid var(--house-gold);
-    color: white;
-    font-size: 1.2rem;
-    padding: 15px;
-    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    height: 55px;
+    border-radius: 12px;
     outline: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Settings Page Keypad Hover/Focus Highlight */
-.num-btn:hover, .num-btn:focus, .num-btn.active-focus {
-    background: var(--house-gold);
-    color: white !important;
-    box-shadow: 0 0 15px rgba(179, 138, 45, 0.9);
-    transform: scale(1.08);
+/* SETTINGS KEYPAD HOVER / TV DPAD FOCUS STYLES */
+.num-btn:hover,
+.num-btn:focus,
+.num-btn.active-focus {
+    background: linear-gradient(135deg, #b38a2d 0%, #ffd700 100%) !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 0 22px var(--gold-glow), 0 6px 16px rgba(0,0,0,0.8) !important;
+    transform: scale(1.08) !important;
+    font-weight: 900 !important;
+    z-index: 10;
 }

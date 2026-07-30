@@ -105,8 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     };
 
-    // Attach focus, blur, and click listeners to num-btns
+    // Attach focus, blur, mouseenter, and click listeners to num-btns
     document.querySelectorAll('.num-btn').forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.focus();
+        });
         btn.addEventListener('focus', function() {
             // Focus aane par baki buttons se active class hatayein aur ispe lagayein
             document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('active-focus'));
