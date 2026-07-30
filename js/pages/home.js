@@ -42,6 +42,33 @@ function syncFocus() {
     }
 }
 
+function rotateToItem(targetItem) {
+    if (!track || !targetItem) return;
+    var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+        return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
+    });
+
+    var targetIndex = visibleItems.indexOf(targetItem);
+    if (targetIndex === -1 || targetIndex === centerIndex) return;
+
+    var diff = targetIndex - centerIndex;
+    if (diff > 0) {
+        for (var i = 0; i < diff; i++) {
+            var firstVisible = track.querySelector('.icon-item:not([style*="display: none"])');
+            if (firstVisible) track.appendChild(firstVisible);
+        }
+    } else if (diff < 0) {
+        for (var k = 0; k < Math.abs(diff); k++) {
+            var vItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+                return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
+            });
+            var lastVis = vItems[vItems.length - 1];
+            if (lastVis) track.insertBefore(lastVis, track.firstElementChild);
+        }
+    }
+    syncFocus();
+}
+
 function rotate(dir) {
     if (!track) return;
     const isRTL = document.body.classList.contains('rtl-mode');
@@ -317,7 +344,25 @@ async function initLanguage() {
             updateCarouselPosition();
         }
 
-        setTimeout(syncFocus, 300);
+        setTimeout(function() {
+            syncFocus();
+            // Bind click event: if a non-centered item is clicked by mouse, center it first
+            if (track) {
+                track.querySelectorAll('.icon-item').forEach(function(item) {
+                    item.addEventListener('click', function(e) {
+                        var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+                            return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
+                        });
+                        var index = visibleItems.indexOf(this);
+                        if (index !== centerIndex) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            rotateToItem(this);
+                        }
+                    }, true);
+                });
+            }
+        }, 300);
     }
 }
 
