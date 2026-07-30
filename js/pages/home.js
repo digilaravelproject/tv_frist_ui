@@ -11,7 +11,9 @@ function updateCarouselPosition() {
 
 function syncFocus() {
     if (!track) return;
-    var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item"));
+    var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item")).filter(function(el) {
+        return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
+    });
 
     for (var i = 0; i < allIcons.length; i++) {
         var icon = allIcons[i];
@@ -20,7 +22,7 @@ function syncFocus() {
         if (img) img.classList.remove("bounce");
     }
 
-    var target = allIcons[centerIndex];
+    var target = allIcons[centerIndex] || allIcons[0];
     if (target) {
         target.focus();
         target.classList.add("active-focus");
@@ -49,9 +51,14 @@ function rotate(dir) {
     }
 
     if (moveDir === 'right') {
-        track.appendChild(track.firstElementChild);
+        var firstVisible = track.querySelector('.icon-item:not([style*="display: none"])');
+        if (firstVisible) track.appendChild(firstVisible);
     } else {
-        track.insertBefore(track.lastElementChild, track.firstElementChild);
+        var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+            return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
+        });
+        var lastVisible = visibleItems[visibleItems.length - 1];
+        if (lastVisible) track.insertBefore(lastVisible, track.firstElementChild);
     }
     syncFocus();
 }
@@ -227,6 +234,7 @@ async function initLanguage() {
             } else {
                 initSlider([]);
             }
+            applyDynamicMenuVisibility(cachedConfig);
         } else {
             initSlider([]);
         }
@@ -246,6 +254,7 @@ async function initLanguage() {
                 if (config.hotel && config.hotel.media && config.hotel.media.slider_images) {
                     initSlider(config.hotel.media.slider_images);
                 }
+                applyDynamicMenuVisibility(config);
                 updateGreetingDisplay();
             }
         }).catch(err => console.warn("Background fetch failed:", err));
@@ -312,6 +321,56 @@ async function initLanguage() {
     }
 }
 
+function applyDynamicMenuVisibility(config) {
+    if (!config || !config.menus || !Array.isArray(config.menus)) return;
+
+    // Map menu IDs to HTML data-action or data-link keys
+    const menuMap = {
+        'apps': 'apps',
+        'applications': 'apps',
+        'live_tv': 'livetv',
+        'livetv': 'livetv',
+        'input': 'input',
+        'screen_cast': 'cast',
+        'cast': 'cast',
+        'refresh': 'refresh',
+        'languages': 'languages.html',
+        'languages.html': 'languages.html',
+        'hotel_info': './hotel_info/hotel_info.html',
+        'amenities': './amenities/amenities.html',
+        'travel': './travel/travel.html',
+        'flights': './flights/flights.html',
+        'our_city': './city/city.html',
+        'city': './city/city.html',
+        'weather': './weather/weather.html',
+        'settings': './settings.html'
+    };
+
+    config.menus.forEach(menu => {
+        if (!menu || !menu.id) return;
+        const targetAttr = menuMap[menu.id] || menu.id;
+        const status = (menu.status || '').toLowerCase();
+
+        document.querySelectorAll('.icon-item').forEach(item => {
+            const action = item.getAttribute('data-action');
+            const link = item.getAttribute('data-link') || item.getAttribute('href');
+            
+            if (action === targetAttr || link === targetAttr) {
+                if (status === 'hide' || status === 'disabled' || status === '0' || status === 'false') {
+                    item.style.display = 'none';
+                } else {
+                    item.style.display = '';
+                }
+            }
+        });
+    });
+
+    if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+        window.TVNavigation.markDirty();
+    }
+    syncFocus();
+}
+
 function applyTranslations() {
     const roomNo = localStorage.getItem('roomNo') || "";
     const roomEl = document.getElementById('room');
@@ -338,6 +397,14 @@ function applyTranslations() {
             labelEl.textContent = currentData.icons[jsonKey];
         }
     });
+
+    // Also re-apply dynamic menu visibility from cached config if available
+    try {
+        const cached = localStorage.getItem('cachedHotelData');
+        if (cached) {
+            applyDynamicMenuVisibility(JSON.parse(cached));
+        }
+    } catch (e) {}
 }
 
 function fetchGuestData() {

@@ -3,23 +3,23 @@
   "message": "Template version details fetched successfully.",
   "data": {
     "auth": {
-      "token": "ugpm2JWeYoCmYsiTDFCpkUEanZg4VhsdF5SIu7gjdsO1LW7rBIdmjFjioiA4DZxK474mCuXs9eIDIGdS"
+      "token": "h5zF9kNOhMlB8MdpfjV0gaeLE0F76Uah2OZvW9Q4dgbyyGPQ81BcqQhEEKPa8orCNPu5xa2j5R2Wmy7Z"
     },
     "template": {
-      "latest_version": "14.0",
-      "old_version": "13.5",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v14_0_1785401037.zip",
-      "uploaded_at": "2026-07-30T14:13:57+05:30",
+      "latest_version": "15.0",
+      "old_version": "14.5",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v15_0_1785407703.zip",
+      "uploaded_at": "2026-07-30T16:05:03+05:30",
       "is_update_available": false
     },
     "device": {
-      "room_no": "101",
-      "device_id": "6231A4D7B13402C5",
-      "mac_address": "AA:BB:CC:DD:EE:FF",
-      "ip_address": "192.168.1.100",
-      "model": "BRAVIA-X90L",
-      "brand": "Sony",
-      "os_version": "Android TV 12"
+      "room_no": "1519",
+      "device_id": "283009a8d405538c",
+      "mac_address": "36:AF:BA:DB:D8:36",
+      "ip_address": "10.0.2.15",
+      "model": "sdk_google_atv64_arm64",
+      "brand": "google",
+      "os_version": "16"
     },
     "hotel": {
       "hotel_name": "Karnival Plaza",
@@ -42,6 +42,150 @@
         "expiry_date": "2026-08-07T13:25:50+05:30"
       }
     },
-    "guest_info": null
+    "guest_info": {
+      "name": "Vaibhav",
+      "mobile_number": "9876567654",
+      "check_in_datetime": "2026-07-15T14:51:00+05:30",
+      "check_out_datetime": null
+    },
+    "active_ott": [
+      {
+        "id": "netflix",
+        "name": "Netflix",
+        "package_name": "com.netflix.mediaclient"
+      },
+      {
+        "id": "hotstar",
+        "name": "Disney+ Hotstar",
+        "package_name": "in.startv.hotstar"
+      },
+      {
+        "id": "prime",
+        "name": "Amazon Prime Video",
+        "package_name": "com.amazon.avod.thirdpartyclient"
+      },
+      {
+        "id": "zee5",
+        "name": "Zee5",
+        "package_name": "com.graymatrix.did"
+      },
+      {
+        "id": "sony-liv",
+        "name": "Sony LIV",
+        "package_name": "com.sony.liv"
+      },
+      {
+        "id": "jiocinema",
+        "name": "JioCinema",
+        "package_name": "com.jio.media.ondemand"
+      },
+      {
+        "id": "aha",
+        "name": "Aha",
+        "package_name": "ka.alua.aha"
+      },
+      {
+        "id": "sun-nxt",
+        "name": "Sun NXT",
+        "package_name": "com.suntv.sunnxt"
+      },
+      {
+        "id": "mx-player",
+        "name": "MX Player",
+        "package_name": "com.mxtech.videoplayer.ad"
+      },
+      {
+        "id": "discovery",
+        "name": "Discovery+",
+        "package_name": "com.discovery.discoveryplus.mobile"
+      },
+      {
+        "id": "altbalaji",
+        "name": "ALTBalaji",
+        "package_name": "com.balaji.alt"
+      },
+      {
+        "id": "eros-now",
+        "name": "Eros Now",
+        "package_name": "com.erosnow"
+      },
+      {
+        "id": "hungama-play",
+        "name": "Hungama Play",
+        "package_name": "com.hungama.myplay.activity"
+      },
+      {
+        "id": "hoichoi",
+        "name": "Hoichoi",
+        "package_name": "com.viewlift.hoichoi"
+      },
+      {
+        "id": "planet-marathi",
+        "name": "Planet Marathi",
+        "package_name": "com.planetmarathi.ott"
+      },
+      {
+        "id": "chaupal",
+        "name": "Chaupal",
+        "package_name": "com.chaupal.app"
+      },
+      {
+        "id": "manoramamax",
+        "name": "ManoramaMAX",
+        "package_name": "com.manoramamax.app"
+      },
+      {
+        "id": "voot",
+        "name": "Voot",
+        "package_name": "com.tv.v18.viola"
+      }
+    ],
+    "menus": [
+      {
+        "id": "flights",
+        "name": "Flights",
+        "status": "show"
+      },
+      {
+        "id": "input",
+        "name": "Input",
+        "status": "show"
+      },
+      {
+        "id": "languages",
+        "name": "Languages",
+        "status": "show"
+      },
+      {
+        "id": "live_tv",
+        "name": "Live TV",
+        "status": "show"
+      },
+      {
+        "id": "our_city",
+        "name": "Our City",
+        "status": "show"
+      },
+      {
+        "id": "screen_cast",
+        "name": "Screen Cast",
+        "status": "show"
+      },
+      {
+        "id": "settings",
+        "name": "Settings",
+        "status": "show"
+      },
+      {
+        "id": "travel",
+        "name": "Travel",
+        "status": "hide"
+      },
+      {
+        "id": "weather",
+        "name": "Weather",
+        "status": "show"
+      }
+    ]
   }
 }
