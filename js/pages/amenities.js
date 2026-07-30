@@ -129,6 +129,25 @@ let images = [];
             }
         }
 
+        function extractAmenitiesImages(config) {
+            if (!config) return [];
+            let list = [];
+
+            // 1. Primary: Read from data.json "amenities" array
+            if (config.amenities && Array.isArray(config.amenities) && config.amenities.length > 0) {
+                list = config.amenities
+                    .filter(item => item && (item.image_url || item.url || item.image))
+                    .map(item => item.image_url || item.url || item.image);
+            }
+
+            // 2. Fallback: Read from hotel.media.amenities_images if present
+            if (list.length === 0 && config.hotel && config.hotel.media && config.hotel.media.amenities_images) {
+                list = config.hotel.media.amenities_images;
+            }
+
+            return list;
+        }
+
         async function initGallery() {
             // Load dynamic configuration instantly from parent cache if available
             const cachedConfig = (window.parent && window.parent.getFastConfig) ? window.parent.getFastConfig() : null;
@@ -139,18 +158,9 @@ let images = [];
 
             if (cachedConfig) {
                 initBackgroundSlider(cachedConfig);
-                if (cachedConfig.hotel && cachedConfig.hotel.media) {
-                    if (cachedConfig.hotel.media.slider_images && cachedConfig.hotel.media.slider_images.length > 0) {
-                        images = cachedConfig.hotel.media.slider_images.map(img => {
-                            return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
-                        });
-                    } else if (cachedConfig.hotel.media.cover_image) {
-                        let cover = cachedConfig.hotel.media.cover_image;
-                        if (!cover.startsWith('http') && !cover.startsWith('/')) {
-                            cover = basePath + cover;
-                        }
-                        images = [cover];
-                    }
+                const rawList = extractAmenitiesImages(cachedConfig);
+                if (rawList.length > 0) {
+                    images = rawList.map(img => (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img);
                 }
             } else {
                 initBackgroundSlider(null);
@@ -162,20 +172,12 @@ let images = [];
                     if (typeof window.checkPlanExpiredRedirect === 'function') window.checkPlanExpiredRedirect(config, '../index.html');
                     initBackgroundSlider(config);
 
+                    const rawList = extractAmenitiesImages(config);
                     let newImages = [];
-                    if (config.hotel && config.hotel.media) {
-                        if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                            newImages = config.hotel.media.slider_images.map(img => {
-                                return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
-                            });
-                        } else if (config.hotel.media.cover_image) {
-                            let cover = config.hotel.media.cover_image;
-                            if (!cover.startsWith('http') && !cover.startsWith('/')) {
-                                cover = basePath + cover;
-                            }
-                            newImages = [cover];
-                        }
+                    if (rawList.length > 0) {
+                        newImages = rawList.map(img => (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img);
                     }
+
                     if (newImages.length > 0 && JSON.stringify(newImages) !== JSON.stringify(images)) {
                         images = newImages;
                         currentIndex = 0;
@@ -222,15 +224,31 @@ let images = [];
                 .catch(err => console.error("Language load error:", err));
         }
 
+        let activeSlideIndex = 0;
+
         function updateDisplay() {
-            if (images[currentIndex]) {
-                const imgEl = document.getElementById('displayImage');
-                imgEl.style.opacity = 0;
-                setTimeout(() => {
-                    imgEl.src = images[currentIndex];
-                    imgEl.style.opacity = 1;
-                }, 100);
-            }
+            if (!images || images.length === 0 || !images[currentIndex]) return;
+            
+            const slides = document.querySelectorAll('#amenitiesSlider .amenity-slide');
+            if (!slides || slides.length < 2) return;
+
+            const targetUrl = images[currentIndex];
+            const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
+
+            const tempImg = new Image();
+            tempImg.onload = function() {
+                slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+                slides[nextSlideIndex].classList.add('active');
+                slides[activeSlideIndex].classList.remove('active');
+                activeSlideIndex = nextSlideIndex;
+            };
+            tempImg.onerror = function() {
+                slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+                slides[nextSlideIndex].classList.add('active');
+                slides[activeSlideIndex].classList.remove('active');
+                activeSlideIndex = nextSlideIndex;
+            };
+            tempImg.src = targetUrl;
         }
 
         function changeSlide(dir) {
@@ -283,6 +301,11 @@ window.onTVBack = function() {
     return true;
 };
 
-
         
-        window.onload = () => { initGallery(); setTimeout(() => document.getElementById('displayImage').focus(), 200); };
+        window.onload = () => { 
+            initGallery(); 
+            setTimeout(() => {
+                const slider = document.getElementById('amenitiesSlider');
+                if (slider) slider.focus();
+            }, 200); 
+        };

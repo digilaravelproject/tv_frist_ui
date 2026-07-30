@@ -379,6 +379,9 @@ function applyTranslations() {
     const iconMap = {
         'apps': 'applications',
         'livetv': 'live_tv',
+        'input': 'input',
+        'cast': 'screen_cast',
+        'refresh': 'refresh',
         'languages.html': 'language',
         'hotel_info/hotel_info.html': 'hotel_info',
         'amenities/amenities.html': 'amenities',

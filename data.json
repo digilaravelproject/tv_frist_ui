@@ -50,6 +50,11 @@
     },
     "active_ott": [
       {
+        "id": "playstore",
+        "name": "Google Play Store",
+        "package_name": "com.android.vending"
+      },
+      {
         "id": "netflix",
         "name": "Netflix",
         "package_name": "com.netflix.mediaclient"
@@ -185,6 +190,18 @@
         "id": "weather",
         "name": "Weather",
         "status": "show"
+      }
+    ],
+    "amenities": [
+      {
+        "sr_no": 1,
+        "title": "fiteness",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/JefBi9jsusLCdy1AmqZrKlffl8lFNh990YvpVURn.jpg"
+      },
+      {
+        "sr_no": 2,
+        "title": "swimming",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/FyJLYWSFyUK2iSlKgxUXC3B7kivwvIUCO8BF41CE.jpg"
       }
     ]
   }
