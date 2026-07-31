@@ -63,10 +63,36 @@ let images = [];
             if (config && config.hotel) {
                 var h = config.hotel;
                 document.getElementById('hotelName').textContent = h.hotel_name || 'Hotel Name';
-                document.getElementById('hotelLocation').textContent = h.hotel_location || 'Location';
+                document.getElementById('hotelLocation').textContent = '📍 ' + (h.hotel_location || h.address || 'Location');
                 document.getElementById('hotelDescription').textContent = h.description || 'Welcome to our hotel. We are committed to providing you with premium hospitality, luxury accommodations, and world-class amenities during your stay.';
-                document.getElementById('hotelPhone').innerHTML = '<strong>Phone:</strong> ' + (h.phone || 'N/A');
-                document.getElementById('hotelEmail').innerHTML = '<strong>Email:</strong> ' + (h.email || 'N/A');
+                
+                var contacts = h.emergency_contacts || {};
+
+                var phoneEl = document.getElementById('hotelPhone');
+                if (phoneEl) phoneEl.textContent = contacts.reception || h.phone || 'Ext. 0 / +91 98765 43210';
+                
+                var emailEl = document.getElementById('hotelEmail');
+                if (emailEl) emailEl.textContent = contacts.email || h.email || 'support@hotel.com';
+
+                var diningEl = document.getElementById('diningContact');
+                if (diningEl) diningEl.textContent = contacts.dining || h.dining_contact || 'Ext. 102 (24x7 Available)';
+
+                var emergencyEl = document.getElementById('emergencyContact');
+                if (emergencyEl) emergencyEl.textContent = contacts.medical_sos || h.emergency_contact || 'Ext. 999 (Emergency Desk)';
+
+                // Render dynamic amenities pills
+                if (h.hotel_amenities && Array.isArray(h.hotel_amenities) && h.hotel_amenities.length > 0) {
+                    var container = document.querySelector('.amenities-pills');
+                    if (container) {
+                        container.innerHTML = '';
+                        h.hotel_amenities.forEach(function(item) {
+                            var pill = document.createElement('span');
+                            pill.className = 'pill';
+                            pill.textContent = item;
+                            container.appendChild(pill);
+                        });
+                    }
+                }
             }
         }
 
@@ -156,12 +182,14 @@ let images = [];
                 initBackgroundSlider(cachedConfig);
                 updateHotelDetails(cachedConfig);
                 if (cachedConfig.hotel && cachedConfig.hotel.media) {
-                    if (cachedConfig.hotel.media.slider_images && cachedConfig.hotel.media.slider_images.length > 0) {
-                        images = cachedConfig.hotel.media.slider_images.map(img => {
+                    const m = cachedConfig.hotel.media;
+                    const galleryList = m.hotel_images || m.slider_images;
+                    if (galleryList && galleryList.length > 0) {
+                        images = galleryList.map(img => {
                             return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
                         });
-                    } else if (cachedConfig.hotel.media.cover_image) {
-                        let cover = cachedConfig.hotel.media.cover_image;
+                    } else if (m.cover_image) {
+                        let cover = m.cover_image;
                         if (!cover.startsWith('http') && !cover.startsWith('/')) {
                             cover = basePath + cover;
                         }
@@ -181,12 +209,14 @@ let images = [];
 
                     let newImages = [];
                     if (config.hotel && config.hotel.media) {
-                        if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                            newImages = config.hotel.media.slider_images.map(img => {
+                        const m = config.hotel.media;
+                        const galleryList = m.hotel_images || m.slider_images;
+                        if (galleryList && galleryList.length > 0) {
+                            newImages = galleryList.map(img => {
                                 return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
                             });
-                        } else if (config.hotel.media.cover_image) {
-                            let cover = config.hotel.media.cover_image;
+                        } else if (m.cover_image) {
+                            let cover = m.cover_image;
                             if (!cover.startsWith('http') && !cover.startsWith('/')) {
                                 cover = basePath + cover;
                             }
@@ -213,7 +243,7 @@ let images = [];
             }
 
             if (images.length === 0) {
-                images = ["pics/slide1.jpg", "pics/slide2.jpg"];
+                images = ["../images/main.jpg"];
             }
 
             updateDisplay();
@@ -239,35 +269,60 @@ let images = [];
                 .catch(err => console.error("Language load error:", err));
         }
 
-        function updateDisplay() {
-            if (images[currentIndex]) {
-                const imgEl = document.getElementById('displayImage');
-                imgEl.style.opacity = 0;
-                setTimeout(() => {
-                    imgEl.src = images[currentIndex];
-                    imgEl.style.opacity = 1;
-                }, 100);
+        let isTransitioning = false;
+
+        function updateDisplay(dir = 1) {
+            if (!images || images.length === 0) {
+                images = ["../images/main.jpg"];
             }
+            const currentEl = document.getElementById('slideCurrent');
+            const nextEl = document.getElementById('slideNext');
+
+            if (!currentEl || !nextEl) return;
+
+            const targetSrc = images[currentIndex] || "../images/main.jpg";
+
+            // Initial render if currentSrc is empty or uninitialized
+            if (!currentEl.getAttribute('src')) {
+                currentEl.src = targetSrc;
+                currentEl.className = 'slide-img active';
+                return;
+            }
+
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            const inClass = dir >= 0 ? 'slide-in-right' : 'slide-in-left';
+            const outClass = dir >= 0 ? 'slide-out-left' : 'slide-out-right';
+
+            nextEl.src = targetSrc;
+            nextEl.className = 'slide-img ' + inClass + ' active';
+            currentEl.className = 'slide-img ' + outClass;
+
+            setTimeout(() => {
+                currentEl.src = targetSrc;
+                currentEl.className = 'slide-img active';
+                nextEl.className = 'slide-img';
+                nextEl.src = '';
+                isTransitioning = false;
+            }, 600);
         }
 
         function changeSlide(dir) {
-            let next = currentIndex + dir;
-            if (next < 0) { trigger('btnPrev'); return; }
-            if (next >= images.length) { trigger('btnNext'); return; }
-
-            currentIndex = next;
-            updateDisplay();
+            if (images.length <= 1 || isTransitioning) return;
+            currentIndex = (currentIndex + dir + images.length) % images.length;
+            updateDisplay(dir);
             startAutoSlide();
         }
 
         function startAutoSlide() {
             clearInterval(autoTimer);
-            autoTimer = setInterval(() => {
-                if (images.length > 1) {
+            if (images.length > 1) {
+                autoTimer = setInterval(() => {
                     currentIndex = (currentIndex + 1) % images.length;
-                    updateDisplay();
-                }
-            }, 10000);
+                    updateDisplay(1);
+                }, 6000);
+            }
         }
 
         function trigger(id) {

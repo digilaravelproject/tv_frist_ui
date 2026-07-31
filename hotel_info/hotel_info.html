@@ -21,19 +21,55 @@
     <div id="headerTitle">Hotel Information</div>
 
     <div class="content-box">
-        <div class="slider-container">
-            <img src="" id="displayImage" class="slide-img" tabindex="0">
+        <div class="slider-container" tabindex="0" id="gallerySlider">
+            <img src="" id="slideCurrent" class="slide-img active" alt="Gallery Image">
+            <img src="" id="slideNext" class="slide-img" alt="Gallery Image">
             <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
             <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
         </div>
         
         <div class="details-container">
             <div id="hotelName" class="hotel-title">Hotel Name</div>
-            <div id="hotelLocation" class="hotel-sub">Location</div>
-            <div id="hotelDescription" class="hotel-desc">Loading details...</div>
-            <div class="hotel-contact">
-                <div id="hotelPhone">Phone: Loading...</div>
-                <div id="hotelEmail">Email: Loading...</div>
+            <div id="hotelLocation" class="hotel-sub">📍 Location</div>
+            
+            <div class="info-section">
+                <div class="section-heading">ABOUT THE HOTEL</div>
+                <div id="hotelDescription" class="hotel-desc">Loading details...</div>
+            </div>
+
+            <!-- EMERGENCY CONTACTS GRID -->
+            <div class="info-section">
+                <div class="section-heading">🚨 EMERGENCY & DESK CONTACTS</div>
+                <div class="contacts-grid">
+                    <div class="contact-card">
+                        <span class="contact-label">Front Desk / Reception</span>
+                        <span class="contact-val" id="hotelPhone">Ext. 0 / +91 98765 43210</span>
+                    </div>
+                    <div class="contact-card">
+                        <span class="contact-label">Room Service & Dining</span>
+                        <span class="contact-val" id="diningContact">Ext. 102 (24x7 Available)</span>
+                    </div>
+                    <div class="contact-card">
+                        <span class="contact-label">Medical Assistance & SOS</span>
+                        <span class="contact-val" id="emergencyContact">Ext. 999 (Emergency Desk)</span>
+                    </div>
+                    <div class="contact-card">
+                        <span class="contact-label">Guest Support Email</span>
+                        <span class="contact-val" id="hotelEmail">support@hotel.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOTEL HIGHLIGHTS & SERVICES -->
+            <div class="info-section">
+                <div class="section-heading">🌟 HOTEL AMENITIES & SERVICES</div>
+                <div class="amenities-pills">
+                    <span class="pill">📶 High-Speed Free Wi-Fi</span>
+                    <span class="pill">🍽️ 24/7 In-Room Dining</span>
+                    <span class="pill">🏊 Infinity Swimming Pool</span>
+                    <span class="pill">🏋️ Fitness & Gym Center</span>
+                    <span class="pill">🧹 Daily Housekeeping</span>
+                </div>
             </div>
         </div>
     </div>

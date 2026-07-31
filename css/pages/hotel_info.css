@@ -1,144 +1,288 @@
 :root {
-            --gold: #b38a2d;
-        }
+    --gold-primary: #b38a2d;
+    --gold-bright: #ffd700;
+    --gold-glow: rgba(255, 215, 0, 0.45);
+    --dark-glass: rgba(10, 12, 18, 0.94);
+    --border-glass: rgba(179, 138, 45, 0.45);
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            font-family: sans-serif;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
-        }
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    font-family: sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
 
-        #bg-slider {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-            background-color: #000;
-        }
+#bg-slider {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background-color: #000;
+}
 
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0;
-            transition: opacity 1000ms ease-in-out;
-        }
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1000ms ease-in-out;
+}
 
-        .slide.active {
-            opacity: 1;
-        }
+.slide.active {
+    opacity: 1;
+}
 
-        /* Page Title adjusted to sit below the background logo */
-        #headerTitle {
-            color: var(--gold);
-            font-size: 1.8rem;
-            /* Reduced to match APPLICATIONS header size */
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 85px;
-            /* Increased distance from top to clear logo */
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            letter-spacing: 2px;
-        }
+/* Page Title adjusted to sit below logo */
+#headerTitle {
+    color: var(--gold-bright);
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    letter-spacing: 2px;
+}
 
-        .content-box {
-            position: relative;
-            width: 85vw;
-            height: 70vh;
-            border: 3px solid var(--gold);
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-direction: row;
-            overflow: hidden;
-            border-radius: 10px;
-        }
+.content-box {
+    position: relative;
+    width: 86vw;
+    max-width: 1240px;
+    height: 74vh;
+    border: 2px solid var(--border-glass);
+    background: var(--dark-glass);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(179, 138, 45, 0.15);
+}
 
-        .slider-container {
-            position: relative;
-            width: 55%;
-            height: 100%;
-            border-right: 2px solid var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+.slider-container {
+    position: relative;
+    width: 52%;
+    height: 100%;
+    border-right: 2px solid rgba(179, 138, 45, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #000;
+}
 
-        .slide-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s ease-in-out;
-        }
+.slide-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 600ms cubic-bezier(0.25, 1, 0.5, 1), transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+    transform: scale(1);
+}
 
-        .details-container {
-            width: 45%;
-            height: 100%;
-            padding: 2.5vw;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            color: #fff;
-            overflow-y: auto;
-        }
+.slide-img.active {
+    opacity: 1;
+    z-index: 2;
+    transform: scale(1);
+}
 
-        .hotel-title {
-            color: var(--gold);
-            font-size: 2.2vw;
-            font-weight: bold;
-            margin-bottom: 1vh;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-            text-align: left;
-        }
+.slide-img.slide-in-right {
+    animation: slideInRight 600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
 
-        .hotel-sub {
-            color: #ccc;
-            font-size: 1.2vw;
-            margin-bottom: 3vh;
-            text-align: left;
-        }
+.slide-img.slide-in-left {
+    animation: slideInLeft 600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
 
-        .hotel-desc {
-            color: #eee;
-            font-size: 1.1vw;
-            line-height: 1.6;
-            margin-bottom: 4vh;
-            flex-grow: 1;
-            overflow-y: auto;
-            text-align: justify;
-        }
+.slide-img.slide-out-left {
+    animation: slideOutLeft 600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
 
-        .hotel-contact {
-            border-top: 1px solid rgba(255,255,255,0.15);
-            padding-top: 2vh;
-            width: 100%;
-            font-size: 1.1vw;
-            color: #bbb;
-            text-align: left;
-        }
+.slide-img.slide-out-right {
+    animation: slideOutRight 600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
 
-        .hotel-contact div {
-            margin-bottom: 1vh;
-        }
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px) scale(1.03); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px) scale(1.03); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes slideOutLeft {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to { opacity: 0; transform: translateX(-40px) scale(0.97); }
+}
+
+@keyframes slideOutRight {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to { opacity: 0; transform: translateX(40px) scale(0.97); }
+}
+
+.details-container {
+    width: 48%;
+    height: 100%;
+    padding: 2.2vw 2.5vw;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: #fff;
+    overflow-y: auto;
+}
+
+/* CUSTOM GOLDEN SCROLLBAR FOR DETAILS CONTAINER */
+.details-container::-webkit-scrollbar {
+    width: 6px;
+}
+.details-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+.details-container::-webkit-scrollbar-thumb {
+    background: var(--gold-primary);
+    border-radius: 3px;
+}
+
+.hotel-title {
+    color: var(--gold-bright);
+    font-size: 1.85vw;
+    font-weight: 800;
+    margin-bottom: 0.3vh;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    text-align: left;
+    letter-spacing: 0.5px;
+}
+
+.hotel-sub {
+    color: #ffd700;
+    font-size: 0.95vw;
+    font-weight: 600;
+    margin-bottom: 2.2vh;
+    text-align: left;
+    opacity: 0.9;
+}
+
+.info-section {
+    width: 100%;
+    margin-bottom: 2.2vh;
+}
+
+.section-heading {
+    color: var(--gold-bright);
+    font-size: 0.88vw;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 1vh;
+    border-bottom: 1px dashed rgba(179, 138, 45, 0.4);
+    padding-bottom: 6px;
+    text-align: left;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+.hotel-desc {
+    color: #e0e0e0;
+    font-size: 0.94vw;
+    line-height: 1.55;
+    text-align: justify;
+    margin-bottom: 0;
+    opacity: 0.95;
+}
+
+/* EMERGENCY & CONTACTS GRID */
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+
+.contact-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(179, 138, 45, 0.35);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.contact-card:hover, .contact-card:focus, .contact-card.active-focus {
+    background: rgba(179, 138, 45, 0.25) !important;
+    border-color: var(--gold-bright) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--gold-glow) !important;
+}
+
+.contact-label {
+    font-size: 0.72vw;
+    color: #bbb;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.contact-val {
+    font-size: 0.9vw;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* AMENITIES PILLS */
+.amenities-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+
+.pill {
+    background: rgba(179, 138, 45, 0.18);
+    border: 1.5px solid rgba(179, 138, 45, 0.45);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82vw;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.pill:hover, .pill:focus, .pill.active-focus {
+    background: linear-gradient(135deg, #b38a2d, #ffd700) !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 16px var(--gold-glow) !important;
+    transform: scale(1.05);
+}
 
         /* Navigation Arrows */
         .nav-icon {

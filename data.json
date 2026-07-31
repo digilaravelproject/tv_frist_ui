@@ -3,34 +3,55 @@
   "message": "Template version details fetched successfully.",
   "data": {
     "auth": {
-      "token": "h5zF9kNOhMlB8MdpfjV0gaeLE0F76Uah2OZvW9Q4dgbyyGPQ81BcqQhEEKPa8orCNPu5xa2j5R2Wmy7Z"
+      "token": "UeDjWSKRmqgcpy1RJjGgJkD7IcZgYYNVTzrNl3DghGz7RZyTmqBa4uP2dgJn3kRTrtUTK0ZC9NhvwMBa"
     },
     "template": {
-      "latest_version": "15.0",
-      "old_version": "14.5",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v15_0_1785407703.zip",
-      "uploaded_at": "2026-07-30T16:05:03+05:30",
+      "latest_version": "16.5",
+      "old_version": "16.0",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v16_5_1785418961.zip",
+      "uploaded_at": "2026-07-30T19:12:41+05:30",
       "is_update_available": false
     },
     "device": {
       "room_no": "1519",
-      "device_id": "283009a8d405538c",
-      "mac_address": "36:AF:BA:DB:D8:36",
-      "ip_address": "10.0.2.15",
-      "model": "sdk_google_atv64_arm64",
-      "brand": "google",
-      "os_version": "16"
+      "device_id": "fb6b9a88719fbb6e",
+      "mac_address": "6C:8A:EC:35:B9:25",
+      "ip_address": "192.168.0.105",
+      "model": "Smart_TV",
+      "brand": "HiDPT",
+      "os_version": "14"
     },
     "hotel": {
-      "hotel_name": "Karnival Plaza",
-      "hotel_location": "Pune",
-      "description": "Karnival Plaza Hotel",
+      "hotel_name": "Taj Mahal Palace, Mumbai",
+      "city": "Mumbai",
+      "hotel_location": "Apollo Bunder, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "Welcome to Taj Mahal Palace, Mumbai. We are delighted to have you as our guest. Enjoy world-class hospitality, luxurious accommodations, fine dining, and exceptional service. We wish you a comfortable and memorable stay.",
       "owner_name": "Darshan Kondekar",
       "email": "darshankondekar01@gmail.com",
       "phone": "8975845684",
+      "emergency_contacts": {
+        "reception": "Ext. 0 \/ +91 22 6665 3366",
+        "dining": "Ext. 102 (24x7 Available)",
+        "medical_sos": "Ext. 999 (Emergency Desk)",
+        "email": "reservations.mumbai@tajhotels.com"
+      },
+      "hotel_amenities": [
+        "5-Star Luxury Hotel",
+        "Outdoor Swimming Pool",
+        "Multiple Fine Dining Restaurants",
+        "24x7 Coffee Shop",
+        "Business & Conference Facilities"
+      ],
       "media": {
         "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1785401445_logo_N1ivTCOz.png",
         "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1783173121_image_sDTg0sZN.jpeg",
+        "hotel_images": [
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_SHIBJP1W.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_Nkr7uLjd.jpeg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_LVVoJp1f.jpeg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_XFqa9MCe.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_dI2OvY7q.jpg"
+        ],
         "slider_images": [
           "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1785401361_slider_jbjZxuH2.png"
         ]
@@ -43,17 +64,12 @@
       }
     },
     "guest_info": {
-      "name": "Vaibhav",
+      "name": "Saurabh",
       "mobile_number": "9876567654",
       "check_in_datetime": "2026-07-15T14:51:00+05:30",
       "check_out_datetime": null
     },
     "active_ott": [
-      {
-        "id": "playstore",
-        "name": "Google Play Store",
-        "package_name": "com.android.vending"
-      },
       {
         "id": "netflix",
         "name": "Netflix",
@@ -149,7 +165,7 @@
       {
         "id": "flights",
         "name": "Flights",
-        "status": "show"
+        "status": "hide"
       },
       {
         "id": "input",
@@ -159,7 +175,7 @@
       {
         "id": "languages",
         "name": "Languages",
-        "status": "show"
+        "status": "hide"
       },
       {
         "id": "live_tv",
@@ -169,7 +185,7 @@
       {
         "id": "our_city",
         "name": "Our City",
-        "status": "show"
+        "status": "hide"
       },
       {
         "id": "screen_cast",
@@ -179,12 +195,12 @@
       {
         "id": "settings",
         "name": "Settings",
-        "status": "show"
+        "status": "hide"
       },
       {
         "id": "travel",
         "name": "Travel",
-        "status": "show"
+        "status": "hide"
       },
       {
         "id": "weather",
@@ -194,14 +210,14 @@
     ],
     "amenities": [
       {
-        "sr_no": 1,
-        "title": "fiteness",
-        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/JefBi9jsusLCdy1AmqZrKlffl8lFNh990YvpVURn.jpg"
-      },
-      {
         "sr_no": 2,
         "title": "swimming",
         "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/FyJLYWSFyUK2iSlKgxUXC3B7kivwvIUCO8BF41CE.jpg"
+      },
+      {
+        "sr_no": 3,
+        "title": "tt",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/zJL6IWDFSAKV9TAMuPX7wkKU5tCHEaFn3YER5Gy3.jpg"
       }
     ]
   }
