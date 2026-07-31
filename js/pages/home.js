@@ -624,34 +624,44 @@ async function fetchIpLocation() {
 }
 
 async function resolveLocation() {
-    // 1. data.json (hotel_location) takes highest priority
+    // 1. data.json (city or hotel_location) takes highest priority
     try {
         let config = typeof window.getFastConfig === 'function' ? window.getFastConfig() : null;
         if (!config && typeof fetchHotelConfig === 'function') {
             config = await fetchHotelConfig();
         }
-        if (config && config.hotel && config.hotel.hotel_location) {
-            const loc = config.hotel.hotel_location;
-            localStorage.setItem('weather_city', loc);
-            return loc;
+        if (config && config.hotel) {
+            const loc = config.hotel.city || config.hotel.hotel_location;
+            if (loc) {
+                localStorage.setItem('weather_city', loc);
+                return loc;
+            }
         }
     } catch (e) {
-        console.warn("Failed resolving hotel_location", e);
+        console.warn("Failed resolving hotel city/location", e);
     }
 
     // 2. Fallback to cached city from previous sessions
     let cachedCity = localStorage.getItem('weather_city');
     if (cachedCity) return cachedCity;
 
-    // 3. IP Geolocation fallback
-    const ipCity = await fetchIpLocation();
-    if (ipCity) {
-        localStorage.setItem('weather_city', ipCity);
-        return ipCity;
+    // 3. IP Geolocation fallback (Only if device is online)
+    if (navigator.onLine) {
+        try {
+            if (typeof fetchIpLocation === 'function') {
+                const ipCity = await fetchIpLocation();
+                if (ipCity) {
+                    localStorage.setItem('weather_city', ipCity);
+                    return ipCity;
+                }
+            }
+        } catch (e) {
+            console.warn("Failed fetching IP location fallback:", e);
+        }
     }
 
     // 4. Ultimate Fallback
-    return "Pune";
+    return "Mumbai";
 }
 
 async function updateWeather() {

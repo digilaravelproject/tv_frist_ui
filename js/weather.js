@@ -315,10 +315,13 @@
             if (res.ok) {
                 const config = await res.json();
                 const data = config.data || config;
-                if (data && data.hotel && data.hotel.hotel_location) {
-                    localStorage.setItem('weather_city', data.hotel.hotel_location);
-                    localStorage.setItem('cachedHotelData', JSON.stringify(data));
-                    return data.hotel.hotel_location;
+                if (data && data.hotel) {
+                    const loc = data.hotel.city || data.hotel.hotel_location;
+                    if (loc) {
+                        localStorage.setItem('weather_city', loc);
+                        localStorage.setItem('cachedHotelData', JSON.stringify(data));
+                        return loc;
+                    }
                 }
             }
         } catch (e) {
@@ -341,8 +344,8 @@
                 if (cachedHotel) {
                     try {
                         const config = JSON.parse(cachedHotel);
-                        if (config.hotel && config.hotel.hotel_location) {
-                            city = config.hotel.hotel_location;
+                        if (config.hotel) {
+                            city = config.hotel.city || config.hotel.hotel_location || city;
                         }
                     } catch (e) {}
                 }
