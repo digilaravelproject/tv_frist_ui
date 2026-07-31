@@ -11,7 +11,7 @@ function updateCarouselPosition() {
 
 function syncFocus() {
     if (!track) return;
-    var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item")).filter(function(el) {
+    var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item")).filter(function (el) {
         return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
     });
 
@@ -49,7 +49,7 @@ function syncFocus() {
 
 function rotateToItem(targetItem) {
     if (!track || !targetItem) return;
-    var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+    var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function (el) {
         return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
     });
 
@@ -64,7 +64,7 @@ function rotateToItem(targetItem) {
         }
     } else if (diff < 0) {
         for (var k = 0; k < Math.abs(diff); k++) {
-            var vItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+            var vItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function (el) {
                 return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
             });
             var lastVis = vItems[vItems.length - 1];
@@ -86,7 +86,7 @@ function rotate(dir) {
         var firstVisible = track.querySelector('.icon-item:not([style*="display: none"])');
         if (firstVisible) track.appendChild(firstVisible);
     } else {
-        var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+        var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function (el) {
             return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
         });
         var lastVisible = visibleItems[visibleItems.length - 1];
@@ -328,10 +328,10 @@ async function initLanguage() {
             var originalTransition = track.style.transition;
             track.style.transition = 'none';
 
-            var visibleIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item")).filter(function(el) {
+            var visibleIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item")).filter(function (el) {
                 return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
             });
-            
+
             var targetIndex = -1;
             for (var j = 0; j < visibleIcons.length; j++) {
                 var item = visibleIcons[j];
@@ -339,7 +339,7 @@ async function initLanguage() {
                 var labelText = labelEl ? labelEl.innerText.trim().toLowerCase() : "";
                 var actionAttr = (item.getAttribute('data-action') || item.getAttribute('data-link') || item.getAttribute('href') || "").toLowerCase();
 
-                if ((lastAction && actionAttr.indexOf(lastAction.toLowerCase()) !== -1) || 
+                if ((lastAction && actionAttr.indexOf(lastAction.toLowerCase()) !== -1) ||
                     (lastLabel && labelText === lastLabel.trim().toLowerCase())) {
                     targetIndex = j;
                     break;
@@ -355,7 +355,7 @@ async function initLanguage() {
                     }
                 } else if (diff < 0) {
                     for (var k = 0; k < Math.abs(diff); k++) {
-                        var vItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+                        var vItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function (el) {
                             return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
                         });
                         var lastVis = vItems[vItems.length - 1];
@@ -375,13 +375,13 @@ async function initLanguage() {
             updateCarouselPosition();
         }
 
-        setTimeout(function() {
+        setTimeout(function () {
             syncFocus();
             // Bind click event: if a non-centered item is clicked by mouse, center it first
             if (track) {
-                track.querySelectorAll('.icon-item').forEach(function(item) {
-                    item.addEventListener('click', function(e) {
-                        var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+                track.querySelectorAll('.icon-item').forEach(function (item) {
+                    item.addEventListener('click', function (e) {
+                        var visibleItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function (el) {
                             return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
                         });
                         var index = visibleItems.indexOf(this);
@@ -430,7 +430,7 @@ function applyDynamicMenuVisibility(config) {
         document.querySelectorAll('.icon-item').forEach(item => {
             const action = item.getAttribute('data-action');
             const link = item.getAttribute('data-link') || item.getAttribute('href');
-            
+
             if (action === targetAttr || link === targetAttr) {
                 if (status === 'hide' || status === 'disabled' || status === '0' || status === 'false') {
                     item.style.display = 'none';
@@ -482,7 +482,7 @@ function applyTranslations() {
         if (cached) {
             applyDynamicMenuVisibility(JSON.parse(cached));
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 function fetchGuestData() {
@@ -698,7 +698,7 @@ async function updateWeather() {
                             city = config.hotel.hotel_location;
                         }
                     }
-                } catch (e) {}
+                } catch (e) { }
 
                 const tempC = Math.round(data.extracted_data.temp);
                 const tempF = Math.round((tempC * 9 / 5) + 32);
@@ -1118,16 +1118,20 @@ function openAppsOverlay() {
 
 async function openLiveTVOverlay() {
     // Direct launch active connected TV setup box port / Live TV
-    if (window.flutterBridge && typeof window.flutterBridge.launchLiveTv === 'function') {
-        window.flutterBridge.launchLiveTv().catch(function(err) {
-            console.error('launchLiveTv failed:', err);
-        });
-        return;
-    } else if (window.flutterBridge && typeof window.flutterBridge.launchHdmi === 'function') {
-        window.flutterBridge.launchHdmi().catch(function(err) {
-            console.error('launchHdmi failed:', err);
-        });
-        return;
+    try {
+        if (window.flutterBridge && typeof window.flutterBridge.launchLiveTv === 'function') {
+            window.flutterBridge.launchLiveTv().catch(function (err) {
+                console.warn('launchLiveTv warning:', err);
+            });
+            return;
+        } else if (window.flutterBridge && typeof window.flutterBridge.launchHdmi === 'function') {
+            window.flutterBridge.launchHdmi().catch(function (err) {
+                console.warn('launchHdmi warning:', err);
+            });
+            return;
+        }
+    } catch (e) {
+        console.warn('Live TV bridge call warning:', e);
     }
 
     // For Live TV Menu Click: connected Set-top box / Dish TV port check fallback
@@ -1138,8 +1142,8 @@ async function openLiveTVOverlay() {
                 // Agar 1 connected STB input hai, toh Direct launch ho jayega
                 var targetId = liveTvInputs[0].id || liveTvInputs[0].model || liveTvInputs[0].label;
                 if (targetId && window.flutterBridge.launchHdmi) {
-                    window.flutterBridge.launchHdmi(targetId).catch(function(err) {
-                        console.error('Launch Live TV HDMI failed:', err);
+                    window.flutterBridge.launchHdmi(targetId).catch(function (err) {
+                        console.warn('Launch Live TV HDMI warning:', err);
                     });
                     return;
                 }
@@ -1225,7 +1229,7 @@ function openInputOverlay() {
             { label: 'HDMI 2', id: 'HDMI 2' },
             { label: 'AV Input', id: 'AV' }
         ];
-        fallbackList.forEach(function(input) {
+        fallbackList.forEach(function (input) {
             var btn = document.createElement('button');
             btn.className = 'tv-input-btn';
             btn.tabIndex = 0;
@@ -1238,11 +1242,11 @@ function openInputOverlay() {
             btn.style.cursor = 'pointer';
             btn.textContent = input.label;
             btn.setAttribute('data-model', input.id);
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 var model = this.getAttribute('data-model');
                 closeInputOverlay();
                 if (window.flutterBridge && window.flutterBridge.launchHdmi) {
-                    window.flutterBridge.launchHdmi(model).catch(function(err) {
+                    window.flutterBridge.launchHdmi(model).catch(function (err) {
                         console.error('Launch HDMI failed:', err);
                     });
                 }
@@ -1257,14 +1261,14 @@ function openInputOverlay() {
     }
 
     if (window.flutterBridge && typeof window.flutterBridge.getTvInputs === 'function') {
-        window.flutterBridge.getTvInputs().then(function(inputs) {
+        window.flutterBridge.getTvInputs().then(function (inputs) {
             if (!container) return;
             if (!inputs || inputs.length === 0) {
                 renderFallbackInputs();
                 return;
             }
             container.innerHTML = '';
-            inputs.forEach(function(input) {
+            inputs.forEach(function (input) {
                 var btn = document.createElement('button');
                 btn.className = 'tv-input-btn';
                 btn.tabIndex = 0;
@@ -1280,13 +1284,17 @@ function openInputOverlay() {
                 var modelId = input.id || '';
                 btn.setAttribute('data-model', modelId);
 
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     var model = this.getAttribute('data-model') || label;
                     closeInputOverlay();
-                    if (window.flutterBridge && window.flutterBridge.launchHdmi) {
-                        window.flutterBridge.launchHdmi(model).catch(function(err) {
-                            console.error('Launch HDMI failed:', err);
-                        });
+                    try {
+                        if (window.flutterBridge && typeof window.flutterBridge.launchHdmi === 'function') {
+                            window.flutterBridge.launchHdmi(model).catch(function (err) {
+                                console.warn('Launch HDMI warning:', err);
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('launchHdmi bridge exception:', e);
                     }
                 });
                 container.appendChild(btn);
@@ -1296,7 +1304,7 @@ function openInputOverlay() {
             }
             var firstInput = container.querySelector('.tv-input-btn');
             if (firstInput) firstInput.focus();
-        }).catch(function() {
+        }).catch(function () {
             renderFallbackInputs();
         });
     } else {
@@ -1323,11 +1331,15 @@ function closeInputOverlay() {
 }
 
 function openCastOverlay() {
-    // Native Screen Mirroring Trigger
-    if (window.flutterBridge && window.flutterBridge.launchCast) {
-        window.flutterBridge.launchCast().catch(function(err) {
-            console.error('Launch cast error:', err);
-        });
+    // Native Screen Mirroring Trigger (Safe Bridge Guard)
+    try {
+        if (window.flutterBridge && typeof window.flutterBridge.launchCast === 'function') {
+            window.flutterBridge.launchCast().catch(function (err) {
+                console.warn('Launch cast bridge warning:', err);
+            });
+        }
+    } catch (e) {
+        console.warn('launchCast bridge not available on web:', e);
     }
 
     var overlay = document.getElementById('castOverlay');
@@ -1352,7 +1364,7 @@ function openCastOverlay() {
                 try {
                     var parsed = JSON.parse(stored);
                     roomNo = (parsed.device && parsed.device.room_no) || parsed.room_no || '';
-                } catch(e) {}
+                } catch (e) { }
             }
         }
         var label = roomNo ? 'Hotel TV (Room ' + roomNo + ')' : (localStorage.getItem('deviceSerial') ? 'Hotel TV (' + localStorage.getItem('deviceSerial') + ')' : 'Hotel TV');
@@ -1401,7 +1413,7 @@ function triggerManualRefresh() {
 
     // 3. Re-fetch all APIs (Hotel Config, Guest Data, Weather, Check-Version)
     if (window.TVCore && typeof window.TVCore.fetchHotelConfig === 'function') {
-        window.TVCore.fetchHotelConfig(true).then(function() {
+        window.TVCore.fetchHotelConfig(true).then(function () {
             initLanguage();
             updateDateTime();
             updateWeather();
@@ -1416,12 +1428,12 @@ function triggerManualRefresh() {
 
     // 4. Trigger Flutter Native Full WebView Page Reload
     if (window.flutterBridge && window.flutterBridge.refreshApp) {
-        setTimeout(function() {
+        setTimeout(function () {
             window.flutterBridge.refreshApp();
         }, 500);
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
     }, 2000);
 }
@@ -1553,7 +1565,7 @@ window.onTVBack = function () {
 window.onTVNavigate = function (direction, active) {
     var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
     var anyOverlayOpen = window.__appsOverlayOpen || window.__inputOverlayOpen || window.__castOverlayOpen || window.__citySelectorOpen;
-    
+
     var subPage = document.getElementById('subPageOverlay');
     if (subPage && subPage.style.display === 'block') anyOverlayOpen = true;
 
