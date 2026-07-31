@@ -95,9 +95,11 @@
 .num-btn.active-focus {
     background: linear-gradient(135deg, #b38a2d 0%, #ffd700 100%) !important;
     color: #000000 !important;
-    border: 2px solid #ffffff !important;
-    box-shadow: 0 0 22px var(--gold-glow), 0 6px 16px rgba(0,0,0,0.8) !important;
+    border: 3px solid #ffffff !important;
+    outline: 3px solid #ffd700 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.95), 0 8px 24px rgba(0, 0, 0, 0.95) !important;
     transform: scale(1.08) !important;
     font-weight: 900 !important;
-    z-index: 10;
+    z-index: 100 !important;
 }

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addDigit(digit) {
         const now = Date.now();
-        if (now - lastPressTime < 350) return;
+        if (now - lastPressTime < 250) return;
         lastPressTime = now;
 
         if (currentPin.length < 6 && !isProcessing) {
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleDel() {
         const now = Date.now();
-        if (now - lastPressTime < 350) return;
+        if (now - lastPressTime < 250) return;
         lastPressTime = now;
 
         if (currentPin.length > 0 && !isProcessing) {
@@ -143,14 +143,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Set initial focus on Settings page keypad
-    var firstBtn = document.querySelector('.num-btn');
-    if (firstBtn) {
-        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
-            window.TVNavigation.markDirty();
+    setTimeout(function() {
+        var firstBtn = document.querySelector('.num-btn');
+        if (firstBtn) {
+            document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('active-focus'));
+            firstBtn.focus();
+            firstBtn.classList.add('active-focus');
+            if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+                window.TVNavigation.markDirty();
+            }
         }
-        firstBtn.focus();
-        firstBtn.classList.add('active-focus');
-    }
+    }, 150);
 
     history.pushState(null, '', location.href);
     window.onpopstate = () => TVNavigation.goBack();

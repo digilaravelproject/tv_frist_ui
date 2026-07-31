@@ -579,17 +579,16 @@
                     }
                 }
 
-                // Number Inputs
+                // Number Inputs (TV Remote numeric keys 0-9 & Numpad)
                 var digit = KeycodeManager.getDigit(keyCode, e.key);
                 if (digit !== null) {
                     var btn = document.querySelector('.num-btn[data-val="' + digit + '"]');
                     if (btn) {
                         btn.focus();
                     }
-
                     if (typeof window.onTVNumberKey === 'function') {
-                        // Prevent double-dispatch if keydown target is already focused button that handles click
                         if (!e.defaultPrevented) {
+                            e.preventDefault();
                             window.onTVNumberKey(digit);
                         }
                     }

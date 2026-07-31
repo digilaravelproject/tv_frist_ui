@@ -22,16 +22,35 @@ document.addEventListener('DOMContentLoaded', function() {
         if (header) header.textContent = "SELECT TV INPUT SOURCE";
         box.querySelectorAll('.package-item').forEach(el => el.remove());
 
-        function renderInputs(inputsList) {
+        function renderInputs(inputsList, selectedPort) {
             box.querySelectorAll('.package-item').forEach(el => el.remove());
             inputsList.forEach(item => {
+                var itemPortId = item.id || item.package || item.file || item.name;
+                var itemLabel = item.name || item.label || item.model || ("Input " + (item.id || item));
+                var isSelected = (selectedPort && (selectedPort === itemPortId || itemLabel.indexOf(selectedPort) !== -1));
+
                 var div = document.createElement('div');
-                div.className = 'package-item';
+                div.className = 'package-item' + (isSelected ? ' selected' : '');
                 div.tabIndex = 0;
-                div.innerText = item.name || item.label || item.model || ("Input " + (item.id || item));
+                div.setAttribute('data-port-id', itemPortId);
+
+                var textSpan = document.createElement('span');
+                textSpan.innerText = itemLabel;
+                div.appendChild(textSpan);
+
+                var tickSpan = document.createElement('span');
+                tickSpan.className = 'tick';
+                tickSpan.innerText = '✔';
+                div.appendChild(tickSpan);
+
                 div.onclick = () => {
-                    currentPkg = item.id || item.package || item.file || item.name;
-                    currentSrc = item.name || item.label || "LIVE TV";
+                    var selectedId = itemPortId;
+                    currentPkg = selectedId;
+                    currentSrc = itemLabel;
+                    localStorage.setItem('selectedLiveTvPort', selectedId);
+                    if (window.flutterBridge && typeof window.flutterBridge.savePortPreference === 'function') {
+                        try { window.flutterBridge.savePortPreference(selectedId); } catch(e){}
+                    }
                     document.getElementById('packageOverlay').style.display = 'none';
                     updateUI('btn-livetv-popup');
                 };
@@ -45,8 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.TVNavigation.markDirty();
             }
             setTimeout(() => {
-                var first = box.querySelector('.package-item');
-                if (first) first.focus();
+                var targetToFocus = box.querySelector('.package-item.selected') || box.querySelector('.package-item');
+                if (targetToFocus) targetToFocus.focus();
             }, 100);
         }
 
@@ -75,20 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 savedPort = ports[0].id || ports[0].model || ports[0].name || ports[0].label;
             }
 
-            renderInputs(ports);
-
-            // Highlight saved / default 1st port
-            if (savedPort) {
-                box.querySelectorAll('.package-item').forEach(el => {
-                    var text = el.innerText;
-                    if (text.indexOf(savedPort) !== -1 || el.getAttribute('data-port-id') === savedPort) {
-                        el.style.border = '2px solid #b38a2d';
-                        el.style.background = 'rgba(179,138,45,0.2)';
-                    }
-                });
-            }
+            renderInputs(ports, savedPort);
         }).catch(function() {
-            renderInputs(defaultInputs);
+            renderInputs(defaultInputs, savedPortPref);
         });
     };
 

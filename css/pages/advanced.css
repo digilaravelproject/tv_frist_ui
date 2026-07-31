@@ -25,13 +25,13 @@
     background: var(--dark-glass);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    padding: 24px 30px; 
+    padding: 26px 34px; 
     border: 2px solid var(--border-glass); 
     border-radius: 20px; 
-    width: 680px; 
+    width: 740px; 
     display: flex; 
     flex-direction: column; 
-    gap: 12px;
+    gap: 14px;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(179, 138, 45, 0.15);
     box-sizing: border-box;
     animation: modalFadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -54,8 +54,8 @@
 }
 
 .main-layout { display: flex; gap: 24px; justify-content: center; align-items: flex-start; }
-.left-col { width: 380px; }
-.right-col { width: 220px; }
+.left-col { width: 410px; }
+.right-col { width: 250px; }
 
 .field-box { margin-bottom: 12px; }
 .field-box label { 
@@ -101,8 +101,8 @@
     transition: all 0.2s ease;
 }
 
-.tick { display: none; color: var(--gold-bright); font-weight: bold; }
-.list-item.selected .tick { display: inline; }
+.tick { display: none; color: var(--gold-bright); font-weight: bold; font-size: 1.1rem; }
+.list-item.selected .tick, .package-item.selected .tick { display: inline-block; }
 
 .list-item:hover, .list-item:focus, .package-item:hover, .package-item:focus, .key-btn:hover, .key-btn:focus, .side-btn:hover, .side-btn:focus, .btn-act:hover, .btn-act:focus, 
 .list-item.active-focus, .package-item.active-focus, .key-btn.active-focus, .side-btn.active-focus, .btn-act.active-focus { 
@@ -113,6 +113,10 @@
     box-shadow: 0 0 20px var(--gold-glow), 0 6px 16px rgba(0,0,0,0.8) !important;
     transform: scale(1.04) !important;
     z-index: 10;
+}
+
+.package-item.active-focus .tick, .list-item.active-focus .tick {
+    color: #000000 !important;
 }
 
 .num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }

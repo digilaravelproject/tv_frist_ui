@@ -82,9 +82,9 @@
     flex: 1;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 14px;
+    grid-gap: 20px;
     overflow-y: auto;
-    padding: 12px 14px;
+    padding: 16px 20px;
     margin-bottom: 14px;
     box-sizing: border-box;
 }
@@ -107,15 +107,15 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px dashed rgba(255, 255, 255, 0.15);
     border-radius: 12px;
-    padding: 14px 18px;
-    height: 60px;
+    padding: 14px 20px;
+    height: 62px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
     outline: none;
-    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), background 0.2s ease, border-color 0.2s ease;
     position: relative;
 }
 
@@ -172,14 +172,16 @@
     transform: scale(1);
 }
 
-/* TV DPAD FOCUS STYLES - GOLD HIGHLIGHT WITH BORDER RING */
+/* TV DPAD FOCUS STYLES - ULTRA HIGH-CONTRAST GOLD HIGHLIGHT WITH BORDER RING */
 .lang-card-item:focus,
 .lang-card-item.active-focus {
     background: linear-gradient(135deg, #b38a2d 0%, #ffd700 100%) !important;
-    border: 2px solid #ffffff !important;
-    box-shadow: 0 0 22px var(--gold-glow), 0 6px 16px rgba(0,0,0,0.8) !important;
-    transform: scale(1.03) !important;
-    z-index: 10;
+    border: 3px solid #ffffff !important;
+    outline: 3px solid #ffd700 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.9), 0 8px 24px rgba(0, 0, 0, 0.95) !important;
+    transform: scale(1.04) !important;
+    z-index: 100 !important;
 }
 
 .lang-card-item:focus .lang-name-native,

@@ -94,7 +94,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     card.setAttribute('data-nav-down', 'applyBtn');
                 }
 
-                // D-Pad Focus listeners
+                // D-Pad Focus & Mouse Hover listeners
+                card.addEventListener('mouseenter', function () {
+                    this.focus();
+                });
+
                 card.addEventListener('focus', function () {
                     document.querySelectorAll('.lang-card-item, .btn').forEach(b => b.classList.remove('active-focus'));
                     this.classList.add('active-focus');
@@ -116,16 +120,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.classList.remove('active-focus');
                 });
 
-                // Selection click & Enter key
+                // Selection click
                 card.addEventListener('click', function (e) {
                     e.preventDefault();
                     document.querySelectorAll('.lang-card-item').forEach(el => el.classList.remove('selected'));
                     this.classList.add('selected');
-                });
-                card.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter' || e.keyCode === 13) {
-                        this.click();
-                    }
                 });
 
                 container.appendChild(card);
