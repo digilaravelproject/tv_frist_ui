@@ -92,6 +92,17 @@ function rotate(dir) {
 
 /* ================= 2. LIVE TV LOGIC (Refactored for Flutter Bridge) ================= */
 async function handleLiveTV() {
+    var savedPort = localStorage.getItem('selectedLiveTvPort') || localStorage.getItem('selectedHdmiPort') || '';
+
+    if (window.flutterBridge && typeof window.flutterBridge.launchLiveTv === 'function') {
+        try {
+            await window.flutterBridge.launchLiveTv(savedPort);
+            return;
+        } catch (err) {
+            console.error('Direct launchLiveTv failed:', err);
+        }
+    }
+
     const serial = localStorage.getItem('deviceSerial');
     const ip = localStorage.getItem('deviceIp');
 
@@ -116,7 +127,7 @@ async function handleLiveTV() {
         if (config.tv_source === "TV APP") {
             await window.flutterBridge.launchApp(config.package);
         } else if (config.tv_source === "HDMI") {
-            await window.flutterBridge.launchHdmi(config.package);
+            await window.flutterBridge.launchHdmi(config.package || savedPort);
         } else if (config.tv_source === "IPTV") {
             await window.flutterBridge.launchIptv(config.package, config.iptv_config || "iptv/all.json");
         }
@@ -915,16 +926,6 @@ async function loadApplications() {
                     this.click();
                 }
             });
-            card.addEventListener('focus', function () {
-                var allFocus = document.querySelectorAll('.active-focus');
-                for (var i = 0; i < allFocus.length; i++) {
-                    allFocus[i].classList.remove('active-focus');
-                }
-                this.classList.add('active-focus');
-            });
-            card.addEventListener('blur', function () {
-                this.classList.remove('active-focus');
-            });
 
             container.appendChild(card);
         });
@@ -1024,16 +1025,6 @@ async function loadTvInputs() {
                 if (e.key === 'Enter' || e.keyCode === 13) {
                     this.click();
                 }
-            });
-            btn.addEventListener('focus', function () {
-                var allFocus = document.querySelectorAll('.active-focus');
-                for (var i = 0; i < allFocus.length; i++) {
-                    allFocus[i].classList.remove('active-focus');
-                }
-                this.classList.add('active-focus');
-            });
-            btn.addEventListener('blur', function () {
-                this.classList.remove('active-focus');
             });
 
             container.appendChild(btn);

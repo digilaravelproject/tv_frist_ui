@@ -640,11 +640,16 @@
                     return;
                 }
 
-                var focusables = document.querySelectorAll('.active-focus');
-                for (var k = 0; k < focusables.length; k++) {
-                    focusables[k].classList.remove('active-focus');
+                var activeItems = document.querySelectorAll('.active-focus');
+                for (var k = 0; k < activeItems.length; k++) {
+                    // Do not clear active-focus from center carousel item IF focus is still on carousel track
+                    if (e.target && e.target.classList && e.target.classList.contains('icon-item')) {
+                        // handled by syncFocus
+                    } else {
+                        activeItems[k].classList.remove('active-focus');
+                    }
                 }
-                if (e.target && e.target.classList) {
+                if (e.target && e.target.classList && !e.target.classList.contains('icon-item')) {
                     e.target.classList.add('active-focus');
                 }
             }, true);

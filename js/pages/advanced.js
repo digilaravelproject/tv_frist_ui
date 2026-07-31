@@ -57,20 +57,39 @@ document.addEventListener('DOMContentLoaded', function() {
             { "name": "IPTV Stream", "id": "IPTV" }
         ];
 
-        if (window.flutterBridge && typeof window.flutterBridge.getLiveTvInputs === 'function') {
-            window.flutterBridge.getLiveTvInputs().then(function(res) {
-                if (res && res.length > 0) {
-                    renderInputs(res);
-                } else {
-                    renderInputs(defaultInputs);
-                }
-            }).catch(function() {
-                renderInputs(defaultInputs);
-            });
-            return;
-        }
+        var savedPortPref = localStorage.getItem('selectedLiveTvPort') || currentPkg || '';
 
-        renderInputs(defaultInputs);
+        Promise.all([
+            window.flutterBridge && typeof window.flutterBridge.getLiveTvInputs === 'function'
+                ? window.flutterBridge.getLiveTvInputs()
+                : Promise.resolve(defaultInputs),
+            window.flutterBridge && typeof window.flutterBridge.getSelectedLiveTvPort === 'function'
+                ? window.flutterBridge.getSelectedLiveTvPort()
+                : Promise.resolve({ selectedPort: savedPortPref })
+        ]).then(function (results) {
+            var ports = (results[0] && results[0].length > 0) ? results[0] : defaultInputs;
+            var savedRes = results[1] || {};
+            var savedPort = savedRes.selectedPort || savedRes.port || savedPortPref;
+
+            if (!savedPort && ports.length > 0) {
+                savedPort = ports[0].id || ports[0].model || ports[0].name || ports[0].label;
+            }
+
+            renderInputs(ports);
+
+            // Highlight saved / default 1st port
+            if (savedPort) {
+                box.querySelectorAll('.package-item').forEach(el => {
+                    var text = el.innerText;
+                    if (text.indexOf(savedPort) !== -1 || el.getAttribute('data-port-id') === savedPort) {
+                        el.style.border = '2px solid #b38a2d';
+                        el.style.background = 'rgba(179,138,45,0.2)';
+                    }
+                });
+            }
+        }).catch(function() {
+            renderInputs(defaultInputs);
+        });
     };
 
     window.openIptvMenu = function() {
