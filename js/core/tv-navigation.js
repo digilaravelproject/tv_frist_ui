@@ -108,7 +108,6 @@
                 var ov = overlays[i];
                 var ovStyle = window.getComputedStyle(ov);
                 if (ovStyle.display !== 'none' && ovStyle.visibility !== 'hidden' && ovStyle.opacity !== '0') {
-                    // Check if appsOverlay actually has the class 'show' to be active, or others have display flex/block
                     if (ov.id === 'appsOverlay') {
                         if (ov.classList.contains('show')) {
                             openOverlay = ov;
@@ -568,14 +567,12 @@
                             }
                         }
                     } else {
+                        CacheManager.markDirty();
                         if (typeof window.onTVNavigate === 'function') {
                             if (window.onTVNavigate(direction, active)) {
                                 e.preventDefault();
                                 return;
                             }
-                        }
-                        if (isIndex && !window.__appsOverlayOpen && (direction === 'left' || direction === 'right')) {
-                            return;
                         }
                         e.preventDefault();
                         FocusEngine.navigate(direction);
@@ -602,7 +599,7 @@
             // Focus and Blur active style class synchronization
             document.addEventListener('focus', function (e) {
                 // Focus trap for active overlays
-                var overlays = document.querySelectorAll('.overlay-fullscreen, .overlay-container, #appsOverlay, #citySelectorOverlay, #planExpiredOverlay');
+                var overlays = document.querySelectorAll('.overlay-fullscreen, .overlay-container, #appsOverlay, #inputOverlay, #castOverlay, #citySelectorOverlay, #planExpiredOverlay');
                 var openOverlay = null;
                 for (var i = 0; i < overlays.length; i++) {
                     var ov = overlays[i];
@@ -642,8 +639,9 @@
 
                 var activeItems = document.querySelectorAll('.active-focus');
                 for (var k = 0; k < activeItems.length; k++) {
-                    // Do not clear active-focus from center carousel item IF focus is still on carousel track
-                    if (e.target && e.target.classList && e.target.classList.contains('icon-item')) {
+                    if (openOverlay) {
+                        activeItems[k].classList.remove('active-focus');
+                    } else if (e.target && e.target.classList && e.target.classList.contains('icon-item')) {
                         // handled by syncFocus
                     } else {
                         activeItems[k].classList.remove('active-focus');

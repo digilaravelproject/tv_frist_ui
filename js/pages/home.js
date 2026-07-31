@@ -27,11 +27,16 @@ function syncFocus() {
         target.focus();
         target.classList.add("active-focus");
 
-        // Save the focused label to localStorage to restore it on Back navigation
+        // Save the focused label & action to localStorage to restore it on Back navigation
         var labelEl = target.querySelector(".icon-label");
-        var label = labelEl ? labelEl.innerText : null;
+        var label = labelEl ? labelEl.innerText.trim() : null;
+        var action = target.getAttribute('data-action') || target.getAttribute('data-link') || target.getAttribute('href');
+
         if (label) {
             localStorage.setItem("lastFocusedLabel", label);
+        }
+        if (action) {
+            localStorage.setItem("lastFocusedAction", action);
         }
 
         var targetImg = target.querySelector(".icon-img");
@@ -317,29 +322,44 @@ async function initLanguage() {
 
         // Restore last focused item from localStorage before updating positions
         var lastLabel = localStorage.getItem("lastFocusedLabel");
-        if (lastLabel && track) {
+        var lastAction = localStorage.getItem("lastFocusedAction");
+        if ((lastLabel || lastAction) && track) {
             // Disable transition temporarily to prevent sliding animation on page load
             var originalTransition = track.style.transition;
             track.style.transition = 'none';
 
-            var allIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item"));
+            var visibleIcons = Array.prototype.slice.call(track.querySelectorAll(".icon-item")).filter(function(el) {
+                return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
+            });
+            
             var targetIndex = -1;
-            for (var j = 0; j < allIcons.length; j++) {
-                var labelEl = allIcons[j].querySelector(".icon-label");
-                if (labelEl && labelEl.innerText === lastLabel) {
+            for (var j = 0; j < visibleIcons.length; j++) {
+                var item = visibleIcons[j];
+                var labelEl = item.querySelector(".icon-label");
+                var labelText = labelEl ? labelEl.innerText.trim().toLowerCase() : "";
+                var actionAttr = (item.getAttribute('data-action') || item.getAttribute('data-link') || item.getAttribute('href') || "").toLowerCase();
+
+                if ((lastAction && actionAttr.indexOf(lastAction.toLowerCase()) !== -1) || 
+                    (lastLabel && labelText === lastLabel.trim().toLowerCase())) {
                     targetIndex = j;
                     break;
                 }
             }
+
             if (targetIndex !== -1) {
                 var diff = targetIndex - centerIndex;
                 if (diff > 0) {
                     for (var i = 0; i < diff; i++) {
-                        track.appendChild(track.firstElementChild);
+                        var firstVis = track.querySelector('.icon-item:not([style*="display: none"])');
+                        if (firstVis) track.appendChild(firstVis);
                     }
                 } else if (diff < 0) {
-                    for (var i = 0; i < Math.abs(diff); i++) {
-                        track.insertBefore(track.lastElementChild, track.firstElementChild);
+                    for (var k = 0; k < Math.abs(diff); k++) {
+                        var vItems = Array.prototype.slice.call(track.querySelectorAll('.icon-item')).filter(function(el) {
+                            return el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none';
+                        });
+                        var lastVis = vItems[vItems.length - 1];
+                        if (lastVis) track.insertBefore(lastVis, track.firstElementChild);
                     }
                 }
             }
@@ -424,7 +444,6 @@ function applyDynamicMenuVisibility(config) {
     if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
         window.TVNavigation.markDirty();
     }
-    syncFocus();
 }
 
 function applyTranslations() {
@@ -1188,11 +1207,50 @@ function openInputOverlay() {
         container.innerHTML = '<div style="color:#888;font-size:1.1vw;">Loading inputs...</div>';
     }
 
+    function renderFallbackInputs() {
+        if (!container) return;
+        container.innerHTML = '';
+        var fallbackList = [
+            { label: 'Setup Box (HDMI 1)', id: 'HDMI 1' },
+            { label: 'HDMI 2', id: 'HDMI 2' },
+            { label: 'AV Input', id: 'AV' }
+        ];
+        fallbackList.forEach(function(input) {
+            var btn = document.createElement('button');
+            btn.className = 'tv-input-btn';
+            btn.tabIndex = 0;
+            btn.style.padding = '12px 24px';
+            btn.style.background = 'rgba(255,255,255,0.1)';
+            btn.style.border = '1px solid #b38a2d';
+            btn.style.color = '#fff';
+            btn.style.borderRadius = '8px';
+            btn.style.fontSize = '1.1rem';
+            btn.style.cursor = 'pointer';
+            btn.textContent = input.label;
+            btn.setAttribute('data-model', input.id);
+            btn.addEventListener('click', function() {
+                var model = this.getAttribute('data-model');
+                closeInputOverlay();
+                if (window.flutterBridge && window.flutterBridge.launchHdmi) {
+                    window.flutterBridge.launchHdmi(model).catch(function(err) {
+                        console.error('Launch HDMI failed:', err);
+                    });
+                }
+            });
+            container.appendChild(btn);
+        });
+        if (window.TVNavigation && typeof window.TVNavigation.markDirty === 'function') {
+            window.TVNavigation.markDirty();
+        }
+        var firstBtn = container.querySelector('.tv-input-btn');
+        if (firstBtn) firstBtn.focus();
+    }
+
     if (window.flutterBridge && typeof window.flutterBridge.getTvInputs === 'function') {
         window.flutterBridge.getTvInputs().then(function(inputs) {
             if (!container) return;
             if (!inputs || inputs.length === 0) {
-                container.innerHTML = '<div style="color:#888;font-size:1.1vw;">HDMI 1, HDMI 2, AV</div>';
+                renderFallbackInputs();
                 return;
             }
             container.innerHTML = '';
@@ -1229,10 +1287,10 @@ function openInputOverlay() {
             var firstInput = container.querySelector('.tv-input-btn');
             if (firstInput) firstInput.focus();
         }).catch(function() {
-            if (container) container.innerHTML = '<div style="color:#aaa;font-size:1.1vw;">HDMI 1 &bull; HDMI 2 &bull; AV</div>';
+            renderFallbackInputs();
         });
     } else {
-        if (container) container.innerHTML = '<div style="color:#aaa;font-size:1.1vw;">HDMI 1 &bull; HDMI 2 &bull; AV</div>';
+        renderFallbackInputs();
     }
 
     setTimeout(function () {
@@ -1484,7 +1542,12 @@ window.onTVBack = function () {
 
 window.onTVNavigate = function (direction, active) {
     var isIndex = window.location.pathname.indexOf('index.html') !== -1 || window.location.pathname.split('/').pop() === '';
-    if (isIndex && !window.__appsOverlayOpen) {
+    var anyOverlayOpen = window.__appsOverlayOpen || window.__inputOverlayOpen || window.__castOverlayOpen || window.__citySelectorOpen;
+    
+    var subPage = document.getElementById('subPageOverlay');
+    if (subPage && subPage.style.display === 'block') anyOverlayOpen = true;
+
+    if (isIndex && !anyOverlayOpen) {
         if (direction === "left") {
             rotate("left");
             return true;

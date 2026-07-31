@@ -184,7 +184,7 @@
       {
         "id": "travel",
         "name": "Travel",
-        "status": "hide"
+        "status": "show"
       },
       {
         "id": "weather",
