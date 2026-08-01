@@ -99,7 +99,7 @@
         setLabel('th-status', currentLangData.status || "STATUS");
         setLabel('prevBtn', currentLangData.previous || "PREV");
         setLabel('nextBtn', currentLangData.next || "NEXT");
-        setLabel('refreshBtn', currentLangData.refresh || "REFRESH NOW");
+        setLabel('refreshBtn', currentLangData.refresh || "REFRESH");
         
         updateHeaderLabel();
     }
@@ -443,6 +443,14 @@ window.onload = async () => {
         refreshBtn.addEventListener('click', () => {
             window.FlightModule.loadTableData(true, true);
         });
+    }
+
+    if (window.TVCore && typeof window.TVCore.fetchHotelConfig === 'function') {
+        window.TVCore.fetchHotelConfig().then(config => {
+            if (!TVCore.checkPlanExpiredRedirect(config)) {
+                TVCore.initBackgroundSlider(config);
+            }
+        }).catch(e => console.warn("Hotel config background load:", e));
     }
 
     if (nextBtn) nextBtn.focus();

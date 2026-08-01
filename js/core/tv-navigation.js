@@ -419,7 +419,7 @@
         ';
         document.head.appendChild(style);
 
-        if (!isIndex) {
+        if (!isIndex && !document.getElementById('backBtn') && !document.querySelector('.back-btn-pill')) {
             var existingBtn = document.querySelector('.tv-floating-back-btn');
             if (!existingBtn) {
                 var btn = document.createElement('button');
