@@ -351,7 +351,7 @@ window.onTVNavigate = function(direction) {
 };
 
 window.onTVBack = function() {
-    goBack();
+    window.location.href = "../index.html";
     return true;
 };
 

@@ -176,7 +176,7 @@
       {
         "id": "languages",
         "name": "Languages",
-        "status": "hide"
+        "status": "show"
       },
       {
         "id": "live_tv",

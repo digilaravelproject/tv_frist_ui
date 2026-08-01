@@ -420,16 +420,20 @@
         document.head.appendChild(style);
 
         if (!isIndex) {
-            // For sub-pages, inject the floating back button
-            var btn = document.createElement('button');
-            btn.className = 'tv-floating-back-btn';
-            btn.innerHTML = '<span>&#8592;</span> BACK';
-            btn.setAttribute('tabindex', '0');
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                FocusEngine.goBack();
-            });
-            document.body.appendChild(btn);
+            var existingBtn = document.querySelector('.tv-floating-back-btn');
+            if (!existingBtn) {
+                var btn = document.createElement('button');
+                btn.className = 'tv-floating-back-btn';
+                btn.id = 'tvFloatingBackBtn';
+                btn.innerHTML = '<span>&#8592;</span> BACK';
+                btn.setAttribute('tabindex', '0');
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    FocusEngine.goBack();
+                });
+                document.body.appendChild(btn);
+            }
         } else {
             // For index page, let's enhance the close button in #appsOverlay and #comingSoonOverlay
             var appsClose = document.getElementById('appsCloseBtn');
@@ -549,7 +553,7 @@
                     // Accidental repeat/double-click throttle
                     if (direction !== 'enter') {
                         var nowDir = Date.now();
-                        if (nowDir - self.lastDirectionTime < 120) {
+                        if (nowDir - self.lastDirectionTime < 50) {
                             e.preventDefault();
                             return;
                         }
@@ -559,12 +563,7 @@
                     if (direction === 'enter') {
                         if (active && active !== document.body) {
                             e.preventDefault();
-                            var now = Date.now();
-                            var last = parseInt(active.getAttribute('data-last-click') || '0', 10);
-                            if (now - last > 400) {
-                                active.setAttribute('data-last-click', now.toString());
-                                active.click();
-                            }
+                            active.click();
                         }
                     } else {
                         CacheManager.markDirty();

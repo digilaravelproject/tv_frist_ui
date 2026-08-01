@@ -163,8 +163,22 @@
             </div>
         </div>
     </div>
+    <!-- Device ID Badge in Bottom Right Corner -->
+    <div id="deviceCornerBadge" style="position:fixed; bottom:12px; right:16px; z-index:999; color:rgba(255,255,255,0.6); font-size:0.8rem; font-family:monospace; background:rgba(0,0,0,0.5); padding:4px 10px; border-radius:12px; backdrop-filter:blur(4px); letter-spacing:0.5px; pointer-events:none;">
+        ID: <span id="cornerDeviceId">--</span>
     </div>
 
+    <!-- Internet Offline Modal Overlay -->
+    <div id="noInternetOverlay" class="overlay-fullscreen overlay-glass" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; flex-direction:column;">
+        <div style="background:rgba(22, 28, 42, 0.95); border:2px solid #b38a2d; padding:35px; border-radius:16px; width:85%; max-width:480px; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.8);">
+            <div style="font-size:3.5rem; margin-bottom:15px;">🌐</div>
+            <div style="color:#b38a2d; font-size:1.6rem; font-weight:bold; margin-bottom:12px;">No Internet Connection</div>
+            <div style="color:#e2e8f0; font-size:1.1rem; margin-bottom:25px; line-height:1.5;">
+                Please connect internet to access Weather & Flight services.
+            </div>
+            <button id="noInternetCloseBtn" class="flight-tab" tabindex="0" style="padding:10px 30px; background:#b38a2d; color:#000; font-weight:bold; border:none; border-radius:8px; font-size:1rem; cursor:pointer;" onclick="document.getElementById('noInternetOverlay').style.display='none';">OK</button>
+        </div>
+    </div>
 </body>
 
 </html>

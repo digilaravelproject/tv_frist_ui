@@ -275,8 +275,12 @@ async function initLanguage() {
         // Load dynamic hotel configuration instantly from cache if available
         const cachedConfig = typeof window.getFastConfig === 'function' ? window.getFastConfig() : null;
         if (cachedConfig) {
-            if (cachedConfig.device && cachedConfig.device.room_no) {
-                localStorage.setItem('roomNo', cachedConfig.device.room_no);
+            const devObj = cachedConfig.device || (cachedConfig.data && cachedConfig.data.device) || {};
+            if (devObj.room_no) localStorage.setItem('roomNo', devObj.room_no);
+            const devId = devObj.device_id || devObj.serial || localStorage.getItem('deviceSerial');
+            if (devId) {
+                const devIdEl = document.getElementById('cornerDeviceId');
+                if (devIdEl) devIdEl.textContent = devId;
             }
             if (cachedConfig.hotel && cachedConfig.hotel.hotel_name) {
                 document.title = cachedConfig.hotel.hotel_name;
@@ -297,8 +301,12 @@ async function initLanguage() {
         // Run updated fetch in the background to avoid blocking initial render
         fetchHotelConfig().then(config => {
             if (config) {
-                if (config.device && config.device.room_no) {
-                    localStorage.setItem('roomNo', config.device.room_no);
+                const devObj = config.device || (config.data && config.data.device) || {};
+                if (devObj.room_no) localStorage.setItem('roomNo', devObj.room_no);
+                const devId = devObj.device_id || devObj.serial || localStorage.getItem('deviceSerial');
+                if (devId) {
+                    const devIdEl = document.getElementById('cornerDeviceId');
+                    if (devIdEl) devIdEl.textContent = devId;
                 }
                 if (config.hotel && config.hotel.hotel_name) {
                     document.title = config.hotel.hotel_name;
@@ -643,7 +651,7 @@ async function resolveLocation() {
             config = await fetchHotelConfig();
         }
         if (config && config.hotel) {
-            const loc = config.hotel.city || config.hotel.hotel_location;
+            const loc = config.hotel.city;
             if (loc) {
                 localStorage.setItem('weather_city', loc);
                 return loc;
@@ -679,49 +687,9 @@ async function resolveLocation() {
 async function updateWeather() {
     const tempEl = document.getElementById('temp');
     if (!tempEl) return;
-
     if (!navigator.onLine) {
-        console.warn("Weather: Device is offline on home page. Loading cache directly.");
-        const cachedTemp = localStorage.getItem('cached_temp_string');
-        const cachedCity = localStorage.getItem('cached_temp_city') || "Mumbai";
-        if (cachedTemp) {
-            const isRTL = document.body.classList.contains('rtl-mode');
-            tempEl.textContent = isRTL ? `${cachedTemp} ${cachedCity}` : `${cachedCity} ${cachedTemp}`;
-            tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
-            return;
-        }
-
-        // Try local fallback file weather/weather_data.json
-        try {
-            const response = await fetch('weather/weather_data.json?v=' + Date.now());
-            if (response.ok) {
-                const data = await response.json();
-                let city = "Mumbai";
-                try {
-                    const cachedConfigStr = localStorage.getItem('cachedHotelData');
-                    if (cachedConfigStr) {
-                        const config = JSON.parse(cachedConfigStr);
-                        if (config.hotel && config.hotel.hotel_location) {
-                            city = config.hotel.hotel_location;
-                        }
-                    } else if (typeof window.getFastConfig === 'function') {
-                        const config = window.getFastConfig();
-                        if (config && config.hotel && config.hotel.hotel_location) {
-                            city = config.hotel.hotel_location;
-                        }
-                    }
-                } catch (e) { }
-
-                const tempC = Math.round(data.extracted_data.temp);
-                const tempF = Math.round((tempC * 9 / 5) + 32);
-                const tempString = `${tempC}°C / ${tempF}°F`;
-                const isRTL = document.body.classList.contains('rtl-mode');
-                tempEl.textContent = isRTL ? `${tempString} ${city}` : `${city} ${tempString}`;
-                tempEl.style.direction = isRTL ? 'rtl' : 'ltr';
-            }
-        } catch (fallbackErr) {
-            console.warn("Local fallback load failed on home page:", fallbackErr);
-        }
+        console.warn("Weather: Device is offline. Hiding weather display.");
+        tempEl.textContent = "";
         return;
     }
 
@@ -800,7 +768,7 @@ async function loadCitiesList() {
 }
 
 /* ================= 4. COMING SOON ================= */
-var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html'];
+var comingSoonLinks = ['./travel/travel.html', './city/city.html'];
 
 /* ================= 5. LISTENERS ================= */
 function showExpiredOverlay() {
@@ -1491,7 +1459,7 @@ window.closeInputOverlay = closeInputOverlay;
 window.openCastOverlay = openCastOverlay;
 window.closeCastOverlay = closeCastOverlay;
 
-var comingSoonLinks = ['./travel/travel.html', './flights/flights.html', './city/city.html'];
+var comingSoonLinks = ['./travel/travel.html', './city/city.html'];
 
 document.querySelectorAll('.icon-item').forEach(item => {
     item.addEventListener('click', function () {
@@ -1519,6 +1487,19 @@ document.querySelectorAll('.icon-item').forEach(item => {
         }
 
         const link = this.dataset.link || this.getAttribute('href');
+
+        // Internet connection check for Weather and Flights
+        if (!navigator.onLine && (action === "weather" || (link && (link.includes("weather") || link.includes("flights"))))) {
+            var noNetOverlay = document.getElementById('noInternetOverlay');
+            if (noNetOverlay) {
+                noNetOverlay.style.display = 'flex';
+                setTimeout(function () {
+                    var btn = document.getElementById('noInternetCloseBtn');
+                    if (btn) btn.focus();
+                }, 100);
+            }
+            return;
+        }
 
         if (link && comingSoonLinks.indexOf(link) !== -1) {
             var overlay = document.getElementById('comingSoonOverlay');

@@ -24,7 +24,8 @@
     const fixedMaxFlights = 70;
 
     const navMap = {
-        'depBtn':     { left: null,      right: 'arrBtn',      up: null,     down: 'prevBtn' },
+        'backBtn':    { left: null,      right: 'depBtn',      up: null,     down: 'depBtn' },
+        'depBtn':     { left: 'backBtn', right: 'arrBtn',      up: null,     down: 'prevBtn' },
         'arrBtn':     { left: 'depBtn',  right: null,          up: null,     down: 'nextBtn' },
         'prevBtn':    { left: null,      right: 'nextBtn',     up: 'depBtn', down: null },
         'nextBtn':    { left: 'prevBtn', right: 'refreshBtn',  up: 'arrBtn', down: null },
@@ -37,8 +38,11 @@
             const langCode = langFile.split('.')[0];
             
             // Load main language file
-            const response = await fetch('languages/' + langFile + '?t=' + Date.now());
-            if (response.ok) {
+            let response = await fetch('languages/' + langFile + '?t=' + Date.now()).catch(() => null);
+            if (!response || !response.ok) {
+                response = await fetch('../weather/languages/' + langFile + '?t=' + Date.now()).catch(() => null);
+            }
+            if (response && response.ok) {
                 currentLangData = await response.json();
                 applyStaticLabels();
             }
@@ -119,7 +123,7 @@
                 const now = new Date();
                 
                 // Check if data is stale (> 6 hours)
-                if (!forceRefresh && Math.abs(now - fileDate) > 600000) {
+                if (!forceRefresh && fileLastModified && Math.abs(now - fileDate) > MAX_CACHE_AGE_MS) {
                     triggerBackgroundSync();
                 }
                 
@@ -293,22 +297,25 @@
         });
 
         // Pad to minimum 7 rows
-        while (html.split('<tr>').length - 1 < 7) {
-            html += `<tr style="border:none;"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>`;
-        }
         tableBody.innerHTML = html;
     }
 
     // Expose module API
     window.FlightModule = {
         loadTableData,
+        loadFlightTranslations,
+        renderPage,
         getCurrentMode: () => currentMode,
         setCurrentMode: (mode) => { currentMode = mode; },
         triggerBackgroundSync,
         getFlightData: () => flightData,
         getCurrentPage: () => currentPage,
-        setCurrentPage: (page) => { currentPage = page; }
+        setCurrentPage: (page) => { currentPage = page; },
+        navMap
     };
+
+    window.loadFlightTranslations = loadFlightTranslations;
+    window.navMap = navMap;
 
     // Backward compatibility for existing inline handlers
     window.currentMode = currentMode;
@@ -320,11 +327,16 @@
 })();
 
 // Navigation handlers (keep in global scope for inline event handlers)
-let currentMode = 'departures';
-
 document.addEventListener('keydown', (e) => {
-    const id = document.activeElement.id;
-    if (!navMap[id]) return;
+    const activeEl = document.activeElement;
+    if (!activeEl) return;
+    const id = activeEl.id;
+    if (id === 'backBtn' && (e.key === "Enter" || e.keyCode === 13)) {
+        window.location.href = '../index.html';
+        return;
+    }
+    const nav = window.FlightModule.navMap;
+    if (!nav[id]) return;
 
     if (e.key.startsWith("Arrow")) {
         e.preventDefault();
@@ -337,29 +349,35 @@ document.addEventListener('keydown', (e) => {
             else if (dir === "right") dir = "left";
         }
 
-        const targetId = navMap[id][dir];
-        if (targetId) document.getElementById(targetId).focus();
+        const targetId = nav[id][dir];
+        if (targetId) {
+            const el = document.getElementById(targetId);
+            if (el) el.focus();
+        }
     }
 
     if (e.key === "Enter" || e.keyCode === 13) {
         e.preventDefault();
+        const flightData = window.FlightModule.getFlightData();
+        const currentPage = window.FlightModule.getCurrentPage();
+        const rowsPerPage = 7;
+
         if (id === "nextBtn") {
             const totalPages = Math.ceil(flightData.length / rowsPerPage);
             if (currentPage < (totalPages - 1)) { 
-                currentPage++; 
+                window.FlightModule.setCurrentPage(currentPage + 1); 
                 window.FlightModule.renderPage(); 
             } 
         } else if (id === "prevBtn") {
             if (currentPage > 0) { 
-                currentPage--; 
+                window.FlightModule.setCurrentPage(currentPage - 1); 
                 window.FlightModule.renderPage(); 
             } 
         } else if (id === "depBtn" || id === "arrBtn") {
-            currentMode = (id === "depBtn") ? 'departures' : 'arrivals';
+            const newMode = (id === "depBtn") ? 'departures' : 'arrivals';
             document.getElementById('depBtn').classList.toggle('active', id === "depBtn");
             document.getElementById('arrBtn').classList.toggle('active', id === "arrBtn");
-            window.FlightModule.setCurrentMode(currentMode);
-            updateHeaderLabel();
+            window.FlightModule.setCurrentMode(newMode);
             window.FlightModule.loadTableData(true);
         } else if (id === "refreshBtn") { 
             window.FlightModule.loadTableData(true, true); 
@@ -368,12 +386,65 @@ document.addEventListener('keydown', (e) => {
 });
 
 window.onload = async () => {
-    await loadFlightTranslations(); 
-    currentMode = 'departures';
+    await window.FlightModule.loadFlightTranslations(); 
+    window.FlightModule.setCurrentMode('departures');
     document.getElementById('depBtn').classList.add('active');
     document.getElementById('arrBtn').classList.remove('active');
     await window.FlightModule.loadTableData(true);
+    
+    // Attach click listeners for mouse/touch interactions
+    const depBtn = document.getElementById('depBtn');
+    const arrBtn = document.getElementById('arrBtn');
+    const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    if (depBtn) {
+        depBtn.addEventListener('click', () => {
+            depBtn.classList.add('active');
+            if (arrBtn) arrBtn.classList.remove('active');
+            window.FlightModule.setCurrentMode('departures');
+            window.FlightModule.loadTableData(true);
+        });
+    }
+
+    if (arrBtn) {
+        arrBtn.addEventListener('click', () => {
+            arrBtn.classList.add('active');
+            if (depBtn) depBtn.classList.remove('active');
+            window.FlightModule.setCurrentMode('arrivals');
+            window.FlightModule.loadTableData(true);
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            const currentPage = window.FlightModule.getCurrentPage();
+            if (currentPage > 0) {
+                window.FlightModule.setCurrentPage(currentPage - 1);
+                window.FlightModule.renderPage();
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const flightData = window.FlightModule.getFlightData();
+            const currentPage = window.FlightModule.getCurrentPage();
+            const totalPages = Math.ceil(flightData.length / 7);
+            if (currentPage < (totalPages - 1)) {
+                window.FlightModule.setCurrentPage(currentPage + 1);
+                window.FlightModule.renderPage();
+            }
+        });
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+            window.FlightModule.loadTableData(true, true);
+        });
+    }
+
     if (nextBtn) nextBtn.focus();
 };
 window.onTVBack = function() { window.location.href = '../index.html'; return true; };

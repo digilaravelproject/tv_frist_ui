@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSMIA Mumbai Live Flight Board</title>
     <link rel="preload" href="images/updating.mp4" as="video" type="video/mp4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="css/flights.css">
@@ -14,51 +15,87 @@
     <script src="js/flightdata.js" defer></script>
 </head>
 <body>
-    <h1 id="airportTitle">Chhatrapati Shivaji Maharaj International Airport</h1>
+    <div class="flights-bg-overlay"></div>
     
-    <div class="tabs">
-        <button id="depBtn" class="flight-tab active" tabindex="0">DEPARTURES</button>
-        <button id="arrBtn" class="flight-tab" tabindex="0">ARRIVALS</button>
-    </div>
+    <!-- Top Header Bar -->
+    <header class="flight-header">
+        <div class="header-left">
+            <button id="backBtn" class="back-btn-pill" tabindex="0" onclick="window.location.href='../index.html'">
+                <i class="fa-solid fa-arrow-left"></i> BACK
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="airport-badge"><i class="fa-solid fa-plane"></i> CSMIA MUMBAI</div>
+            <h1 id="airportTitle">CHHATRAPATI SHIVAJI MAHARAJ INTERNATIONAL AIRPORT</h1>
+        </div>
+        <div class="header-right">
+            <!-- Hotel Logo placeholder populated by tv-core or CSS -->
+        </div>
+    </header>
 
-    <div class="table-container" id="mainBox">
-        <div id="videoOverlay">
-            <div class="sync-content">
-                <video id="syncVideo" 
-                       width="200" 
-                       height="200" 
-                       loop 
-                       muted 
-                       playsinline 
-                       poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
-                    <source src="images/updating.mp4" type="video/mp4">
-                </video>
-                <div class="sync-text" id="sync-text">Updating Flights Data...</div>
+    <!-- Main Container -->
+    <main class="flight-board-wrapper">
+        <div class="tabs-container">
+            <button id="depBtn" class="flight-tab active" tabindex="0">
+                <i class="fa-solid fa-plane-departure"></i> DEPARTURES
+            </button>
+            <button id="arrBtn" class="flight-tab" tabindex="0">
+                <i class="fa-solid fa-plane-arrival"></i> ARRIVALS
+            </button>
+        </div>
+
+        <div class="table-container" id="mainBox">
+            <div id="videoOverlay">
+                <div class="sync-content">
+                    <video id="syncVideo" 
+                           width="200" 
+                           height="200" 
+                           loop 
+                           muted 
+                           playsinline 
+                           poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                        <source src="images/updating.mp4" type="video/mp4">
+                    </video>
+                    <div class="sync-text" id="sync-text">Updating Flights Data...</div>
+                </div>
+            </div>
+
+            <table id="flightTable">
+                <thead>
+                    <tr>
+                        <th id="th-time"><i class="fa-regular fa-clock"></i> TIME</th>
+                        <th id="th-flight"><i class="fa-solid fa-plane-up"></i> FLIGHT</th>
+                        <th id="th-terminal"><i class="fa-solid fa-building"></i> TERMINAL</th> 
+                        <th id="th-airline"><i class="fa-solid fa-passport"></i> AIRLINE</th>
+                        <th id="headerLabel"><i class="fa-solid fa-location-dot"></i> DESTINATION</th>
+                        <th id="th-status"><i class="fa-solid fa-circle-info"></i> STATUS</th>
+                    </tr>
+                </thead>
+                <tbody id="flightBody"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="footer-info">
+        <div class="footer-left">
+            <div id="lastUpdated" class="last-updated-badge">
+                <i class="fa-solid fa-rotate-right"></i> Last Refreshed: --:--
             </div>
         </div>
-
-        <table id="flightTable">
-            <thead>
-                <tr>
-                    <th id="th-time">TIME</th>
-                    <th id="th-flight">FLIGHT</th>
-                    <th id="th-terminal">TERMINAL</th> 
-                    <th id="th-airline">AIRLINE</th>
-                    <th id="headerLabel">DESTINATION</th>
-                    <th id="th-status">STATUS</th>
-                </tr>
-            </thead>
-            <tbody id="flightBody"></tbody>
-        </table>
-    </div>
-
-    <div class="footer-info">
-        <div id="lastUpdated">Last Refreshed: --:--</div>
         <div class="center-controls">
-            <button id="prevBtn" class="flight-tab" tabindex="0">PREV</button>
-            <button id="nextBtn" class="flight-tab" tabindex="0">NEXT</button>
+            <button id="prevBtn" class="flight-btn-sec" tabindex="0">
+                <i class="fa-solid fa-chevron-left"></i> PREV
+            </button>
+            <button id="nextBtn" class="flight-btn-sec" tabindex="0">
+                NEXT <i class="fa-solid fa-chevron-right"></i>
+            </button>
         </div>
-        <button id="refreshBtn" class="flight-tab" tabindex="0">REFRESH NOW</button>
-    </div>
+        <div class="footer-right">
+            <button id="refreshBtn" class="flight-btn-action" tabindex="0">
+                <i class="fa-solid fa-arrows-rotate"></i> REFRESH NOW
+            </button>
+        </div>
+    </footer>
 </body>
 </html>

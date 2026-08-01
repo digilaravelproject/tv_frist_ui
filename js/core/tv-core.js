@@ -243,7 +243,13 @@ window.TVCore = {
                 img.alt = config.hotel.hotel_name || 'Hotel Logo';
 
                 container.appendChild(img);
-                document.body.appendChild(container);
+
+                const headerRight = document.querySelector('.header-right');
+                if (headerRight) {
+                    headerRight.appendChild(container);
+                } else {
+                    document.body.appendChild(container);
+                }
             }
         }
     }
