@@ -233,33 +233,70 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "admin/open_hdmi.php?ip=" + ip + "&model=" + model + "&t=" + new Date().getTime(), true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    try {
-                        var res = JSON.parse(xhr.responseText);
-                        var modelsList = res.options || res.available_models;
-                        if (modelsList) {
-                            showManualModelMenu(modelsList, model);
-                            return;
+        // 1. Fetch Dynamic Hardware Ports via Flutter Bridge
+        if (window.flutterBridge && typeof window.flutterBridge.getHdmiModels === 'function') {
+            try {
+                var res = window.flutterBridge.getHdmiModels();
+                var p = (res && typeof res.then === 'function') ? res : Promise.resolve(res);
+                p.then(function(portsList) {
+                    if (portsList) {
+                        if (typeof portsList === 'string') {
+                            try { portsList = JSON.parse(portsList); } catch(e){}
                         }
-                    } catch (e) {}
-                }
-                showManualModelMenu(fallbackOptions, "HDMI 1");
+                        var formatted = (portsList.options || portsList.available_models || portsList);
+                        showManualModelMenu(formatted, model);
+                        return;
+                    }
+                    fetchHdmiFromPhp();
+                }).catch(function(err) {
+                    console.warn("getHdmiModels bridge call failed:", err);
+                    fetchHdmiFromPhp();
+                });
+                return;
+            } catch(err) {
+                console.warn("getHdmiModels bridge error:", err);
             }
-        };
-        xhr.onerror = function() {
-            showManualModelMenu(fallbackOptions, "HDMI 1");
-        };
-        xhr.send();
+        }
+
+        fetchHdmiFromPhp();
+
+        function fetchHdmiFromPhp() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "admin/open_hdmi.php?ip=" + ip + "&model=" + model + "&t=" + new Date().getTime(), true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            var res = JSON.parse(xhr.responseText);
+                            var modelsList = res.options || res.available_models;
+                            if (modelsList) {
+                                showManualModelMenu(modelsList, model);
+                                return;
+                            }
+                        } catch (e) {}
+                    }
+                    showManualModelMenu(fallbackOptions, "HDMI 1");
+                }
+            };
+            xhr.onerror = function() {
+                showManualModelMenu(fallbackOptions, "HDMI 1");
+            };
+            xhr.send();
+        }
     };
 
     function showManualModelMenu(options, detectedModel) {
         var box = document.getElementById('hdmiBox');
         var overlay = document.getElementById('hdmiOverlay');
         box.innerHTML = ''; 
+
+        // Handle flat object or array formats from bridge
+        if (options && typeof options === 'object' && !Array.isArray(options)) {
+            let firstVal = Object.values(options)[0];
+            if (typeof firstVal === 'string') {
+                options = { "Hardware Ports": options };
+            }
+        }
 
         function createRow(brand, modelName, pkg, isRecommended = false) {
             let row = document.createElement('div');
@@ -332,6 +369,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function confirmSelection(pkg) {
         currentPkg = pkg; 
         currentSrc = "HDMI";
+        localStorage.setItem('selectedLiveTvPort', pkg);
+        if (window.flutterBridge && typeof window.flutterBridge.savePortPreference === 'function') {
+            try { window.flutterBridge.savePortPreference(pkg); } catch(e){}
+        }
         document.getElementById('hdmiOverlay').style.display = 'none';
         updateUI('btn-hdmi');
     }

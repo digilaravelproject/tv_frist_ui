@@ -101,10 +101,14 @@ async function handleLiveTV() {
 
     if (window.flutterBridge && typeof window.flutterBridge.launchLiveTv === 'function') {
         try {
-            await window.flutterBridge.launchLiveTv(savedPort);
-            return;
+            var res = window.flutterBridge.launchLiveTv(savedPort);
+            if (res && typeof res.then === 'function') {
+                await res;
+            }
+            return; // Single-invocation guard: skip multiple fallback fetch calls or re-invocations
         } catch (err) {
             console.error('Direct launchLiveTv failed:', err);
+            return; // Prevent fallback double-invocation on error
         }
     }
 
@@ -113,13 +117,15 @@ async function handleLiveTV() {
 
     if (!serial || !ip) {
         try {
-            const device = await window.flutterBridge.identifyDevice(ip);
-            if (device.success && device.serial) {
-                localStorage.setItem('deviceSerial', device.serial);
-                localStorage.setItem('deviceIp', device.ip);
-                return handleLiveTV();
+            if (window.flutterBridge && typeof window.flutterBridge.identifyDevice === 'function') {
+                const device = await window.flutterBridge.identifyDevice(ip);
+                if (device && device.success && device.serial) {
+                    localStorage.setItem('deviceSerial', device.serial);
+                    localStorage.setItem('deviceIp', device.ip);
+                    return handleLiveTV();
+                }
             }
-            throw new Error(device.error || 'Failed to identify device');
+            throw new Error('Failed to identify device');
         } catch (err) {
             console.error('Device identification failed:', err);
             return;
@@ -130,11 +136,17 @@ async function handleLiveTV() {
         const config = await fetch(`admin/devices/${serial}.json?t=${Date.now()}`).then(r => r.json());
 
         if (config.tv_source === "TV APP") {
-            await window.flutterBridge.launchApp(config.package);
+            if (window.flutterBridge && typeof window.flutterBridge.launchApp === 'function') {
+                await window.flutterBridge.launchApp(config.package);
+            }
         } else if (config.tv_source === "HDMI") {
-            await window.flutterBridge.launchHdmi(config.package || savedPort);
+            if (window.flutterBridge && typeof window.flutterBridge.launchHdmi === 'function') {
+                await window.flutterBridge.launchHdmi(config.package || savedPort);
+            }
         } else if (config.tv_source === "IPTV") {
-            await window.flutterBridge.launchIptv(config.package, config.iptv_config || "iptv/all.json");
+            if (window.flutterBridge && typeof window.flutterBridge.launchIptv === 'function') {
+                await window.flutterBridge.launchIptv(config.package, config.iptv_config || "iptv/all.json");
+            }
         }
     } catch (e) {
         console.error("Launch error", e);
@@ -1330,45 +1342,15 @@ function closeInputOverlay() {
     if (items[3]) items[3].focus();
 }
 
-function openCastOverlay() {
-    // Native Screen Mirroring Trigger (Safe Bridge Guard)
-    try {
-        if (window.flutterBridge && typeof window.flutterBridge.launchCast === 'function') {
-            window.flutterBridge.launchCast().catch(function (err) {
-                console.warn('Launch cast bridge warning:', err);
-            });
-        }
-    } catch (e) {
-        console.warn('launchCast bridge not available on web:', e);
-    }
-
-    var overlay = document.getElementById('castOverlay');
-    if (!overlay) return;
-    overlay.style.display = 'flex';
-    document.getElementById('mainUI').style.display = 'none';
-    window.history.pushState(null, "", window.location.href);
-    window.__castOverlayOpen = true;
-
-    var nameEl = document.getElementById('castDeviceName');
-    if (nameEl) {
-        var roomNo = localStorage.getItem('roomNo') || '';
-        if (!roomNo && window.TVCore && typeof window.TVCore.getFastConfig === 'function') {
-            var cfg = window.TVCore.getFastConfig();
-            if (cfg && cfg.device && cfg.device.room_no) {
-                roomNo = cfg.device.room_no;
-            }
-        }
-        if (!roomNo) {
-            var stored = localStorage.getItem('cachedHotelData');
-            if (stored) {
-                try {
-                    var parsed = JSON.parse(stored);
-                    roomNo = (parsed.device && parsed.device.room_no) || parsed.room_no || '';
-                } catch (e) { }
-            }
-        }
-        var label = roomNo ? 'Hotel TV (Room ' + roomNo + ')' : (localStorage.getItem('deviceSerial') ? 'Hotel TV (' + localStorage.getItem('deviceSerial') + ')' : 'Hotel TV');
-        nameEl.textContent = label;
+async function openCastOverlay() {
+    // 1. Open Overlay Immediately so UI is instant & responsive
+    const overlay = document.getElementById('castOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        var mainUI = document.getElementById('mainUI');
+        if (mainUI) mainUI.style.display = 'none';
+        window.history.pushState(null, "", window.location.href);
+        window.__castOverlayOpen = true;
     }
 
     setTimeout(function () {
@@ -1378,6 +1360,69 @@ function openCastOverlay() {
         var btn = document.getElementById('castCloseBtn');
         if (btn) btn.focus();
     }, 150);
+
+    // 2. Native Screen Mirroring Trigger (Safe Bridge Guard)
+    try {
+        if (window.flutterBridge && typeof window.flutterBridge.launchCast === 'function') {
+            var castRes = window.flutterBridge.launchCast();
+            if (castRes && typeof castRes.catch === 'function') {
+                castRes.catch(function (err) {
+                    console.warn('Launch cast bridge warning:', err);
+                });
+            }
+        }
+    } catch (e) {
+        console.warn('launchCast bridge not available on web:', e);
+    }
+
+    // 3. Fetch Device Info Dynamically
+    let deviceName = 'Hotel TV';
+    try {
+        if (window.flutterBridge && typeof window.flutterBridge.identifyDevice === 'function') {
+            let deviceInfo = window.flutterBridge.identifyDevice();
+            if (deviceInfo && typeof deviceInfo.then === 'function') {
+                deviceInfo = await deviceInfo;
+            }
+            if (typeof deviceInfo === 'string') {
+                try { deviceInfo = JSON.parse(deviceInfo); } catch (err) {}
+            }
+            const data = (deviceInfo && (deviceInfo.data || deviceInfo.device || deviceInfo)) || {};
+            deviceName = data.device_name || data.deviceName || data.name || (data.room_no ? `Hotel TV (Room ${data.room_no})` : 'Hotel TV');
+        }
+    } catch (e) {
+        console.warn('Failed to fetch device info from bridge:', e);
+    }
+
+    // Fallback if deviceName was not resolved from bridge
+    if (!deviceName || deviceName === 'Hotel TV') {
+        var roomNo = localStorage.getItem('roomNo') || '';
+        if (!roomNo && window.TVCore && typeof window.TVCore.getFastConfig === 'function') {
+            var cfg = window.TVCore.getFastConfig();
+            if (cfg && cfg.device && cfg.device.room_no) {
+                roomNo = cfg.device.room_no;
+            }
+        }
+        if (!roomNo) {
+            const cached = localStorage.getItem('cachedHotelData');
+            if (cached) {
+                try {
+                    const config = JSON.parse(cached);
+                    roomNo = (config.device && config.device.room_no) || config.room_no || '';
+                } catch (err) {}
+            }
+        }
+        if (roomNo) {
+            deviceName = `Hotel TV (Room ${roomNo})`;
+        } else if (localStorage.getItem('deviceSerial')) {
+            deviceName = `Hotel TV (${localStorage.getItem('deviceSerial')})`;
+        }
+    }
+
+    // Update Device Name in Cast Modal UI
+    const nameEl = document.getElementById('castDeviceName');
+    if (nameEl) {
+        nameEl.textContent = deviceName;
+    }
 }
 
 function closeCastOverlay() {

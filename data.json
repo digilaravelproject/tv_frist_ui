@@ -6,10 +6,10 @@
       "token": "UeDjWSKRmqgcpy1RJjGgJkD7IcZgYYNVTzrNl3DghGz7RZyTmqBa4uP2dgJn3kRTrtUTK0ZC9NhvwMBa"
     },
     "template": {
-      "latest_version": "16.5",
-      "old_version": "16.0",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v16_5_1785418961.zip",
-      "uploaded_at": "2026-07-30T19:12:41+05:30",
+      "latest_version": "17.0",
+      "old_version": "16.5",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v17_0_1785482600.zip",
+      "uploaded_at": "2026-07-31T12:53:20+05:30",
       "is_update_available": false
     },
     "device": {
@@ -43,14 +43,15 @@
         "Business & Conference Facilities"
       ],
       "media": {
-        "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1785401445_logo_N1ivTCOz.png",
-        "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1783173121_image_sDTg0sZN.jpeg",
+        "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1785490217_logo_jtI6b25s.png",
+        "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1785491332_image_3LgBzy9y.jpg",
         "hotel_images": [
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_SHIBJP1W.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_Nkr7uLjd.jpeg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_LVVoJp1f.jpeg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_XFqa9MCe.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785480150_gallery_dI2OvY7q.jpg"
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_PwjhqXa5.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_IUG30nGB.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_qKGxYQ0h.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_DiXTBCng.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_fPtfsJw2.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_F7P4shPG.jpg"
         ],
         "slider_images": [
           "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1785401361_slider_jbjZxuH2.png"
@@ -165,7 +166,7 @@
       {
         "id": "flights",
         "name": "Flights",
-        "status": "hide"
+        "status": "show"
       },
       {
         "id": "input",
@@ -210,14 +211,39 @@
     ],
     "amenities": [
       {
+        "sr_no": 1,
+        "title": "a",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/1PlJhvLDi9857iRqVq3qlRPuwqYdfKsLVEvMHCVA.jpg"
+      },
+      {
         "sr_no": 2,
-        "title": "swimming",
-        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/FyJLYWSFyUK2iSlKgxUXC3B7kivwvIUCO8BF41CE.jpg"
+        "title": "b",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/AcXwhKxyO26oycdKeTS8c7g30oMt0YK8PiH0okIy.jpg"
       },
       {
         "sr_no": 3,
-        "title": "tt",
-        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/zJL6IWDFSAKV9TAMuPX7wkKU5tCHEaFn3YER5Gy3.jpg"
+        "title": "c",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/TTf1vdFRFFfXFqgLH3xAOMiMPRwr5N055NBulAZE.jpg"
+      },
+      {
+        "sr_no": 4,
+        "title": "d",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/mxTzlNf3KCpzIjXVvdqYiHCvlHlea537vdbRPHCL.jpg"
+      },
+      {
+        "sr_no": 5,
+        "title": "e",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/6LE5V0x8Drb6d5pMfXNEnRsB9jUY9ahRH7zil2VP.jpg"
+      },
+      {
+        "sr_no": 6,
+        "title": "f",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/aIHaFW8501ttYS52mTOlYs29Cbs3SCCQNUng0DMp.jpg"
+      },
+      {
+        "sr_no": 7,
+        "title": "g",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/BZo1RNZYCOsFZ4NqNmiSVD6T3k67fTWRwFWz0z5T.jpg"
       }
     ]
   }
