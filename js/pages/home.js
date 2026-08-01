@@ -323,8 +323,14 @@ async function initLanguage() {
         }).catch(err => console.warn("Background fetch failed:", err));
 
         const langFile = localStorage.getItem('selectedLangFile') || 'english.json';
-        const response = await fetch(`admin/languages/${langFile}`);
-        if (response.ok) {
+        let response = await fetch(`admin/languages/${langFile}?t=${Date.now()}`).catch(() => null);
+        if (!response || !response.ok) {
+            response = await fetch(`weather/languages/${langFile}?t=${Date.now()}`).catch(() => null);
+        }
+        if (!response || !response.ok) {
+            response = await fetch(`languages/${langFile}?t=${Date.now()}`).catch(() => null);
+        }
+        if (response && response.ok) {
             const freshData = await response.json();
             currentData = { ...currentData, ...freshData };
             if (currentData.direction === 'rtl') {
@@ -478,21 +484,37 @@ function applyTranslations() {
         'cast': 'screen_cast',
         'refresh': 'refresh',
         'languages.html': 'language',
+        './languages.html': 'language',
         'hotel_info/hotel_info.html': 'hotel_info',
+        './hotel_info/hotel_info.html': 'hotel_info',
         'amenities/amenities.html': 'amenities',
+        './amenities/amenities.html': 'amenities',
         'travel/travel.html': 'travel',
+        './travel/travel.html': 'travel',
         'city/city.html': 'our_city',
+        './city/city.html': 'our_city',
         'weather/weather.html': 'weather',
+        './weather/weather.html': 'weather',
         'settings.html': 'settings',
-        'flights/flights.html': 'flights'
+        './settings.html': 'settings',
+        'flights/flights.html': 'flights',
+        './flights/flights.html': 'flights'
     };
 
     document.querySelectorAll('.icon-item').forEach(item => {
         const key = item.getAttribute('data-link') || item.getAttribute('data-action');
         const labelEl = item.querySelector('.icon-label');
         const jsonKey = iconMap[key];
-        if (labelEl && jsonKey && currentData.icons && currentData.icons[jsonKey]) {
-            labelEl.textContent = currentData.icons[jsonKey];
+        if (labelEl && jsonKey) {
+            let translated = null;
+            if (currentData.icons && currentData.icons[jsonKey]) {
+                translated = currentData.icons[jsonKey];
+            } else if (currentData[jsonKey]) {
+                translated = currentData[jsonKey];
+            }
+            if (translated) {
+                labelEl.textContent = translated;
+            }
         }
     });
 

@@ -103,7 +103,11 @@
     "medical": "Medical",
     "forex": "Forex",
     "flights": "Flights",
-    "our_city": "Our City"
+    "our_city": "Our City",
+    "amenities": "Facilities",
+    "screen_cast": "Screen Cast",
+    "input": "Input",
+    "refresh": "UPDATE NOW"
   },
   "messages": {
     "no_internet": "Please check your internet connection",
