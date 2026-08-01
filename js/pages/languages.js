@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Try fetching online/local json with complete 21 language fallback safety
-        fetch('admin/languages.json?t=' + Date.now())
+        fetch('languages/languages.json?t=' + Date.now())
             .then(res => res.json())
             .then(data => {
                 const langs = (data && data.available_languages && data.available_languages.length > 0)

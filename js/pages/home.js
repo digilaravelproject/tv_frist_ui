@@ -323,13 +323,7 @@ async function initLanguage() {
         }).catch(err => console.warn("Background fetch failed:", err));
 
         const langFile = localStorage.getItem('selectedLangFile') || 'english.json';
-        let response = await fetch(`admin/languages/${langFile}?t=${Date.now()}`).catch(() => null);
-        if (!response || !response.ok) {
-            response = await fetch(`weather/languages/${langFile}?t=${Date.now()}`).catch(() => null);
-        }
-        if (!response || !response.ok) {
-            response = await fetch(`languages/${langFile}?t=${Date.now()}`).catch(() => null);
-        }
+        const response = await fetch(`languages/${langFile}?t=${Date.now()}`).catch(() => null);
         if (response && response.ok) {
             const freshData = await response.json();
             currentData = { ...currentData, ...freshData };

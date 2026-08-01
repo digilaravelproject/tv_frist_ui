@@ -38,10 +38,7 @@
             const langCode = langFile.split('.')[0];
             
             // Load main language file
-            let response = await fetch('languages/' + langFile + '?t=' + Date.now()).catch(() => null);
-            if (!response || !response.ok) {
-                response = await fetch('../weather/languages/' + langFile + '?t=' + Date.now()).catch(() => null);
-            }
+            const response = await fetch('../languages/' + langFile + '?t=' + Date.now()).catch(() => null);
             if (response && response.ok) {
                 currentLangData = await response.json();
                 applyStaticLabels();
