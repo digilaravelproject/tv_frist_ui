@@ -8,6 +8,10 @@
     --overlay-dark: rgba(0, 0, 0, 0.9);
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -20,6 +24,8 @@ html, body {
     touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     -ms-touch-action: manipulation;
 }
 

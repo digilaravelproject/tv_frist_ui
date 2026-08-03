@@ -1,367 +1,370 @@
 let images = [];
-        let currentIndex = 0;
-        let autoTimer;
+let currentIndex = 0;
+let autoTimer;
 
-        function waitForLoginData() {
-            return new Promise(resolve => {
-                if (window.tvLoginData) return resolve(window.tvLoginData);
-                if (window.parent && window.parent.tvLoginData) return resolve(window.parent.tvLoginData);
-                const check = setInterval(() => {
-                    const data = window.tvLoginData || (window.parent && window.parent.tvLoginData);
-                    if (data) {
-                        clearInterval(check);
-                        resolve(data);
-                    }
-                }, 100);
-                setTimeout(() => { clearInterval(check); resolve(null); }, 3000);
+function waitForLoginData() {
+    return new Promise(resolve => {
+        if (window.tvLoginData) return resolve(window.tvLoginData);
+        if (window.parent && window.parent.tvLoginData) return resolve(window.parent.tvLoginData);
+        const check = setInterval(() => {
+            const data = window.tvLoginData || (window.parent && window.parent.tvLoginData);
+            if (data) {
+                clearInterval(check);
+                resolve(data);
+            }
+        }, 100);
+        setTimeout(() => { clearInterval(check); resolve(null); }, 3000);
+    });
+}
+
+async function fetchHotelConfig() {
+    const injected = await waitForLoginData();
+    if (injected) {
+        var normalized = injected.data || injected;
+        localStorage.setItem('cachedHotelData', JSON.stringify(normalized));
+        return normalized;
+    }
+
+    const filename = window.parent.HOTEL_DATA_FILE || window.HOTEL_DATA_FILE || 'data.json';
+    const paths = [`../${filename}`, filename, '../data.json', 'data.json'];
+    let config = null;
+
+    for (let path of paths) {
+        try {
+            const res = await fetch(`${path}?t=${Date.now()}`);
+            if (res.ok) {
+                config = await res.json();
+                config = config.data || config;
+                localStorage.setItem('cachedHotelData', JSON.stringify(config));
+                break;
+            }
+        } catch (e) {
+            console.warn(`Failed to fetch config from ${path}:`, e);
+        }
+    }
+
+    if (!config) {
+        const cached = localStorage.getItem('cachedHotelData');
+        if (cached) {
+            try {
+                config = JSON.parse(cached);
+            } catch (e) {
+                console.error("Failed parsing cached config:", e);
+            }
+        }
+    }
+    return config;
+}
+
+let bgSlideImages = [];
+let bgCurrentImageIndex = 0;
+let bgActiveSlideIndex = 0;
+let bgSliderIntervalId = null;
+
+function initBackgroundSlider(config) {
+    if (bgSliderIntervalId) clearInterval(bgSliderIntervalId);
+    bgSlideImages = [];
+
+    const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
+    const basePath = isInSubfolder ? '../' : '';
+
+    if (config && config.hotel && config.hotel.media) {
+        if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
+            bgSlideImages = config.hotel.media.slider_images.map(img => {
+                return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
             });
+        } else if (config.hotel.media.cover_image) {
+            let cover = config.hotel.media.cover_image;
+            if (!cover.startsWith('http') && !cover.startsWith('/')) {
+                cover = basePath + cover;
+            }
+            bgSlideImages = [cover];
         }
+    }
 
-        async function fetchHotelConfig() {
-            const injected = await waitForLoginData();
-            if (injected) {
-                var normalized = injected.data || injected;
-                localStorage.setItem('cachedHotelData', JSON.stringify(normalized));
-                return normalized;
-            }
+    if (bgSlideImages.length === 0) {
+        bgSlideImages = ['../images/main.jpg'];
+    }
 
-            const filename = window.parent.HOTEL_DATA_FILE || window.HOTEL_DATA_FILE || 'data.json';
-            const paths = [`../${filename}`, filename, '../data.json', 'data.json'];
-            let config = null;
+    const slides = document.querySelectorAll('#bg-slider .slide');
+    if (slides.length < 2) return;
 
-            for (let path of paths) {
-                try {
-                    const res = await fetch(`${path}?t=${Date.now()}`);
-                    if (res.ok) {
-                        config = await res.json();
-                        config = config.data || config;
-                        localStorage.setItem('cachedHotelData', JSON.stringify(config));
-                        break;
-                    }
-                } catch (e) {
-                    console.warn(`Failed to fetch config from ${path}:`, e);
-                }
-            }
+    const tempImg1 = new Image();
+    tempImg1.onload = () => {
+        slides[0].style.backgroundImage = `url('${bgSlideImages[0]}')`;
+        slides[0].classList.add('active');
+        slides[1].classList.remove('active');
+    };
+    tempImg1.onerror = () => {
+        slides[0].style.backgroundImage = "url('../images/main.jpg')";
+        slides[0].classList.add('active');
+        slides[1].classList.remove('active');
+    };
+    tempImg1.src = bgSlideImages[0];
 
-            if (!config) {
-                const cached = localStorage.getItem('cachedHotelData');
-                if (cached) {
-                    try {
-                        config = JSON.parse(cached);
-                    } catch (e) {
-                        console.error("Failed parsing cached config:", e);
-                    }
-                }
-            }
-            return config;
-        }
+    bgCurrentImageIndex = 0;
+    bgActiveSlideIndex = 0;
 
-        let bgSlideImages = [];
-        let bgCurrentImageIndex = 0;
-        let bgActiveSlideIndex = 0;
-        let bgSliderIntervalId = null;
+    if (bgSlideImages.length > 1) {
+        bgSliderIntervalId = setInterval(() => {
+            bgCurrentImageIndex = (bgCurrentImageIndex + 1) % bgSlideImages.length;
+            const nextSlideIndex = bgActiveSlideIndex === 0 ? 1 : 0;
+            const targetUrl = bgSlideImages[bgCurrentImageIndex];
 
-        function initBackgroundSlider(config) {
-            if (bgSliderIntervalId) clearInterval(bgSliderIntervalId);
-            bgSlideImages = [];
-
-            const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
-            const basePath = isInSubfolder ? '../' : '';
-
-            if (config && config.hotel && config.hotel.media) {
-                if (config.hotel.media.slider_images && config.hotel.media.slider_images.length > 0) {
-                    bgSlideImages = config.hotel.media.slider_images.map(img => {
-                        return (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img;
-                    });
-                } else if (config.hotel.media.cover_image) {
-                    let cover = config.hotel.media.cover_image;
-                    if (!cover.startsWith('http') && !cover.startsWith('/')) {
-                        cover = basePath + cover;
-                    }
-                    bgSlideImages = [cover];
-                }
-            }
-
-            if (bgSlideImages.length === 0) {
-                bgSlideImages = ['../images/main.jpg'];
-            }
-
-            const slides = document.querySelectorAll('#bg-slider .slide');
-            if (slides.length < 2) return;
-
-            const tempImg1 = new Image();
-            tempImg1.onload = () => {
-                slides[0].style.backgroundImage = `url('${bgSlideImages[0]}')`;
-                slides[0].classList.add('active');
-                slides[1].classList.remove('active');
+            const tempImgNext = new Image();
+            tempImgNext.onload = () => {
+                slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+                slides[nextSlideIndex].classList.add('active');
+                slides[bgActiveSlideIndex].classList.remove('active');
+                bgActiveSlideIndex = nextSlideIndex;
             };
-            tempImg1.onerror = () => {
-                slides[0].style.backgroundImage = "url('../images/main.jpg')";
-                slides[0].classList.add('active');
-                slides[1].classList.remove('active');
+            tempImgNext.onerror = () => {
+                slides[nextSlideIndex].style.backgroundImage = "url('../images/main.jpg')";
+                slides[nextSlideIndex].classList.add('active');
+                slides[bgActiveSlideIndex].classList.remove('active');
+                bgActiveSlideIndex = nextSlideIndex;
             };
-            tempImg1.src = bgSlideImages[0];
+            tempImgNext.src = targetUrl;
+        }, 5000);
+    }
+}
 
-            bgCurrentImageIndex = 0;
-            bgActiveSlideIndex = 0;
+function extractAmenities(config) {
+    if (!config) return [];
+    let list = [];
 
-            if (bgSlideImages.length > 1) {
-                bgSliderIntervalId = setInterval(() => {
-                    bgCurrentImageIndex = (bgCurrentImageIndex + 1) % bgSlideImages.length;
-                    const nextSlideIndex = bgActiveSlideIndex === 0 ? 1 : 0;
-                    const targetUrl = bgSlideImages[bgCurrentImageIndex];
+    // 1. Primary: Read from data.json "amenities" array
+    if (config.amenities && Array.isArray(config.amenities) && config.amenities.length > 0) {
+        list = config.amenities
+            .filter(item => item && (item.image_url || item.url || item.image))
+            .map(item => ({
+                title: item.title || 'Amenity',
+                description: item.description || '',
+                image_url: item.image_url || item.url || item.image
+            }));
+    }
 
-                    const tempImgNext = new Image();
-                    tempImgNext.onload = () => {
-                        slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
-                        slides[nextSlideIndex].classList.add('active');
-                        slides[bgActiveSlideIndex].classList.remove('active');
-                        bgActiveSlideIndex = nextSlideIndex;
-                    };
-                    tempImgNext.onerror = () => {
-                        slides[nextSlideIndex].style.backgroundImage = "url('../images/main.jpg')";
-                        slides[nextSlideIndex].classList.add('active');
-                        slides[bgActiveSlideIndex].classList.remove('active');
-                        bgActiveSlideIndex = nextSlideIndex;
-                    };
-                    tempImgNext.src = targetUrl;
-                }, 5000);
-            }
+    // 2. Fallback: Read from hotel.media.amenities_images if present
+    if (list.length === 0 && config.hotel && config.hotel.media && config.hotel.media.amenities_images) {
+        list = config.hotel.media.amenities_images.map((img, idx) => ({
+            title: `Amenity ${idx + 1}`,
+            description: '',
+            image_url: img
+        }));
+    }
+
+    return list;
+}
+
+async function initGallery() {
+    // Load dynamic configuration instantly from parent cache if available
+    const cachedConfig = (window.parent && window.parent.getFastConfig) ? window.parent.getFastConfig() : null;
+    images = [];
+
+    const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
+    const basePath = isInSubfolder ? '../' : '';
+
+    if (cachedConfig) {
+        initBackgroundSlider(cachedConfig);
+        const rawList = extractAmenities(cachedConfig);
+        if (rawList.length > 0) {
+            images = rawList.map(item => ({
+                ...item,
+                image_url: (item.image_url.startsWith('http') || item.image_url.startsWith('/')) ? item.image_url : basePath + item.image_url
+            }));
         }
+    } else {
+        initBackgroundSlider(null);
+    }
 
-        function extractAmenities(config) {
-            if (!config) return [];
-            let list = [];
+    // Run updated fetch in the background to avoid blocking initial render
+    fetchHotelConfig().then(config => {
+        if (config) {
+            if (typeof window.checkPlanExpiredRedirect === 'function') window.checkPlanExpiredRedirect(config, '../index.html');
+            initBackgroundSlider(config);
 
-            // 1. Primary: Read from data.json "amenities" array
-            if (config.amenities && Array.isArray(config.amenities) && config.amenities.length > 0) {
-                list = config.amenities
-                    .filter(item => item && (item.image_url || item.url || item.image))
-                    .map(item => ({
-                        title: item.title || 'Amenity',
-                        description: item.description || '',
-                        image_url: item.image_url || item.url || item.image
-                    }));
-            }
-
-            // 2. Fallback: Read from hotel.media.amenities_images if present
-            if (list.length === 0 && config.hotel && config.hotel.media && config.hotel.media.amenities_images) {
-                list = config.hotel.media.amenities_images.map((img, idx) => ({
-                    title: `Amenity ${idx + 1}`,
-                    description: '',
-                    image_url: img
+            const rawList = extractAmenities(config);
+            let newImages = [];
+            if (rawList.length > 0) {
+                newImages = rawList.map(item => ({
+                    ...item,
+                    image_url: (item.image_url.startsWith('http') || item.image_url.startsWith('/')) ? item.image_url : basePath + item.image_url
                 }));
             }
 
-            return list;
+            if (newImages.length > 0 && JSON.stringify(newImages) !== JSON.stringify(images)) {
+                images = newImages;
+                currentIndex = 0;
+                updateDisplay();
+                startAutoSlide();
+            }
         }
+    }).catch(err => console.warn("Background fetch failed:", err));
 
-        async function initGallery() {
-            // Load dynamic configuration instantly from parent cache if available
-            const cachedConfig = (window.parent && window.parent.getFastConfig) ? window.parent.getFastConfig() : null;
-            images = [];
+    // Standard local offline default fallback
+    if (images.length === 0) {
+        if (window.AndroidBridge && window.AndroidBridge.getPictureList) {
+            try {
+                const listString = window.AndroidBridge.getPictureList();
+                const parsed = JSON.parse(listString);
+                images = parsed.map((img, i) => ({
+                    title: `Amenity ${i + 1}`,
+                    description: '',
+                    image_url: img
+                }));
+            } catch (e) { }
+        }
+    }
 
-            const isInSubfolder = window.location.pathname.indexOf('/') !== window.location.pathname.lastIndexOf('/');
-            const basePath = isInSubfolder ? '../' : '';
+    if (images.length === 0) {
+        images = [
+            { title: "Amenity 1", description: "", image_url: "pics/slide1.jpg" },
+            { title: "Amenity 2", description: "", image_url: "pics/slide2.jpg" }
+        ];
+    }
 
-            if (cachedConfig) {
-                initBackgroundSlider(cachedConfig);
-                const rawList = extractAmenities(cachedConfig);
-                if (rawList.length > 0) {
-                    images = rawList.map(item => ({
-                        ...item,
-                        image_url: (item.image_url.startsWith('http') || item.image_url.startsWith('/')) ? item.image_url : basePath + item.image_url
-                    }));
-                }
-            } else {
-                initBackgroundSlider(null);
+    updateDisplay();
+    startAutoSlide();
+
+    let langFile = localStorage.getItem('selectedLangFile') || 'english.json';
+
+    if (window.AndroidBridge && window.AndroidBridge.getSelectedLanguageFile) {
+        langFile = window.AndroidBridge.getSelectedLanguageFile();
+    }
+
+    fetch(`../languages/${langFile}?t=${Date.now()}`)
+        .then(res => res.json())
+        .then(data => {
+            const titleKey = 'amenities';
+            const titleEl = document.getElementById('headerTitle');
+            let pageLabel = 'Amenities';
+            if (data.icons && data.icons[titleKey]) {
+                pageLabel = data.icons[titleKey];
+            } else if (data[titleKey]) {
+                pageLabel = data[titleKey];
             }
 
-            // Run updated fetch in the background to avoid blocking initial render
-            fetchHotelConfig().then(config => {
-                if (config) {
-                    if (typeof window.checkPlanExpiredRedirect === 'function') window.checkPlanExpiredRedirect(config, '../index.html');
-                    initBackgroundSlider(config);
+            titleEl.innerText = pageLabel.toUpperCase();
+        })
+        .catch(err => console.error("Language load error:", err));
+}
 
-                    const rawList = extractAmenities(config);
-                    let newImages = [];
-                    if (rawList.length > 0) {
-                        newImages = rawList.map(item => ({
-                            ...item,
-                            image_url: (item.image_url.startsWith('http') || item.image_url.startsWith('/')) ? item.image_url : basePath + item.image_url
-                        }));
-                    }
+let activeSlideIndex = 0;
+const preloadedCache = {};
 
-                    if (newImages.length > 0 && JSON.stringify(newImages) !== JSON.stringify(images)) {
-                        images = newImages;
-                        currentIndex = 0;
-                        updateDisplay();
-                        startAutoSlide();
-                    }
-                }
-            }).catch(err => console.warn("Background fetch failed:", err));
+function preloadNextImage(index) {
+    if (!images || images.length === 0) return;
+    const nextIdx = (index + 1) % images.length;
+    const nextUrl = images[nextIdx]?.image_url || images[nextIdx];
+    if (nextUrl && !preloadedCache[nextUrl]) {
+        const img = new Image();
+        img.src = nextUrl;
+        preloadedCache[nextUrl] = img;
+    }
+}
 
-            // Standard local offline default fallback
-            if (images.length === 0) {
-                if (window.AndroidBridge && window.AndroidBridge.getPictureList) {
-                    try {
-                        const listString = window.AndroidBridge.getPictureList();
-                        const parsed = JSON.parse(listString);
-                        images = parsed.map((img, i) => ({
-                            title: `Amenity ${i + 1}`,
-                            description: '',
-                            image_url: img
-                        }));
-                    } catch (e) { }
-                }
-            }
+function updateDisplay() {
+    if (!images || images.length === 0 || !images[currentIndex]) return;
 
-            if (images.length === 0) {
-                images = [
-                    { title: "Amenity 1", description: "", image_url: "pics/slide1.jpg" },
-                    { title: "Amenity 2", description: "", image_url: "pics/slide2.jpg" }
-                ];
-            }
+    const item = images[currentIndex];
+    const targetUrl = item.image_url || item;
 
+    // Preload next image in background for fast instant transition
+    preloadNextImage(currentIndex);
+
+    // Update Title & Badge
+    const titleEl = document.getElementById('amenityTitle');
+    const badgeEl = document.getElementById('amenityBadge');
+    const descEl = document.getElementById('amenityDescription');
+    const countEl = document.getElementById('countIndicator');
+
+    if (badgeEl) {
+        const num = currentIndex + 1;
+        badgeEl.innerText = num < 10 ? `0${num}` : `${num}`;
+    }
+
+    if (titleEl) {
+        titleEl.innerText = item.title || 'Amenity';
+    }
+
+    if (countEl) {
+        countEl.innerText = `${currentIndex + 1} / ${images.length}`;
+    }
+
+    if (descEl) {
+        let descText = item.description || '';
+        if (descText.length > 100) {
+            descText = descText.substring(0, 100) + '...';
+        }
+        descEl.innerText = descText;
+    }
+
+    // Render pagination dots
+    const dotsContainer = document.getElementById('slideDots');
+    if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        images.forEach((_, idx) => {
+            const dot = document.createElement('div');
+            dot.className = `slide-dot ${idx === currentIndex ? 'active' : ''}`;
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    const slides = document.querySelectorAll('#amenitiesSlider .amenity-slide');
+    if (!slides || slides.length < 2) return;
+
+    const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
+
+    const tempImg = new Image();
+    tempImg.onload = function () {
+        slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+        slides[nextSlideIndex].classList.add('active');
+        slides[activeSlideIndex].classList.remove('active');
+        activeSlideIndex = nextSlideIndex;
+    };
+    tempImg.onerror = function () {
+        slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
+        slides[nextSlideIndex].classList.add('active');
+        slides[activeSlideIndex].classList.remove('active');
+        activeSlideIndex = nextSlideIndex;
+    };
+    tempImg.src = targetUrl;
+}
+
+function changeSlide(dir) {
+    let next = currentIndex + dir;
+    if (next < 0) { trigger('btnPrev'); return; }
+    if (next >= images.length) { trigger('btnNext'); return; }
+
+    currentIndex = next;
+    updateDisplay();
+    startAutoSlide();
+}
+
+function startAutoSlide() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => {
+        if (images.length > 1) {
+            currentIndex = (currentIndex + 1) % images.length;
             updateDisplay();
-            startAutoSlide();
-
-            let langFile = localStorage.getItem('selectedLangFile') || 'english.json';
-
-            if (window.AndroidBridge && window.AndroidBridge.getSelectedLanguageFile) {
-                langFile = window.AndroidBridge.getSelectedLanguageFile();
-            }
-
-            fetch(`../languages/${langFile}?t=${Date.now()}`)
-                .then(res => res.json())
-                .then(data => {
-                    const titleKey = 'amenities';
-                    const titleEl = document.getElementById('headerTitle');
-                    if (data.icons && data.icons[titleKey]) {
-                        titleEl.innerText = data.icons[titleKey];
-                    } else if (data[titleKey]) {
-                        titleEl.innerText = data[titleKey];
-                    }
-                })
-                .catch(err => console.error("Language load error:", err));
         }
+    }, 10000);
+}
 
-        let activeSlideIndex = 0;
-        const preloadedCache = {};
+function trigger(id) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.classList.add('vibrate');
+        setTimeout(() => el.classList.remove('vibrate'), 400);
+    }
+}
 
-        function preloadNextImage(index) {
-            if (!images || images.length === 0) return;
-            const nextIdx = (index + 1) % images.length;
-            const nextUrl = images[nextIdx]?.image_url || images[nextIdx];
-            if (nextUrl && !preloadedCache[nextUrl]) {
-                const img = new Image();
-                img.src = nextUrl;
-                preloadedCache[nextUrl] = img;
-            }
-        }
+function goBack() {
+    window.location.href = "../index.html";
+}
 
-        function updateDisplay() {
-            if (!images || images.length === 0 || !images[currentIndex]) return;
-            
-            const item = images[currentIndex];
-            const targetUrl = item.image_url || item;
-            
-            // Preload next image in background for fast instant transition
-            preloadNextImage(currentIndex);
-            
-            // Update Title & Badge
-            const titleEl = document.getElementById('amenityTitle');
-            const badgeEl = document.getElementById('amenityBadge');
-            const descEl = document.getElementById('amenityDescription');
-            const countEl = document.getElementById('countIndicator');
-            
-            if (badgeEl) {
-                const num = currentIndex + 1;
-                badgeEl.innerText = num < 10 ? `0${num}` : `${num}`;
-            }
 
-            if (titleEl) {
-                titleEl.innerText = item.title || 'Amenity';
-            }
-
-            if (countEl) {
-                countEl.innerText = `${currentIndex + 1} / ${images.length}`;
-            }
-            
-            if (descEl) {
-                let descText = item.description || '';
-                if (descText.length > 100) {
-                    descText = descText.substring(0, 100) + '...';
-                }
-                descEl.innerText = descText;
-            }
-
-            // Render pagination dots
-            const dotsContainer = document.getElementById('slideDots');
-            if (dotsContainer) {
-                dotsContainer.innerHTML = '';
-                images.forEach((_, idx) => {
-                    const dot = document.createElement('div');
-                    dot.className = `slide-dot ${idx === currentIndex ? 'active' : ''}`;
-                    dotsContainer.appendChild(dot);
-                });
-            }
-
-            const slides = document.querySelectorAll('#amenitiesSlider .amenity-slide');
-            if (!slides || slides.length < 2) return;
-
-            const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
-
-            const tempImg = new Image();
-            tempImg.onload = function() {
-                slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
-                slides[nextSlideIndex].classList.add('active');
-                slides[activeSlideIndex].classList.remove('active');
-                activeSlideIndex = nextSlideIndex;
-            };
-            tempImg.onerror = function() {
-                slides[nextSlideIndex].style.backgroundImage = `url('${targetUrl}')`;
-                slides[nextSlideIndex].classList.add('active');
-                slides[activeSlideIndex].classList.remove('active');
-                activeSlideIndex = nextSlideIndex;
-            };
-            tempImg.src = targetUrl;
-        }
-
-        function changeSlide(dir) {
-            let next = currentIndex + dir;
-            if (next < 0) { trigger('btnPrev'); return; }
-            if (next >= images.length) { trigger('btnNext'); return; }
-
-            currentIndex = next;
-            updateDisplay();
-            startAutoSlide();
-        }
-
-        function startAutoSlide() {
-            clearInterval(autoTimer);
-            autoTimer = setInterval(() => {
-                if (images.length > 1) {
-                    currentIndex = (currentIndex + 1) % images.length;
-                    updateDisplay();
-                }
-            }, 10000);
-        }
-
-        function trigger(id) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.classList.add('vibrate');
-                setTimeout(() => el.classList.remove('vibrate'), 400);
-            }
-        }
-
-        function goBack() {
-            window.location.href = "../index.html";
-        }
-
-        
-window.onTVNavigate = function(direction) {
+window.onTVNavigate = function (direction) {
     if (direction === 'left') {
         changeSlide(-1);
         return true;
@@ -373,16 +376,16 @@ window.onTVNavigate = function(direction) {
     return false;
 };
 
-window.onTVBack = function() {
+window.onTVBack = function () {
     goBack();
     return true;
 };
 
-        
-        window.onload = () => { 
-            initGallery(); 
-            setTimeout(() => {
-                const slider = document.getElementById('amenitiesSlider');
-                if (slider) slider.focus();
-            }, 200); 
-        };
+
+window.onload = () => {
+    initGallery();
+    setTimeout(() => {
+        const slider = document.getElementById('amenitiesSlider');
+        if (slider) slider.focus();
+    }, 200);
+};

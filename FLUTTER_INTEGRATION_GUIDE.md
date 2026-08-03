@@ -442,10 +442,14 @@ Example MIME type map to configure:
 **Option 2 — Load via `file://`**
 Use `loadFile()` or `loadRequest()` on the WebView to load `index.html` from the app's assets directory.
 
-#### B. Configure the WebView
+#### B. Configure the WebView & Android Screen Density
+
+Make sure your WebSettings are configured with wide viewport and density auto-scale mode so all TV resolutions (720p, 1080p, 4K) render the exact same UI ratio:
 
 ```dart
 import 'package:webview_flutter/webview_flutter.dart';
+// Optional: import Android-specific WebView controller if using webview_flutter_android
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 class HotelTvWebView extends StatefulWidget {
   @override
@@ -458,7 +462,23 @@ class _HotelTvWebViewState extends State<HotelTvWebView> {
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
+    
+    final WebViewController controller = WebViewController();
+    
+    // Enable Screen Density & Wide Viewport auto-scaling for Android TV
+    if (controller.platform is AndroidWebViewController) {
+      final androidController = controller.platform as AndroidWebViewController;
+      androidController.setMediaPlaybackRequiresUserGesture(false);
+      
+      // Native Android WebView Settings (Enforces exact UI scaling on 720p, 1080p, 4K TVs)
+      // Note: If using custom Android PlatformView / WebView plugin, ensure:
+      // webSettings.setUseWideViewPort(true);
+      // webSettings.setLoadWithOverviewMode(true);
+      // webSettings.setDomStorageEnabled(true);
+      // webSettings.setJavaScriptEnabled(true);
+    }
+
+    _controller = controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..addJavaScriptChannel(
         'FlutterBridge',
