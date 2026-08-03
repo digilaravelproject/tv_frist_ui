@@ -17,6 +17,10 @@ html, body {
     background-color: transparent; /* Changed based on user feedback */
     color: var(--text-light);
     font-family: sans-serif;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-touch-action: manipulation;
 }
 
 /* Base flex centering for simple pages like settings/languages */

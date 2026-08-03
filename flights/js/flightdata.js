@@ -428,7 +428,7 @@ window.onload = async () => {
         nextBtn.addEventListener('click', () => {
             const flightData = window.FlightModule.getFlightData();
             const currentPage = window.FlightModule.getCurrentPage();
-            const totalPages = Math.ceil(flightData.length / 7);
+            const totalPages = Math.ceil(flightData.length / rowsPerPage);
             if (currentPage < (totalPages - 1)) {
                 window.FlightModule.setCurrentPage(currentPage + 1);
                 window.FlightModule.renderPage();
