@@ -129,7 +129,7 @@ let images = [];
             }
         }
 
-        function extractAmenitiesImages(config) {
+        function extractAmenities(config) {
             if (!config) return [];
             let list = [];
 
@@ -137,12 +137,20 @@ let images = [];
             if (config.amenities && Array.isArray(config.amenities) && config.amenities.length > 0) {
                 list = config.amenities
                     .filter(item => item && (item.image_url || item.url || item.image))
-                    .map(item => item.image_url || item.url || item.image);
+                    .map(item => ({
+                        title: item.title || 'Amenity',
+                        description: item.description || '',
+                        image_url: item.image_url || item.url || item.image
+                    }));
             }
 
             // 2. Fallback: Read from hotel.media.amenities_images if present
             if (list.length === 0 && config.hotel && config.hotel.media && config.hotel.media.amenities_images) {
-                list = config.hotel.media.amenities_images;
+                list = config.hotel.media.amenities_images.map((img, idx) => ({
+                    title: `Amenity ${idx + 1}`,
+                    description: '',
+                    image_url: img
+                }));
             }
 
             return list;
@@ -158,9 +166,12 @@ let images = [];
 
             if (cachedConfig) {
                 initBackgroundSlider(cachedConfig);
-                const rawList = extractAmenitiesImages(cachedConfig);
+                const rawList = extractAmenities(cachedConfig);
                 if (rawList.length > 0) {
-                    images = rawList.map(img => (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img);
+                    images = rawList.map(item => ({
+                        ...item,
+                        image_url: (item.image_url.startsWith('http') || item.image_url.startsWith('/')) ? item.image_url : basePath + item.image_url
+                    }));
                 }
             } else {
                 initBackgroundSlider(null);
@@ -172,10 +183,13 @@ let images = [];
                     if (typeof window.checkPlanExpiredRedirect === 'function') window.checkPlanExpiredRedirect(config, '../index.html');
                     initBackgroundSlider(config);
 
-                    const rawList = extractAmenitiesImages(config);
+                    const rawList = extractAmenities(config);
                     let newImages = [];
                     if (rawList.length > 0) {
-                        newImages = rawList.map(img => (img.startsWith('http') || img.startsWith('/')) ? img : basePath + img);
+                        newImages = rawList.map(item => ({
+                            ...item,
+                            image_url: (item.image_url.startsWith('http') || item.image_url.startsWith('/')) ? item.image_url : basePath + item.image_url
+                        }));
                     }
 
                     if (newImages.length > 0 && JSON.stringify(newImages) !== JSON.stringify(images)) {
@@ -192,13 +206,21 @@ let images = [];
                 if (window.AndroidBridge && window.AndroidBridge.getPictureList) {
                     try {
                         const listString = window.AndroidBridge.getPictureList();
-                        images = JSON.parse(listString);
+                        const parsed = JSON.parse(listString);
+                        images = parsed.map((img, i) => ({
+                            title: `Amenity ${i + 1}`,
+                            description: '',
+                            image_url: img
+                        }));
                     } catch (e) { }
                 }
             }
 
             if (images.length === 0) {
-                images = ["pics/slide1.jpg", "pics/slide2.jpg"];
+                images = [
+                    { title: "Amenity 1", description: "", image_url: "pics/slide1.jpg" },
+                    { title: "Amenity 2", description: "", image_url: "pics/slide2.jpg" }
+                ];
             }
 
             updateDisplay();
@@ -225,14 +247,69 @@ let images = [];
         }
 
         let activeSlideIndex = 0;
+        const preloadedCache = {};
+
+        function preloadNextImage(index) {
+            if (!images || images.length === 0) return;
+            const nextIdx = (index + 1) % images.length;
+            const nextUrl = images[nextIdx]?.image_url || images[nextIdx];
+            if (nextUrl && !preloadedCache[nextUrl]) {
+                const img = new Image();
+                img.src = nextUrl;
+                preloadedCache[nextUrl] = img;
+            }
+        }
 
         function updateDisplay() {
             if (!images || images.length === 0 || !images[currentIndex]) return;
             
+            const item = images[currentIndex];
+            const targetUrl = item.image_url || item;
+            
+            // Preload next image in background for fast instant transition
+            preloadNextImage(currentIndex);
+            
+            // Update Title & Badge
+            const titleEl = document.getElementById('amenityTitle');
+            const badgeEl = document.getElementById('amenityBadge');
+            const descEl = document.getElementById('amenityDescription');
+            const countEl = document.getElementById('countIndicator');
+            
+            if (badgeEl) {
+                const num = currentIndex + 1;
+                badgeEl.innerText = num < 10 ? `0${num}` : `${num}`;
+            }
+
+            if (titleEl) {
+                titleEl.innerText = item.title || 'Amenity';
+            }
+
+            if (countEl) {
+                countEl.innerText = `${currentIndex + 1} / ${images.length}`;
+            }
+            
+            if (descEl) {
+                let descText = item.description || '';
+                if (descText.length > 100) {
+                    descText = descText.substring(0, 100) + '...';
+                }
+                descEl.innerText = descText;
+            }
+
+            // Render pagination dots
+            const dotsContainer = document.getElementById('slideDots');
+            if (dotsContainer) {
+                dotsContainer.innerHTML = '';
+                images.forEach((_, idx) => {
+                    const dot = document.createElement('div');
+                    dot.className = `slide-dot ${idx === currentIndex ? 'active' : ''}`;
+                    dotsContainer.appendChild(dot);
+                });
+            }
+
             const slides = document.querySelectorAll('#amenitiesSlider .amenity-slide');
             if (!slides || slides.length < 2) return;
 
-            const targetUrl = images[currentIndex];
             const nextSlideIndex = activeSlideIndex === 0 ? 1 : 0;
 
             const tempImg = new Image();

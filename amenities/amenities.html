@@ -21,14 +21,29 @@
 
     <div id="headerTitle">Amenities</div>
 
-    <div class="content-box">
-        <div id="amenitiesSlider" tabindex="0">
-            <div class="amenity-slide active"></div>
-            <div class="amenity-slide"></div>
+    <div class="amenities-container">
+        <div class="main-column">
+            <div class="title-card">
+                <div class="title-badge" id="amenityBadge">01</div>
+                <h2 id="amenityTitle">Title</h2>
+            </div>
+            <div class="image-card">
+                <div id="amenitiesSlider" tabindex="0">
+                    <div class="amenity-slide active"></div>
+                    <div class="amenity-slide"></div>
+                </div>
+                <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
+                <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
+                <div class="slide-dots" id="slideDots"></div>
+            </div>
         </div>
-
-        <img src="../images/icons/prev.png" class="nav-icon prev" id="btnPrev" onclick="changeSlide(-1)">
-        <img src="../images/icons/next.png" class="nav-icon next" id="btnNext" onclick="changeSlide(1)">
+        <div class="description-card">
+            <div class="desc-header">
+                <span>DESCRIPTION</span>
+                <span class="count-indicator" id="countIndicator">1 / 1</span>
+            </div>
+            <p id="amenityDescription"></p>
+        </div>
     </div>
 
     

@@ -6,10 +6,10 @@
       "token": "UeDjWSKRmqgcpy1RJjGgJkD7IcZgYYNVTzrNl3DghGz7RZyTmqBa4uP2dgJn3kRTrtUTK0ZC9NhvwMBa"
     },
     "template": {
-      "latest_version": "17.0",
-      "old_version": "16.5",
-      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v17_0_1785482600.zip",
-      "uploaded_at": "2026-07-31T12:53:20+05:30",
+      "latest_version": "19.5",
+      "old_version": "19.0",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v19_5_1785594639.zip",
+      "uploaded_at": "2026-08-01T20:00:39+05:30",
       "is_update_available": false
     },
     "device": {
@@ -51,7 +51,8 @@
           "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_qKGxYQ0h.jpg",
           "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_DiXTBCng.jpg",
           "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_fPtfsJw2.jpg",
-          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_F7P4shPG.jpg"
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_F7P4shPG.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785580200_gallery_quac7LQJ.jpg"
         ],
         "slider_images": [
           "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1785401361_slider_jbjZxuH2.png"
@@ -71,6 +72,11 @@
       "check_out_datetime": null
     },
     "active_ott": [
+      {
+        "id": "playstore",
+        "name": "Google Play Store",
+        "package_name": "com.android.vending"
+      },
       {
         "id": "netflix",
         "name": "Netflix",
@@ -160,6 +166,11 @@
         "id": "voot",
         "name": "Voot",
         "package_name": "com.tv.v18.viola"
+      },
+      {
+        "id": "youtube",
+        "name": "YouTube",
+        "package_name": "com.google.android.youtube.tv"
       }
     ],
     "menus": [
@@ -186,7 +197,7 @@
       {
         "id": "our_city",
         "name": "Our City",
-        "status": "hide"
+        "status": "show"
       },
       {
         "id": "screen_cast",
@@ -196,12 +207,12 @@
       {
         "id": "settings",
         "name": "Settings",
-        "status": "hide"
+        "status": "show"
       },
       {
         "id": "travel",
         "name": "Travel",
-        "status": "hide"
+        "status": "show"
       },
       {
         "id": "weather",
@@ -213,36 +224,43 @@
       {
         "sr_no": 1,
         "title": "a",
+        "description": "",
         "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/1PlJhvLDi9857iRqVq3qlRPuwqYdfKsLVEvMHCVA.jpg"
       },
       {
         "sr_no": 2,
-        "title": "b",
-        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/AcXwhKxyO26oycdKeTS8c7g30oMt0YK8PiH0okIy.jpg"
+        "title": "Taj Garden",
+        "description": "Taj Garden nsdjbvnds   bnb bsjbns  snb jbsnj  ms nbxcjvnsd   bjivvsnd  sbvijsdc  bjskjsm nkasnjb jbs",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/amenity_1785742635_rZnhbR7D.webp"
       },
       {
         "sr_no": 3,
         "title": "c",
+        "description": "",
         "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/TTf1vdFRFFfXFqgLH3xAOMiMPRwr5N055NBulAZE.jpg"
       },
       {
         "sr_no": 4,
         "title": "d",
+        "description": "",
         "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/mxTzlNf3KCpzIjXVvdqYiHCvlHlea537vdbRPHCL.jpg"
       },
       {
         "sr_no": 5,
         "title": "e",
+        "description": "",
         "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/6LE5V0x8Drb6d5pMfXNEnRsB9jUY9ahRH7zil2VP.jpg"
       },
       {
         "sr_no": 6,
         "title": "f",
+        "description": "",
         "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/aIHaFW8501ttYS52mTOlYs29Cbs3SCCQNUng0DMp.jpg"
       },
       {
         "sr_no": 7,
         "title": "g",
+        "description": "",
         "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/BZo1RNZYCOsFZ4NqNmiSVD6T3k67fTWRwFWz0z5T.jpg"
       }
     ]

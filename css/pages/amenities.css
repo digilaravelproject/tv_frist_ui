@@ -48,29 +48,153 @@
         #headerTitle {
             color: var(--gold);
             font-size: 1.8rem;
-            /* Reduced to match APPLICATIONS header size */
             font-weight: bold;
             text-transform: uppercase;
-            margin-top: 85px;
-            /* Increased distance from top to clear logo */
+            margin-top: 60px;
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             letter-spacing: 2px;
         }
 
-        /* Container for the gallery */
-        .content-box {
-            position: relative;
-            width: 80vw;
-            height: 70vh;
-            /* Proportionally matched to the apps grid height */
-            border: 3px solid var(--gold);
-            background: rgba(0, 0, 0, 0.5);
+        /* Container for grid layout matching design sketch */
+        .amenities-container {
             display: flex;
-            justify-content: center;
+            width: 85vw;
+            height: 70vh;
+            gap: 25px;
+            box-sizing: border-box;
+        }
+
+        .main-column {
+            flex: 2.8;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: 100%;
+        }
+
+        .title-card {
+            border: 2px solid rgba(179, 138, 45, 0.7);
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.85), rgba(5, 5, 5, 0.95));
+            border-radius: 14px;
+            padding: 12px 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(179, 138, 45, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
             align-items: center;
+            gap: 15px;
+        }
+
+        .title-badge {
+            background: linear-gradient(135deg, #d4af37, #996515);
+            color: #000;
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 6px 14px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+        }
+
+        .title-card h2 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .image-card {
+            flex: 1;
+            position: relative;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+            border: 2px solid rgba(179, 138, 45, 0.7);
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(179, 138, 45, 0.1);
+        }
+
+        .slide-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 12;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 14px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slide-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .slide-dot.active {
+            background: var(--gold);
+            width: 26px;
             border-radius: 10px;
+            box-shadow: 0 0 8px rgba(179, 138, 45, 0.8);
+        }
+
+        .description-card {
+            flex: 1.2;
+            border: 2px solid rgba(179, 138, 45, 0.7);
+            background: linear-gradient(145deg, rgba(18, 18, 18, 0.85), rgba(8, 8, 8, 0.95));
+            border-radius: 14px;
+            padding: 28px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(179, 138, 45, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .desc-header {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(179, 138, 45, 0.3);
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .count-indicator {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(179, 138, 45, 0.15);
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(179, 138, 45, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .description-card p {
+            color: #e5e5e5;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            margin: 0;
+            word-wrap: break-word;
+            letter-spacing: 0.5px;
         }
 
         #amenitiesSlider {
@@ -107,6 +231,7 @@
             z-index: 10;
             opacity: 0.8;
             transition: opacity 0.2s ease, filter 0.2s ease;
+            cursor: pointer;
         }
 
         .nav-icon.active-focus {
