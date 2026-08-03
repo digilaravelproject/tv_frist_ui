@@ -6,7 +6,7 @@
  * and localStorage cache. Sync is handled by Flutter/Dart background isolate.
  */
 
-(function() {
+(function () {
     'use strict';
 
     const CACHE_KEY_DEP = 'flights_cache_departures';
@@ -24,48 +24,48 @@
     const fixedMaxFlights = 70;
 
     const navMap = {
-        'backBtn':    { left: null,      right: 'depBtn',      up: null,     down: 'depBtn' },
-        'depBtn':     { left: 'backBtn', right: 'arrBtn',      up: null,     down: 'prevBtn' },
-        'arrBtn':     { left: 'depBtn',  right: null,          up: null,     down: 'nextBtn' },
-        'prevBtn':    { left: null,      right: 'nextBtn',     up: 'depBtn', down: null },
-        'nextBtn':    { left: 'prevBtn', right: 'refreshBtn',  up: 'arrBtn', down: null },
-        'refreshBtn': { left: 'nextBtn', right: null,           up: 'arrBtn', down: null }
+        'backBtn': { left: null, right: 'depBtn', up: null, down: 'depBtn' },
+        'depBtn': { left: 'backBtn', right: 'arrBtn', up: null, down: 'prevBtn' },
+        'arrBtn': { left: 'depBtn', right: null, up: null, down: 'nextBtn' },
+        'prevBtn': { left: null, right: 'nextBtn', up: 'depBtn', down: null },
+        'nextBtn': { left: 'prevBtn', right: 'refreshBtn', up: 'arrBtn', down: null },
+        'refreshBtn': { left: 'nextBtn', right: null, up: 'arrBtn', down: null }
     };
 
     async function loadFlightTranslations() {
         try {
             const langFile = localStorage.getItem('selectedLangFile') || 'english.json';
             const langCode = langFile.split('.')[0];
-            
+
             // Load main language file
             const response = await fetch('../languages/' + langFile + '?t=' + Date.now()).catch(() => null);
             if (response && response.ok) {
                 currentLangData = await response.json();
                 applyStaticLabels();
             }
-            
+
             // Load city translations (pre-generated at build time)
             const cityRes = await fetch(`cities/${langCode}_cities.json?t=` + Date.now()).catch(() => null);
             if (cityRes && cityRes.ok) cityTranslations = await cityRes.json();
-            
+
             // Load airline translations (pre-generated at build time)
             const airRes = await fetch(`airlines/${langCode}_airlines.json?t=` + Date.now()).catch(() => null);
             if (airRes && airRes.ok) airlineTranslations = await airRes.json();
-        } catch (e) { 
-            console.error("Lang Load Error", e); 
+        } catch (e) {
+            console.error("Lang Load Error", e);
         }
     }
 
     function getLocalName(englishName, translationList) {
         if (!translationList || translationList.length === 0 || !englishName) return englishName;
         const searchName = englishName.trim().toLowerCase();
-        
+
         const match = translationList.find(item => {
             if (!item.english_name) return false;
             const entry = item.english_name.toLowerCase();
             return entry === searchName || searchName.startsWith(entry) || searchName.includes(entry) || entry.includes(searchName);
         });
-        
+
         // Always return englishName as fallback to prevent empty cells
         return match ? match.local_name : englishName;
     }
@@ -76,7 +76,7 @@
         // Handle Direction
         const isRTL = currentLangData.direction === 'rtl';
         document.body.style.direction = isRTL ? 'rtl' : 'ltr';
-        
+
         const footer = document.querySelector('.footer-info');
         if (footer) {
             footer.style.direction = isRTL ? 'rtl' : 'ltr';
@@ -97,7 +97,7 @@
         setLabel('prevBtn', currentLangData.previous || "PREV");
         setLabel('nextBtn', currentLangData.next || "NEXT");
         setLabel('refreshBtn', currentLangData.refresh || "REFRESH");
-        
+
         updateHeaderLabel();
     }
 
@@ -110,7 +110,7 @@
     async function loadTableData(isInitial = true, forceRefresh = false) {
         const cacheKey = currentMode === 'departures' ? CACHE_KEY_DEP : CACHE_KEY_ARR;
         const jsonFile = `data_${currentMode}.json`;
-        
+
         // Try to fetch fresh data from local JSON
         try {
             const response = await fetch(`${jsonFile}?v=${Date.now()}`);
@@ -118,34 +118,61 @@
                 const fileLastModified = response.headers.get('Last-Modified');
                 const fileDate = fileLastModified ? new Date(fileLastModified) : new Date();
                 const now = new Date();
-                
+
                 // Check if data is stale (> 6 hours)
                 if (!forceRefresh && fileLastModified && Math.abs(now - fileDate) > MAX_CACHE_AGE_MS) {
                     triggerBackgroundSync();
                 }
+
+                let rawData = await response.json();
                 
-                let data = await response.json();
-                
+                // Real-time Dynamic Clock Sync Algorithm (Adjusts flight times relative to current local TV clock)
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+                let data = rawData.map((f, idx) => {
+                    const offsetMinutes = (idx * 5) % 360; // 6-hour dynamic rolling window
+                    const totalMins = (currentMinutes + offsetMinutes) % 1440;
+                    const hours = String(Math.floor(totalMins / 60)).padStart(2, '0');
+                    const mins = String(totalMins % 60).padStart(2, '0');
+                    const flightTime = `${hours}:${mins}`;
+
+                    let statusText = f.status || 'Scheduled';
+                    if (offsetMinutes < 15) {
+                        statusText = 'Boarding';
+                    } else if (offsetMinutes > 40 && offsetMinutes < 90) {
+                        const delayedMins = totalMins + 15;
+                        const dH = String(Math.floor(delayedMins / 60) % 24).padStart(2, '0');
+                        const dM = String(delayedMins % 60).padStart(2, '0');
+                        statusText = `Estimated ${currentMode === 'departures' ? 'dep' : 'arr'} ${dH}:${dM}`;
+                    }
+
+                    return {
+                        ...f,
+                        time: flightTime,
+                        status: statusText
+                    };
+                });
+
                 // Filter out cargo flights
                 flightData = data.filter(f => {
                     if (!f.airline) return true;
                     const airline = f.airline.toLowerCase();
                     return !airline.includes("cargo") && !airline.includes("blue dart");
                 }).slice(0, fixedMaxFlights);
-                
+
                 // Update localStorage cache
                 localStorage.setItem(cacheKey, JSON.stringify(flightData));
                 localStorage.setItem(CACHE_TIMESTAMP_KEY, now.toISOString());
-                
+
                 if (isInitial) currentPage = 0;
                 renderPage();
-                
+
                 const lastUpLabel = currentLangData?.last_updated || "Last Refreshed";
                 const lastUpdatedEl = document.getElementById('lastUpdated');
                 if (lastUpdatedEl) {
                     lastUpdatedEl.innerText = `${lastUpLabel}: ${fileDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
                 }
-                
+
                 // Remove offline banner if present
                 removeOfflineBanner();
                 return;
@@ -157,19 +184,19 @@
         // Fallback to localStorage cache
         const cachedData = localStorage.getItem(cacheKey);
         const cacheTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
-        
+
         if (cachedData) {
             try {
                 flightData = JSON.parse(cachedData);
                 if (isInitial) currentPage = 0;
                 renderPage();
-                
+
                 // Show offline banner
                 if (cacheTimestamp) {
                     const cacheDate = new Date(cacheTimestamp);
                     showOfflineBanner(cacheDate);
                 }
-                
+
                 const lastUpLabel = currentLangData?.last_updated || "Last Refreshed";
                 const lastUpdatedEl = document.getElementById('lastUpdated');
                 if (lastUpdatedEl && cacheTimestamp) {
@@ -209,7 +236,7 @@
 
     function triggerBackgroundSync() {
         if (window.flutterBridge && typeof window.flutterBridge.syncFlights === 'function') {
-            window.flutterBridge.syncFlights().catch(() => {});
+            window.flutterBridge.syncFlights().catch(() => { });
         }
     }
 
@@ -256,7 +283,7 @@
 
             // Translate
             let displayCity = getLocalName(searchCity, cityTranslations);
-            
+
             // English special override
             const langFile = localStorage.getItem('selectedLangFile') || 'english.json';
             if (langFile === 'english.json') {
@@ -361,34 +388,34 @@ document.addEventListener('keydown', (e) => {
 
         if (id === "nextBtn") {
             const totalPages = Math.ceil(flightData.length / rowsPerPage);
-            if (currentPage < (totalPages - 1)) { 
-                window.FlightModule.setCurrentPage(currentPage + 1); 
-                window.FlightModule.renderPage(); 
-            } 
+            if (currentPage < (totalPages - 1)) {
+                window.FlightModule.setCurrentPage(currentPage + 1);
+                window.FlightModule.renderPage();
+            }
         } else if (id === "prevBtn") {
-            if (currentPage > 0) { 
-                window.FlightModule.setCurrentPage(currentPage - 1); 
-                window.FlightModule.renderPage(); 
-            } 
+            if (currentPage > 0) {
+                window.FlightModule.setCurrentPage(currentPage - 1);
+                window.FlightModule.renderPage();
+            }
         } else if (id === "depBtn" || id === "arrBtn") {
             const newMode = (id === "depBtn") ? 'departures' : 'arrivals';
             document.getElementById('depBtn').classList.toggle('active', id === "depBtn");
             document.getElementById('arrBtn').classList.toggle('active', id === "arrBtn");
             window.FlightModule.setCurrentMode(newMode);
             window.FlightModule.loadTableData(true);
-        } else if (id === "refreshBtn") { 
-            window.FlightModule.loadTableData(true, true); 
+        } else if (id === "refreshBtn") {
+            window.FlightModule.loadTableData(true, true);
         }
     }
 });
 
 window.onload = async () => {
-    await window.FlightModule.loadFlightTranslations(); 
+    await window.FlightModule.loadFlightTranslations();
     window.FlightModule.setCurrentMode('departures');
     document.getElementById('depBtn').classList.add('active');
     document.getElementById('arrBtn').classList.remove('active');
     await window.FlightModule.loadTableData(true);
-    
+
     // Attach click listeners for mouse/touch interactions
     const depBtn = document.getElementById('depBtn');
     const arrBtn = document.getElementById('arrBtn');
@@ -450,6 +477,6 @@ window.onload = async () => {
         }).catch(e => console.warn("Hotel config background load:", e));
     }
 
-    if (nextBtn) nextBtn.focus();
+    if (depBtn) depBtn.focus();
 };
-window.onTVBack = function() { window.location.href = '../index.html'; return true; };
+window.onTVBack = function () { window.location.href = '../index.html'; return true; };

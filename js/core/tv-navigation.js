@@ -215,7 +215,11 @@
             if (overrideId) {
                 var overrideTarget = document.getElementById(overrideId);
                 if (overrideTarget) {
+                    var prevActive = document.querySelector('.active-focus');
+                    if (prevActive) prevActive.classList.remove('active-focus');
                     overrideTarget.focus();
+                    overrideTarget.classList.add('active-focus');
+                    overrideTarget.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
                     return;
                 }
             }
@@ -654,10 +658,9 @@
                 e.target.classList.remove('active-focus');
             }, true);
 
-            // Sync mouse hover with TV focus (excluding homepage carousel icons to maintain center focus)
-            document.addEventListener('mouseover', function (e) {
+            // Sync mouse hover with TV focus (Disabled mouseover focus hijack so D-pad arrow keys work reliably)
+            document.addEventListener('click', function (e) {
                 var el = e.target.closest(FOCUSABLE_SELECTOR);
-                if (el && el.classList.contains('icon-item')) return; // Ignore homepage carousel icons on mouseover
                 if (el && document.activeElement !== el) {
                     el.focus();
                 }

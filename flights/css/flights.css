@@ -20,18 +20,18 @@
 }
 
 html {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 @media screen and (min-width: 1920px) {
     html {
-        font-size: 18px;
+        font-size: 15px;
     }
 }
 
 @media screen and (max-width: 1280px) {
     html {
-        font-size: 14px;
+        font-size: 13px;
     }
 }
 
@@ -69,11 +69,11 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0.6rem 3%;
-    background: rgba(12, 17, 27, 0.75);
-    backdrop-filter: blur(1rem);
-    -webkit-backdrop-filter: blur(1rem);
+    background: rgba(12, 17, 27, 0.45);
+    backdrop-filter: blur(0.8rem);
+    -webkit-backdrop-filter: blur(0.8rem);
     border-bottom: 1px solid rgba(229, 184, 66, 0.2);
-    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.3);
     min-height: 5.5rem;
 }
 
@@ -164,6 +164,8 @@ body {
     padding: 15px 35px 10px 35px;
     gap: 15px;
     width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
     box-sizing: border-box;
 }
 
@@ -235,9 +237,9 @@ body .hotel-logo-container img {
     position: relative;
     width: 100%;
     flex: 1;
-    background: var(--card-glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(15, 22, 35, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     overflow: hidden;
@@ -329,7 +331,11 @@ th:nth-child(6), td:nth-child(6) { width: 18%; font-weight: 700; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.6rem 4%;
+    padding: 0.8rem 3.5%;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    box-sizing: border-box;
     background: rgba(12, 17, 27, 0.75);
     backdrop-filter: blur(1rem);
     border-top: 1px solid rgba(255, 255, 255, 0.1);

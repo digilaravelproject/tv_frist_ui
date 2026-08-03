@@ -24,7 +24,7 @@
     <!-- Top Header Bar -->
     <header class="flight-header">
         <div class="header-left">
-            <button id="backBtn" class="back-btn-pill" tabindex="0" onclick="window.location.href='../index.html'">
+            <button id="backBtn" class="back-btn-pill" tabindex="0" data-nav-down="depBtn" data-nav-right="depBtn" data-nav-left="refreshBtn" onclick="window.location.href='../index.html'">
                 <i class="fa-solid fa-arrow-left"></i> BACK
             </button>
         </div>
@@ -39,10 +39,10 @@
     <!-- Main Container -->
     <main class="flight-board-wrapper">
         <div class="tabs-container">
-            <button id="depBtn" class="flight-tab active" tabindex="0">
+            <button id="depBtn" class="flight-tab active" tabindex="0" data-nav-left="backBtn" data-nav-right="arrBtn" data-nav-up="backBtn" data-nav-down="prevBtn">
                 <i class="fa-solid fa-plane-departure"></i> DEPARTURES
             </button>
-            <button id="arrBtn" class="flight-tab" tabindex="0">
+            <button id="arrBtn" class="flight-tab" tabindex="0" data-nav-left="depBtn" data-nav-right="refreshBtn" data-nav-up="backBtn" data-nav-down="nextBtn">
                 <i class="fa-solid fa-plane-arrival"></i> ARRIVALS
             </button>
         </div>
@@ -87,15 +87,15 @@
             </div>
         </div>
         <div class="center-controls">
-            <button id="prevBtn" class="flight-btn-sec" tabindex="0">
+            <button id="prevBtn" class="flight-btn-sec" tabindex="0" data-nav-left="depBtn" data-nav-right="nextBtn" data-nav-up="depBtn" data-nav-down="depBtn">
                 <i class="fa-solid fa-chevron-left"></i> PREV
             </button>
-            <button id="nextBtn" class="flight-btn-sec" tabindex="0">
+            <button id="nextBtn" class="flight-btn-sec" tabindex="0" data-nav-left="prevBtn" data-nav-right="refreshBtn" data-nav-up="arrBtn" data-nav-down="arrBtn">
                 NEXT <i class="fa-solid fa-chevron-right"></i>
             </button>
         </div>
         <div class="footer-right">
-            <button id="refreshBtn" class="flight-btn-action" tabindex="0">
+            <button id="refreshBtn" class="flight-btn-action" tabindex="0" data-nav-left="nextBtn" data-nav-right="backBtn" data-nav-up="arrBtn" data-nav-down="arrBtn">
                 <i class="fa-solid fa-arrows-rotate"></i> REFRESH
             </button>
         </div>

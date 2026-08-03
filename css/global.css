@@ -12,20 +12,30 @@
     box-sizing: border-box;
 }
 
+html {
+    font-size: 14px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+@media screen and (min-width: 1920px) {
+    html {
+        font-size: 15px;
+    }
+}
+
 html, body {
     margin: 0;
     padding: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: transparent; /* Changed based on user feedback */
+    background-color: transparent;
     color: var(--text-light);
     font-family: sans-serif;
     touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
     -ms-touch-action: manipulation;
 }
 
