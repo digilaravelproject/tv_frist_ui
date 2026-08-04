@@ -161,7 +161,13 @@
                         `;
                         appCard.addEventListener('click', function() {
                             try {
-                                alert(`Launching ${app.name}...`);
+                                const pkgName = app.package_name || app.packageName || app.pkg || app.name;
+                                console.log('[SmartTVApp] Launching native application:', app.name, pkgName);
+                                if (window.flutterBridge && typeof window.flutterBridge.launchApp === 'function') {
+                                    window.flutterBridge.launchApp(pkgName);
+                                } else if (window.FlutterBridge && typeof window.FlutterBridge.postMessage === 'function') {
+                                    window.FlutterBridge.postMessage(JSON.stringify({ method: 'launchApp', args: [pkgName], id: Date.now() }));
+                                }
                             } catch (err) {
                                 console.error('[SmartTVApp] App click error:', err);
                             }
@@ -244,8 +250,24 @@
         try {
             const link = item.getAttribute('data-link');
             const action = item.getAttribute('data-action');
+            const menuId = item.getAttribute('data-menu-id');
 
             if (link) {
+                // Coming Soon feature guard for City Guide & Explore Travel
+                if (link.includes('city') || link.includes('travel') || menuId === 'our_city' || menuId === 'travel') {
+                    if (window.TVModal && window.TVModal.showNotice) {
+                        const labelEl = item.querySelector('.nav-label');
+                        const featureName = labelEl ? labelEl.textContent : 'This Feature';
+                        window.TVModal.showNotice(
+                            'Coming Soon',
+                            `${featureName} is coming soon to your in-room Smart TV experience. Stay tuned!`,
+                            '🚀',
+                            'OK'
+                        );
+                    }
+                    return;
+                }
+
                 // If navigation requires internet (weather/flight) and device is offline, block navigation & show No Internet modal on homepage
                 if ((link.includes('weather') || link.includes('flight')) && !navigator.onLine) {
                     if (window.TVModal && window.TVModal.showOfflineNotice) {

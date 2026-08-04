@@ -49,6 +49,15 @@
     user-select: none;
     -webkit-user-select: none;
     outline: none;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+/* Hide Scrollbars completely across Smart TV app */
+::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 html, body {

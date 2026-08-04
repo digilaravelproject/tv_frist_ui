@@ -54,38 +54,54 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(10, 14, 26, 0.92);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    z-index: 1000;
+    background: rgba(7, 10, 18, 0.96);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    z-index: 10000;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
 }
 
 .overlay-modal-glass {
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--border-radius-lg);
-    padding: 2.5vw;
-    width: 80%;
-    max-width: 1200px;
-    max-height: 80vh;
+    background: linear-gradient(145deg, rgba(12, 17, 29, 0.98), rgba(7, 10, 18, 0.98));
+    border: none;
+    border-radius: 0;
+    padding: 3.5vw 5vw;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
     overflow-y: auto;
-    box-shadow: var(--glass-shadow);
+    box-shadow: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.overlay-modal-glass::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2vw;
+    margin-bottom: 2.5vw;
+    padding-bottom: 1vw;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-header h2 {
-    font-size: 2vw;
-    color: var(--text-primary);
+    font-size: 2.2vw;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
 }
 
 .apps-grid {
@@ -140,6 +156,27 @@
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 2vw;
+}
+
+#appsCloseBtn, #castCloseBtn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 1.1vw;
+    font-weight: 700;
+    padding: 0.7vw 1.8vw;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#appsCloseBtn:focus, #appsCloseBtn:hover,
+#castCloseBtn:focus, #castCloseBtn:hover {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    color: #000000;
+    border-color: #00f2fe;
+    box-shadow: 0 0 30px rgba(0, 242, 254, 0.8);
+    transform: scale(1.08);
 }
 
 /* Reusable Glassmorphism Smart TV Offline Modal Component */

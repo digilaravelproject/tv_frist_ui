@@ -14,29 +14,31 @@
      * Call window.TVModal.showOfflineNotice() anywhere in the application.
      */
     window.TVModal = {
-        showOfflineNotice: function(options) {
-            options = options || {};
-            const title = options.title || 'No Internet Connection';
-            const message = options.message || 'Live feeds require an active network connection. Please check your TV Wi-Fi or Ethernet settings.';
-            const buttonText = options.buttonText || 'OK';
+        showNotice: function(title, message, iconEmoji, buttonText) {
+            const titleStr = title || 'Coming Soon';
+            const msgStr = message || 'This feature is coming soon to your Smart TV experience.';
+            const iconStr = iconEmoji || '✨';
+            const btnStr = buttonText || 'OK';
 
             let modal = document.getElementById('tv-offline-modal');
             if (modal) {
                 modal.style.display = 'flex';
+                const iconEl = modal.querySelector('.tv-offline-icon-badge');
                 const titleEl = modal.querySelector('.tv-offline-title');
                 const descEl = modal.querySelector('.tv-offline-desc');
-                if (titleEl) titleEl.textContent = title;
-                if (descEl) descEl.textContent = message;
+                if (iconEl) iconEl.textContent = iconStr;
+                if (titleEl) titleEl.textContent = titleStr;
+                if (descEl) descEl.textContent = msgStr;
             } else {
                 modal = document.createElement('div');
                 modal.id = 'tv-offline-modal';
                 modal.className = 'tv-offline-modal-overlay';
                 modal.innerHTML = `
                     <div class="tv-offline-modal-card">
-                        <div class="tv-offline-icon-badge">📡</div>
-                        <h2 class="tv-offline-title">${title}</h2>
-                        <p class="tv-offline-desc">${message}</p>
-                        <button id="tv-offline-close-btn" class="tv-offline-btn focusable" tabindex="0">${buttonText}</button>
+                        <div class="tv-offline-icon-badge">${iconStr}</div>
+                        <h2 class="tv-offline-title">${titleStr}</h2>
+                        <p class="tv-offline-desc">${msgStr}</p>
+                        <button id="tv-offline-close-btn" class="tv-offline-btn focusable" tabindex="0">${btnStr}</button>
                     </div>
                 `;
                 document.body.appendChild(modal);
@@ -44,7 +46,7 @@
                 const closeBtn = document.getElementById('tv-offline-close-btn');
                 if (closeBtn) {
                     closeBtn.addEventListener('click', function() {
-                        window.TVModal.hideOfflineNotice();
+                        window.TVModal.hideNotice();
                     });
                 }
             }
@@ -55,12 +57,26 @@
             if (window.TVNavigation) window.TVNavigation.refresh();
         },
 
-        hideOfflineNotice: function() {
+        showOfflineNotice: function(options) {
+            options = options || {};
+            this.showNotice(
+                options.title || 'No Internet Connection',
+                options.message || 'Live feeds require an active network connection. Please check your TV Wi-Fi or Ethernet settings.',
+                '📡',
+                options.buttonText || 'OK'
+            );
+        },
+
+        hideNotice: function() {
             const modal = document.getElementById('tv-offline-modal');
             if (modal) {
                 modal.style.display = 'none';
             }
             if (window.TVNavigation) window.TVNavigation.refresh();
+        },
+
+        hideOfflineNotice: function() {
+            this.hideNotice();
         }
     };
 
