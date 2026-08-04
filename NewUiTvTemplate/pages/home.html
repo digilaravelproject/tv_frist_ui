@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Home Dashboard</title>
+    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/tv-navigation.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/home.css">
+    
+    <script src="../js/tv-navigation.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/modules/home.js" defer></script>
+</head>
+<body class="tv-viewport">
+    
+    <main class="tv-safe-zone">
+        
+        <!-- Welcome Hero Banner -->
+        <section class="glass-card home-hero-banner focusable" tabindex="0">
+            <div class="hero-content">
+                <span class="hero-subtitle">LUXURY HOSPITALITY EXPERIENCE</span>
+                <h1 class="hero-title">Welcome to Grand Palace Resort</h1>
+                <p class="hero-desc">Enjoy world-class amenities, fine dining, live TV streaming, and personalized services right from your screen.</p>
+            </div>
+            <div class="hero-quick-actions">
+                <button class="tv-btn focusable" tabindex="0" onclick="window.parent.location.href='weather.html'">☀️ Live Weather</button>
+                <button class="tv-btn focusable" tabindex="0" onclick="window.parent.location.href='amenities.html'">🏊 Amenities</button>
+            </div>
+        </section>
+
+        <!-- Quick Services Grid -->
+        <section class="home-services-grid">
+            
+            <div class="glass-card service-card focusable" tabindex="0">
+                <div class="card-icon">🍽️</div>
+                <h3>In-Room Dining</h3>
+                <p>Order fresh gourmet meals directly to your suite.</p>
+            </div>
+
+            <div class="glass-card service-card focusable" tabindex="0">
+                <div class="card-icon">💆</div>
+                <h3>Spa & Wellness</h3>
+                <p>Book relaxing massages and sauna sessions.</p>
+            </div>
+
+            <div class="glass-card service-card focusable" tabindex="0">
+                <div class="card-icon">🚗</div>
+                <h3>Airport Shuttle</h3>
+                <p>Schedule luxury private transfers anytime.</p>
+            </div>
+
+            <div class="glass-card service-card focusable" tabindex="0">
+                <div class="card-icon">🛎️</div>
+                <h3>Front Desk Care</h3>
+                <p>Contact housekeeping or request extra towels.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

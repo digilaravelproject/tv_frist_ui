@@ -1,0 +1,159 @@
+/* Reusable Glassmorphism Cards & Overlay Components */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--glass-shadow);
+    padding: 2vw;
+}
+
+.glass-panel {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--glass-shadow);
+}
+
+.tv-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8vw 2vw;
+    font-size: 1.1vw;
+    border-radius: var(--border-radius-md);
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+}
+
+.tv-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vw;
+    padding: 0.6vw 1.2vw;
+    font-size: 1vw;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+}
+
+/* TV Overlay & Modal System */
+.hidden,
+.tv-overlay.hidden {
+    display: none !important;
+}
+
+.tv-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 14, 26, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay-modal-glass {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5vw;
+    width: 80%;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--glass-shadow);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2vw;
+}
+
+.modal-header h2 {
+    font-size: 2vw;
+    color: var(--text-primary);
+}
+
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5vw;
+}
+
+.app-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-md);
+    padding: 1.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vw;
+    text-align: center;
+    transition: var(--transition-smooth);
+}
+
+.app-icon-wrapper {
+    font-size: 3vw;
+}
+
+.app-name {
+    font-size: 1vw;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.cast-box {
+    text-align: center;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vw;
+}
+
+.cast-icon-large {
+    font-size: 4vw;
+}
+
+.cast-box h2 {
+    font-size: 2vw;
+    color: var(--accent-cyan);
+}
+
+.cast-box p {
+    font-size: 1.1vw;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.loading-active { display: flex; }
+.error-hidden { display: none; }
+
+.tv-spinner {
+    width: 4vw;
+    height: 4vw;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid var(--accent-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

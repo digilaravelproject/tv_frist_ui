@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart TV UI - Premium Hotel Experience</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tv-navigation.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/home.css">
+
+    <script src="js/bridge.js" defer></script>
+    <script src="js/tv-navigation.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/modules/home.js" defer></script>
+</head>
+
+<body class="tv-viewport">
+
+    <!-- Ambient Fullscreen Background Slider with Auto-Transition -->
+    <div class="tv-bg-wrapper">
+        <div id="bg-slide-1" class="bg-image-slide active-slide" style="background-image: url('../images/main.jpg');">
+        </div>
+        <div id="bg-slide-2" class="bg-image-slide" style="background-image: url('../images/2main.jpg');"></div>
+        <div class="bg-overlay-gradient"></div>
+    </div>
+
+    <!-- Main TV Shell Container -->
+    <div class="tv-shell-container">
+
+        <!-- Left Vertical Glassmorphic Sidebar Navigation (Apple TV / Google TV Style) -->
+        <aside class="tv-sidebar-glass">
+            <div class="brand-logo-area">
+                <img id="hotel-logo-img" class="hotel-logo-img" src="" alt="Logo" style="display:none;">
+            </div>
+
+            <nav class="sidebar-nav-list">
+                <div class="nav-item focusable" tabindex="0" data-menu-id="amenities" data-link="pages/amenities.html">
+                    <span class="nav-icon"><img src="images/icons/amenities.png" class="menu-icon-img" alt="Amenities"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Amenities</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="applications" data-action="apps">
+                    <span class="nav-icon"><img src="images/icons/applications.png" class="menu-icon-img"
+                            alt="Applications" loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Applications</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="our_city" data-link="pages/city.html">
+                    <span class="nav-icon"><img src="images/icons/city.png" class="menu-icon-img" alt="City Guide"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">City Guide</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="travel" data-link="pages/travel.html">
+                    <span class="nav-icon"><img src="images/icons/travel.png" class="menu-icon-img" alt="Explore Travel"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Explore Travel</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="flights" data-link="pages/flights.html">
+                    <span class="nav-icon"><img src="images/icons/flights.png" class="menu-icon-img" alt="Flight Status"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Flight Status</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="hotel_info"
+                    data-link="pages/hotel_info.html">
+                    <span class="nav-icon"><img src="images/icons/hotel_info.png" class="menu-icon-img" alt="Hotel Info"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Hotel Info</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="languages" data-link="pages/languages.html">
+                    <span class="nav-icon"><img src="images/icons/languages.png" class="menu-icon-img" alt="Languages"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Languages</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="live_tv" data-action="livetv">
+                    <span class="nav-icon"><img src="images/icons/livetv.png" class="menu-icon-img" alt="Live TV"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Live TV</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="screen_cast" data-action="cast">
+                    <span class="nav-icon"><img src="images/icons/cast.png" class="menu-icon-img" alt="Screen Cast"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Screen Cast</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="settings" data-link="pages/settings.html">
+                    <span class="nav-icon"><img src="images/icons/settings.png" class="menu-icon-img" alt="Settings"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Settings</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="input" data-action="input">
+                    <span class="nav-icon"><img src="images/icons/input.png" class="menu-icon-img" alt="TV Inputs"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">TV Inputs</span>
+                </div>
+                <div class="nav-item focusable" tabindex="0" data-menu-id="weather" data-link="pages/weather.html">
+                    <span class="nav-icon"><img src="images/icons/weather.png" class="menu-icon-img" alt="Weather"
+                            loading="lazy" decoding="async"></span>
+                    <span class="nav-label">Weather</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Right Hero & Dashboard Workspace -->
+        <main class="tv-main-content">
+
+            <!-- Top Status Bar (Greeting, Center Hotel Logo, Room Badge, Live Clock) -->
+            <header class="top-status-header">
+                <div class="status-left">
+                    <h2 id="greeting" class="guest-greeting-title">--</h2>
+                    <span id="hotel-subtitle" class="hotel-sub-name">--</span>
+                </div>
+                <div class="status-right">
+                    <div class="status-pill room-pill">
+                        <span class="pill-icon">🔑</span>
+                        <span id="room">ROOM --</span>
+                    </div>
+                    <div class="header-clock-badge">
+                        <span class="pulse-dot"></span>
+                        <span id="live-clock">--:--:-- -- | ---, --- --</span>
+                    </div>
+                </div>
+            </header>
+
+
+
+            <!-- Bottom Quick Shortcuts Carousel Grid -->
+            <section class="shortcuts-section">
+                <h3 class="section-label">QUICK ACCESS SERVICES</h3>
+                <div class="shortcuts-grid">
+
+                    <div class="quick-card focusable" tabindex="0" data-action="apps">
+                        <div class="q-icon-box">📺</div>
+                        <div class="q-content">
+                            <span class="q-title">Streaming Apps</span>
+                            <span class="q-desc">Netflix, Hotstar, Prime</span>
+                        </div>
+                    </div>
+
+                    <div class="quick-card focusable" tabindex="0" data-link="pages/weather.html">
+                        <div id="weather-quick-icon" class="q-icon-box">🌤️</div>
+                        <div class="q-content">
+                            <span class="q-title">Live Weather</span>
+                            <span id="weather-quick-desc" class="q-desc">Fetching Live Weather...</span>
+                        </div>
+                    </div>
+
+                    <div class="quick-card focusable" tabindex="0" data-link="pages/flights.html">
+                        <div class="q-icon-box">🛫</div>
+                        <div class="q-content">
+                            <span class="q-title">Flight Tracker</span>
+                            <span class="q-desc">Arrivals & Departures</span>
+                        </div>
+                    </div>
+
+                    <div class="quick-card focusable" tabindex="0" data-action="cast">
+                        <div class="q-icon-box">📲</div>
+                        <div class="q-content">
+                            <span class="q-title">Screen Mirroring</span>
+                            <span class="q-desc">Cast phone to TV</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- SubPage View Overlay Iframe -->
+    <div id="subPageOverlay" class="subpage-overlay hidden">
+        <iframe id="subFrame" src="about:blank"></iframe>
+    </div>
+
+    <!-- Applications Grid Overlay Modal -->
+    <div id="appsOverlay" class="tv-overlay hidden">
+        <div class="overlay-modal-glass">
+            <div class="modal-header">
+                <h2 id="appsTitle">Installed Applications</h2>
+                <button class="tv-btn focusable" id="appsCloseBtn" tabindex="0">✕ Close</button>
+            </div>
+            <div id="apps-container" class="apps-grid">
+                <!-- Dynamically populated app cards -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen Cast Overlay Modal -->
+    <div id="castOverlay" class="tv-overlay hidden">
+        <div class="overlay-modal-glass cast-box">
+            <div class="cast-icon-large">📺</div>
+            <h2>Wireless Screen Cast</h2>
+            <p>Connect your Mobile device to the hotel Wi-Fi and select <strong>Hotel Smart TV</strong> from your screen
+                cast menu.</p>
+            <button class="tv-btn focusable" id="castCloseBtn" tabindex="0">Close</button>
+        </div>
+    </div>
+
+</body>
+
+</html>

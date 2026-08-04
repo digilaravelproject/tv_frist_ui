@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart TV UI - Split Glass Hub (Variant 2)</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tv-navigation.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/index2.css">
+    
+    <script src="js/bridge.js" defer></script>
+    <script src="js/tv-navigation.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/index2.js" defer></script>
+</head>
+<body class="tv-viewport">
+
+    <!-- Edge-to-Edge 4K Background Slider -->
+    <div class="tv-bg-wrapper">
+        <div id="bg-slide-1" class="bg-image-slide active-slide" style="background-image: url('../images/main.jpg');"></div>
+        <div id="bg-slide-2" class="bg-image-slide" style="background-image: url('../images/2main.jpg');"></div>
+        <div class="split-vignette-overlay"></div>
+    </div>
+
+    <!-- Master TV Shell (Split Dual-Panel Creative Layout) -->
+    <div class="split-tv-container">
+        
+        <!-- Top Glass Header Bar -->
+        <header class="top-status-header">
+            <div class="status-left">
+                <span class="star-badge">✦ 5-STAR LUXURY SUITE ✦</span>
+                <h1 id="hotel-title" class="brand-title">--</h1>
+            </div>
+            <div class="status-center">
+                <img id="hotel-logo-img" src="" alt="Hotel Logo" class="top-brand-logo" style="display: none;">
+            </div>
+            <div class="status-right">
+                <div id="room" class="status-pill room-pill">🔑 ROOM --</div>
+                <div class="header-clock-badge">
+                    <span class="pulse-dot"></span>
+                    <span id="live-clock">--:--:-- -- | ---, --- --</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Split Workspace (Left Spotlight + Right 2-Column Interactive Tiles) -->
+        <main class="split-main-workspace">
+            
+            <!-- Left Side Spotlight Glass Card -->
+            <section class="split-spotlight-left">
+                <div class="spotlight-glass-box">
+                    <span class="spotlight-tag">FEATURED RESORT EXPERIENCE</span>
+                    <h2 id="greeting" class="spotlight-headline">Welcome, Mr. Saurabh</h2>
+                    <p id="hotel-description" class="spotlight-desc">Mumbai • Enjoy world-class oceanfront dining, private spa wellness, and personalized 24x7 suite concierge directly on your TV screen.</p>
+                </div>
+            </section>
+
+            <!-- Right Side 2-Column Interactive Glass Tiles Grid -->
+            <section class="split-tiles-right">
+                <div class="tiles-grid-container">
+                    
+                    <!-- Tile 1: Applications -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="applications" data-action="apps">
+                        <div class="tile-icon-wrapper"><img src="images/icons/applications.png" class="tile-icon-img" alt="Applications" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Applications</span>
+                            <span class="tile-sub">Netflix, Hotstar, YouTube</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 2: Live TV -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="live_tv" data-action="livetv">
+                        <div class="tile-icon-wrapper"><img src="images/icons/livetv.png" class="tile-icon-img" alt="Live TV" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Live TV</span>
+                            <span class="tile-sub">HD Channels & Sports</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 3: Amenities -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="amenities" data-link="pages/amenities.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/amenities.png" class="tile-icon-img" alt="Amenities" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Amenities</span>
+                            <span class="tile-sub">Pool, Spa & Dining</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 4: Flight Tracker -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="flights" data-link="pages/flights.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/flights.png" class="tile-icon-img" alt="Flight Status" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Flight Status</span>
+                            <span class="tile-sub">Arrivals & Departures</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 5: Explore Travel -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="travel" data-link="pages/travel.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/travel.png" class="tile-icon-img" alt="Explore Travel" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Explore Travel</span>
+                            <span class="tile-sub">Tours & Local Excursions</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 6: City Guide -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="our_city" data-link="pages/city.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/city.png" class="tile-icon-img" alt="City Guide" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">City Guide</span>
+                            <span class="tile-sub">Mumbai Attractions & Maps</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 7: Hotel Info -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="hotel_info" data-link="pages/hotel_info.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/hotel_info.png" class="tile-icon-img" alt="Hotel Info" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Hotel Info</span>
+                            <span class="tile-sub">Reception & Emergency</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 8: Screen Cast -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="screen_cast" data-action="cast">
+                        <div class="tile-icon-wrapper"><img src="images/icons/cast.png" class="tile-icon-img" alt="Screen Cast" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Screen Cast</span>
+                            <span class="tile-sub">Wireless Screen Mirroring</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 9: Languages -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="languages" data-link="pages/languages.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/languages.png" class="tile-icon-img" alt="Languages" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Languages</span>
+                            <span class="tile-sub">18 International Locales</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 10: Settings -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="settings" data-link="pages/settings.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/settings.png" class="tile-icon-img" alt="Settings" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Settings</span>
+                            <span class="tile-sub">TV Preferences & System</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 11: Inputs -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="input" data-action="input">
+                        <div class="tile-icon-wrapper"><img src="images/icons/input.png" class="tile-icon-img" alt="TV Inputs" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">TV Inputs</span>
+                            <span class="tile-sub">HDMI & AV Sources</span>
+                        </div>
+                    </div>
+
+                    <!-- Tile 12: Weather -->
+                    <div class="grid-tile-card focusable" tabindex="0" data-menu-id="weather" data-link="pages/weather.html">
+                        <div class="tile-icon-wrapper"><img src="images/icons/weather.png" class="tile-icon-img" alt="Weather" loading="lazy" decoding="async"></div>
+                        <div class="tile-content">
+                            <span class="tile-title">Weather</span>
+                            <span class="tile-sub">Local Forecast & Radar</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- SubPage View Overlay Iframe -->
+    <div id="subPageOverlay" class="subpage-overlay hidden">
+        <iframe id="subFrame" src="about:blank"></iframe>
+    </div>
+
+    <!-- Applications Grid Overlay Modal -->
+    <div id="appsOverlay" class="tv-overlay hidden">
+        <div class="overlay-modal-glass">
+            <div class="modal-header">
+                <h2 id="appsTitle">Installed Applications</h2>
+                <button class="tv-btn focusable" id="appsCloseBtn" tabindex="0">✕ Close</button>
+            </div>
+            <div id="apps-container" class="apps-grid">
+                <!-- Dynamically populated app cards -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen Cast Overlay Modal -->
+    <div id="castOverlay" class="tv-overlay hidden">
+        <div class="overlay-modal-glass cast-box">
+            <div class="cast-icon-large">📺</div>
+            <h2>Wireless Screen Cast</h2>
+            <p>Connect your Mobile device to the hotel Wi-Fi and select <strong>Hotel Smart TV</strong> from your screen cast menu.</p>
+            <button class="tv-btn focusable" id="castCloseBtn" tabindex="0">Close</button>
+        </div>
+    </div>
+
+</body>
+</html>

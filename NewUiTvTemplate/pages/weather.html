@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Next-Gen Smart TV Weather Dashboard</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/tv-navigation.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/weather.css">
+
+    <script src="../js/bridge.js" defer></script>
+    <script src="../js/tv-navigation.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/modules/weather.js" defer></script>
+</head>
+
+<body class="tv-viewport">
+
+    <!-- Dynamic Ken-Burns Ambient Background Slider -->
+    <div class="tv-bg-wrapper">
+        <div id="bg-slide-1" class="bg-image-slide active-slide"></div>
+        <div id="bg-slide-2" class="bg-image-slide"></div>
+        <div class="bg-overlay-gradient"></div>
+    </div>
+
+    <!-- Loading State Overlay -->
+    <div id="weather-loading" class="tv-overlay hidden" style="display: none;">
+        <div class="tv-spinner"></div>
+        <p class="loading-text">Fetching Live Weather Data...</p>
+    </div>
+
+    <!-- Offline / Error State Overlay -->
+    <div id="weather-error" class="tv-overlay error-hidden">
+        <div class="error-icon">⚠️</div>
+        <h2 id="error-title" class="error-heading">Connection Unavailable</h2>
+        <p id="error-body" class="error-desc">Unable to retrieve live weather feeds. Please check network connectivity.</p>
+        <button id="retry-btn" class="tv-btn focusable" tabindex="0">Retry Connection</button>
+    </div>
+
+    <!-- Main TV Layout Container (10ft Interface Safe Zone) -->
+    <main class="tv-safe-zone">
+
+        <!-- Top Header Navigation Row with Glass BACK Button, Logo, and Clock -->
+        <header class="tv-header-row">
+            <div class="header-left">
+                <button class="tv-glass-back-btn focusable" id="btn-back" tabindex="0" onclick="window.location.href='../index.html'">
+                    <span class="back-icon">←</span>
+                    <span>BACK</span>
+                </button>
+            </div>
+            <div class="header-center">
+                <img id="hotel-logo-img" src="" alt="Hotel Logo" class="brand-logo-img" style="display: none;">
+            </div>
+            <div class="header-right">
+                <div class="header-clock-badge">
+                    <span class="pulse-dot"></span>
+                    <span id="live-clock">--:-- --</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Hero Weather Grid (Primary Card + Metrics Grid) -->
+        <section class="hero-weather-section">
+
+            <!-- Primary Temp Glass Card -->
+            <div class="primary-hero-card glass-card focusable" tabindex="0">
+                <div class="hero-card-header">
+                    <div class="city-location-wrap">
+                        <span class="loc-pin">📍</span>
+                        <h1 id="city-name" class="modern-city-title">--</h1>
+                    </div>
+                </div>
+                
+                <div class="hero-temp-body">
+                    <div id="cur-temp" class="hero-temp-val">--°C</div>
+                    <div id="hero-weather-icon-box" class="hero-icon-container">
+                        <span id="hero-w-emoji" class="hero-weather-emoji">☀️</span>
+                    </div>
+                </div>
+
+                <div class="hero-aqi-footer">
+                    <div class="aqi-meta">
+                        <span class="aqi-lbl">Air Quality Index</span>
+                        <span id="aqi-text" class="aqi-tag-badge">LOADING</span>
+                    </div>
+                    <div class="aqi-bar-wrapper">
+                        <div id="cur-aqi-bar" class="aqi-fill-bar" style="width: 42%;"></div>
+                    </div>
+                    <div class="aqi-val-num">AQI <strong id="cur-aqi">--</strong></div>
+                </div>
+            </div>
+
+            <!-- Right Key Metrics Glass Panel -->
+            <div class="modern-metrics-grid">
+                <div class="metric-glass-tile focusable" tabindex="0">
+                    <div class="m-icon-row">🌡️ <span class="m-title">FEELS LIKE</span></div>
+                    <span id="h-feels" class="m-value">--°C</span>
+                </div>
+                <div class="metric-glass-tile focusable" tabindex="0">
+                    <div class="m-icon-row">💧 <span class="m-title">HUMIDITY</span></div>
+                    <span id="h-hum" class="m-value">--%</span>
+                </div>
+                <div class="metric-glass-tile focusable" tabindex="0">
+                    <div class="m-icon-row">⏱️ <span class="m-title">PRESSURE</span></div>
+                    <span id="h-press" class="m-value">-- hPa</span>
+                </div>
+                <div class="metric-glass-tile focusable" tabindex="0">
+                    <div class="m-icon-row">💨 <span class="m-title">WIND SPEED</span></div>
+                    <span id="h-wind" class="m-value">-- KM/H</span>
+                </div>
+                <div class="metric-glass-tile focusable" tabindex="0">
+                    <div class="m-icon-row">🌅 <span class="m-title">SUNRISE</span></div>
+                    <span id="h-rise" class="m-value">--:-- AM</span>
+                </div>
+                <div class="metric-glass-tile focusable" tabindex="0">
+                    <div class="m-icon-row">🌇 <span class="m-title">SUNSET</span></div>
+                    <span id="h-set" class="m-value">--:-- PM</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 7-Day Extended Forecast Carousel Section -->
+        <section class="forecast-section">
+            <div class="forecast-section-header">
+                <h2 class="forecast-title">7-Day Extended Forecast</h2>
+            </div>
+            <div id="forecast-row" class="modern-forecast-grid">
+                <!-- Forecast Cards Rendered Dynamically -->
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>

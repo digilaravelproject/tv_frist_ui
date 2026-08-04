@@ -1,0 +1,269 @@
+{
+  "status": true,
+  "message": "Template version details fetched successfully.",
+  "data": {
+    "auth": {
+      "token": "UeDjWSKRmqgcpy1RJjGgJkD7IcZgYYNVTzrNl3DghGz7RZyTmqBa4uP2dgJn3kRTrtUTK0ZC9NhvwMBa"
+    },
+    "template": {
+      "latest_version": "19.5",
+      "old_version": "19.0",
+      "download_url": "https:\/\/tvapp.digiemperor.com\/storage\/templates\/template_v19_5_1785594639.zip",
+      "uploaded_at": "2026-08-01T20:00:39+05:30",
+      "is_update_available": false
+    },
+    "device": {
+      "room_no": "519",
+      "device_id": "fb6b9a88719fbb6e",
+      "mac_address": "6C:8A:EC:35:B9:25",
+      "ip_address": "192.168.0.105",
+      "model": "Smart_TV",
+      "brand": "HiDPT",
+      "os_version": "14"
+    },
+    "hotel": {
+      "hotel_name": "Taj Mahal Palace, Mumbai",
+      "city": "Mumbai",
+      "hotel_location": "Apollo Bunder, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "Welcome to Taj Mahal Palace, Mumbai. We are delighted to have you as our guest. Enjoy world-class hospitality, luxurious accommodations, fine dining, and exceptional service. We wish you a comfortable and memorable stay.",
+      "owner_name": "Darshan Kondekar",
+      "email": "darshankondekar01@gmail.com",
+      "phone": "8975845684",
+      "emergency_contacts": {
+        "reception": "Ext. 0 \/ +91 22 6665 3366",
+        "dining": "Ext. 102 (24x7 Available)",
+        "medical_sos": "Ext. 999 (Emergency Desk)",
+        "email": "reservations.mumbai@tajhotels.com"
+      },
+      "hotel_amenities": [
+        "5-Star Luxury Hotel",
+        "Outdoor Swimming Pool",
+        "Multiple Fine Dining Restaurants",
+        "24x7 Coffee Shop",
+        "Business & Conference Facilities"
+      ],
+      "media": {
+        "logo_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_logos\/1785490217_logo_jtI6b25s.png",
+        "cover_image": "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_images\/1785491332_image_3LgBzy9y.jpg",
+        "hotel_images": [
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_PwjhqXa5.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_IUG30nGB.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_qKGxYQ0h.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_DiXTBCng.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_fPtfsJw2.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_F7P4shPG.jpg",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785580200_gallery_quac7LQJ.jpg"
+        ],
+        "slider_images": [
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_sliders\/1785401361_slider_jbjZxuH2.png",
+          "https:\/\/tvapp.digiemperor.com\/uploads\/hotel_gallery\/1785491322_gallery_qKGxYQ0h.jpg"
+        ]
+      },
+      "active_plan": {
+        "plan_name": "Deluxe Plan",
+        "plan_price": "1999.00",
+        "purchase_date": "2026-07-08T13:25:50+05:30",
+        "expiry_date": "2026-08-07T13:25:50+05:30"
+      }
+    },
+    "guest_info": {
+      "name": "Saurabh",
+      "mobile_number": "9876567654",
+      "check_in_datetime": "2026-07-15T14:51:00+05:30",
+      "check_out_datetime": null
+    },
+    "active_ott": [
+      {
+        "id": "playstore",
+        "name": "Google Play Store",
+        "package_name": "com.android.vending"
+      },
+      {
+        "id": "netflix",
+        "name": "Netflix",
+        "package_name": "com.netflix.mediaclient"
+      },
+      {
+        "id": "hotstar",
+        "name": "Disney+ Hotstar",
+        "package_name": "in.startv.hotstar"
+      },
+      {
+        "id": "prime",
+        "name": "Amazon Prime Video",
+        "package_name": "com.amazon.avod.thirdpartyclient"
+      },
+      {
+        "id": "zee5",
+        "name": "Zee5",
+        "package_name": "com.graymatrix.did"
+      },
+      {
+        "id": "sony-liv",
+        "name": "Sony LIV",
+        "package_name": "com.sony.liv"
+      },
+      {
+        "id": "jiocinema",
+        "name": "JioCinema",
+        "package_name": "com.jio.media.ondemand"
+      },
+      {
+        "id": "aha",
+        "name": "Aha",
+        "package_name": "ka.alua.aha"
+      },
+      {
+        "id": "sun-nxt",
+        "name": "Sun NXT",
+        "package_name": "com.suntv.sunnxt"
+      },
+      {
+        "id": "mx-player",
+        "name": "MX Player",
+        "package_name": "com.mxtech.videoplayer.ad"
+      },
+      {
+        "id": "discovery",
+        "name": "Discovery+",
+        "package_name": "com.discovery.discoveryplus.mobile"
+      },
+      {
+        "id": "altbalaji",
+        "name": "ALTBalaji",
+        "package_name": "com.balaji.alt"
+      },
+      {
+        "id": "eros-now",
+        "name": "Eros Now",
+        "package_name": "com.erosnow"
+      },
+      {
+        "id": "hungama-play",
+        "name": "Hungama Play",
+        "package_name": "com.hungama.myplay.activity"
+      },
+      {
+        "id": "hoichoi",
+        "name": "Hoichoi",
+        "package_name": "com.viewlift.hoichoi"
+      },
+      {
+        "id": "planet-marathi",
+        "name": "Planet Marathi",
+        "package_name": "com.planetmarathi.ott"
+      },
+      {
+        "id": "chaupal",
+        "name": "Chaupal",
+        "package_name": "com.chaupal.app"
+      },
+      {
+        "id": "manoramamax",
+        "name": "ManoramaMAX",
+        "package_name": "com.manoramamax.app"
+      },
+      {
+        "id": "voot",
+        "name": "Voot",
+        "package_name": "com.tv.v18.viola"
+      },
+      {
+        "id": "youtube",
+        "name": "YouTube",
+        "package_name": "com.google.android.youtube.tv"
+      }
+    ],
+    "menus": [
+      {
+        "id": "flights",
+        "name": "Flights",
+        "status": "show"
+      },
+      {
+        "id": "input",
+        "name": "Input",
+        "status": "show"
+      },
+      {
+        "id": "languages",
+        "name": "Languages",
+        "status": "show"
+      },
+      {
+        "id": "live_tv",
+        "name": "Live TV",
+        "status": "show"
+      },
+      {
+        "id": "our_city",
+        "name": "Our City",
+        "status": "show"
+      },
+      {
+        "id": "screen_cast",
+        "name": "Screen Cast",
+        "status": "show"
+      },
+      {
+        "id": "settings",
+        "name": "Settings",
+        "status": "show"
+      },
+      {
+        "id": "travel",
+        "name": "Travel",
+        "status": "show"
+      },
+      {
+        "id": "weather",
+        "name": "Weather",
+        "status": "show"
+      }
+    ],
+    "amenities": [
+      {
+        "sr_no": 1,
+        "title": "a",
+        "description": "",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/1PlJhvLDi9857iRqVq3qlRPuwqYdfKsLVEvMHCVA.jpg"
+      },
+      {
+        "sr_no": 2,
+        "title": "Taj Garden",
+        "description": "Taj Garden nsdjbvnds   bnb bsjbns  snb jbsnj  ms nbxcjvnsd   bjivvsnd  sbvijsdc  bjskjsm nkasnjb jbs",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/amenity_1785742635_rZnhbR7D.webp"
+      },
+      {
+        "sr_no": 3,
+        "title": "c",
+        "description": "",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/TTf1vdFRFFfXFqgLH3xAOMiMPRwr5N055NBulAZE.jpg"
+      },
+      {
+        "sr_no": 4,
+        "title": "d",
+        "description": "",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/mxTzlNf3KCpzIjXVvdqYiHCvlHlea537vdbRPHCL.jpg"
+      },
+      {
+        "sr_no": 5,
+        "title": "e",
+        "description": "",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/6LE5V0x8Drb6d5pMfXNEnRsB9jUY9ahRH7zil2VP.jpg"
+      },
+      {
+        "sr_no": 6,
+        "title": "f",
+        "description": "",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/aIHaFW8501ttYS52mTOlYs29Cbs3SCCQNUng0DMp.jpg"
+      },
+      {
+        "sr_no": 7,
+        "title": "g",
+        "description": "",
+        "image_url": "https:\/\/tvapp.digiemperor.com\/storage\/uploads\/amenities\/BZo1RNZYCOsFZ4NqNmiSVD6T3k67fTWRwFWz0z5T.jpg"
+      }
+    ]
+  }
+}
