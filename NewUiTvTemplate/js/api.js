@@ -1,70 +1,186 @@
 /**
  * Unified API Data Service & Universal TV Background Slider Engine
- * 0ms instant loading from LocalStorage cache with background revalidation.
- * Universal reusable TVSlider module (DRY principle - zero code repetition).
+ * Strict Network-First with LocalStorage Offline Caching Architecture
+ * 1. Online: Direct network fetch & update LocalStorage cache.
+ * 2. Offline: Read from LocalStorage cache & local fallbacks.
  */
 (function() {
     'use strict';
 
     const CACHE_PREFIX = 'tv_app_cache_';
-    const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache TTL
+
+    /**
+     * Reusable Glassmorphism Smart TV Modal Component System
+     * Call window.TVModal.showOfflineNotice() anywhere in the application.
+     */
+    window.TVModal = {
+        showOfflineNotice: function(options) {
+            options = options || {};
+            const title = options.title || 'No Internet Connection';
+            const message = options.message || 'Live feeds require an active network connection. Please check your TV Wi-Fi or Ethernet settings.';
+            const buttonText = options.buttonText || 'OK';
+
+            let modal = document.getElementById('tv-offline-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                const titleEl = modal.querySelector('.tv-offline-title');
+                const descEl = modal.querySelector('.tv-offline-desc');
+                if (titleEl) titleEl.textContent = title;
+                if (descEl) descEl.textContent = message;
+            } else {
+                modal = document.createElement('div');
+                modal.id = 'tv-offline-modal';
+                modal.className = 'tv-offline-modal-overlay';
+                modal.innerHTML = `
+                    <div class="tv-offline-modal-card">
+                        <div class="tv-offline-icon-badge">📡</div>
+                        <h2 class="tv-offline-title">${title}</h2>
+                        <p class="tv-offline-desc">${message}</p>
+                        <button id="tv-offline-close-btn" class="tv-offline-btn focusable" tabindex="0">${buttonText}</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                const closeBtn = document.getElementById('tv-offline-close-btn');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        window.TVModal.hideOfflineNotice();
+                    });
+                }
+            }
+
+            const btn = document.getElementById('tv-offline-close-btn');
+            if (btn) btn.focus();
+
+            if (window.TVNavigation) window.TVNavigation.refresh();
+        },
+
+        hideOfflineNotice: function() {
+            const modal = document.getElementById('tv-offline-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            if (window.TVNavigation) window.TVNavigation.refresh();
+        }
+    };
 
     window.APIService = {
         fetchJSON: async function(url) {
             try {
-                // Bypass cache for local data.json and live open-meteo weather API to ensure 100% real-time accuracy
-                if (url.includes('data.json') || url.includes('open-meteo.com')) {
-                    return await this._refreshCache(url, CACHE_PREFIX + url);
-                }
-
                 const cacheKey = CACHE_PREFIX + url;
-                const cached = localStorage.getItem(cacheKey);
 
-                if (cached) {
+                // Step 1: If Internet IS connected -> Direct network fetch & update LocalStorage cache
+                if (navigator.onLine) {
                     try {
-                        const parsed = JSON.parse(cached);
-                        const isStale = (Date.now() - parsed.timestamp) > CACHE_TTL_MS;
-
-                        if (isStale) {
-                            this._refreshCache(url, cacheKey);
+                        const response = await fetch(url, { cache: 'reload' });
+                        if (response.ok) {
+                            const liveData = await response.json();
+                            try {
+                                localStorage.setItem(cacheKey, JSON.stringify({
+                                    timestamp: Date.now(),
+                                    data: liveData
+                                }));
+                            } catch (e) {}
+                            return liveData;
                         }
-                        return parsed.data;
-                    } catch (e) {
-                        localStorage.removeItem(cacheKey);
+                    } catch (netErr) {
+                        console.warn('[APIService] Online network fetch failed, using cache:', netErr);
                     }
                 }
 
-                return await this._refreshCache(url, cacheKey);
+                // Step 2: If Internet NOT connected (Offline) -> Read from LocalStorage cache
+                const cachedLS = localStorage.getItem(cacheKey);
+                if (cachedLS) {
+                    try {
+                        const parsed = JSON.parse(cachedLS);
+                        if (parsed && parsed.data) return parsed.data;
+                    } catch (e) {}
+                }
+
+                // Secondary attempt fallback
+                const res = await fetch(url);
+                if (res.ok) return await res.json();
+
+                throw new Error(`Data unavailable offline for ${url}`);
             } catch (err) {
                 console.error('[APIService] fetchJSON error:', err);
                 throw err;
             }
         },
 
-        _refreshCache: async function(url, cacheKey) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-                const data = await response.json();
+        /**
+         * Strict Network-First Image Loader & LocalStorage Cache
+         * 1. Online: Direct remote URL load + convert to Base64 & save in LocalStorage on load.
+         * 2. Offline: Read Base64 from LocalStorage (or local fallback image asset).
+         */
+        bindImageWithCache: function(imgElement, remoteUrl, fallbackLocalPath) {
+            if (!imgElement) return;
 
-                try {
-                    localStorage.setItem(cacheKey, JSON.stringify({
-                        timestamp: Date.now(),
-                        data: data
-                    }));
-                } catch (e) {
-                    console.warn('[APIService] LocalStorage quota exceeded or unavailable.', e);
+            if (!remoteUrl) {
+                if (fallbackLocalPath) {
+                    imgElement.src = fallbackLocalPath;
+                    imgElement.style.display = 'block';
+                } else {
+                    imgElement.style.display = 'none';
                 }
+                return;
+            }
 
-                return data;
-            } catch (err) {
-                console.error('[APIService] Refresh cache error:', err);
-                throw err;
+            const cacheKey = 'img_b64_' + remoteUrl;
+
+            // Step 1: If Internet IS connected -> Direct live URL load + save Base64 to LocalStorage on load
+            if (navigator.onLine) {
+                imgElement.src = remoteUrl;
+                imgElement.style.display = 'block';
+
+                imgElement.onload = function() {
+                    try {
+                        imgElement.style.display = 'block';
+                        if (imgElement.complete && imgElement.naturalWidth > 0) {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = imgElement.naturalWidth;
+                            canvas.height = imgElement.naturalHeight;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(imgElement, 0, 0);
+                            const dataURL = canvas.toDataURL('image/png');
+                            localStorage.setItem(cacheKey, dataURL);
+                        }
+                    } catch (e) {
+                        // Ignore canvas export errors if cross-origin restricts canvas export
+                    }
+                };
+
+                imgElement.onerror = function() {
+                    let cachedB64 = null;
+                    try { cachedB64 = localStorage.getItem(cacheKey); } catch (e) {}
+
+                    if (cachedB64) {
+                        imgElement.src = cachedB64;
+                        imgElement.style.display = 'block';
+                    } else if (fallbackLocalPath) {
+                        imgElement.src = fallbackLocalPath;
+                        imgElement.style.display = 'block';
+                    }
+                };
+            } else {
+                // Step 2: If Internet NOT connected (Offline) -> Read Base64 from LocalStorage
+                let cachedB64 = null;
+                try { cachedB64 = localStorage.getItem(cacheKey); } catch (e) {}
+
+                if (cachedB64) {
+                    imgElement.src = cachedB64;
+                    imgElement.style.display = 'block';
+                } else if (fallbackLocalPath) {
+                    imgElement.src = fallbackLocalPath;
+                    imgElement.style.display = 'block';
+                } else {
+                    imgElement.style.display = 'none';
+                }
             }
         },
 
         fetchCityCoordinates: async function(cityName) {
-            if (!cityName) return null;
+            if (!cityName || !navigator.onLine) return null;
             try {
                 const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1`;
                 const res = await this.fetchJSON(url);
@@ -74,43 +190,24 @@
                         lon: res.results[0].longitude
                     };
                 }
-            } catch (e) {
-                console.warn('[APIService] Dynamic city geocoding fallback', e);
-            }
+            } catch (e) {}
             return null;
         },
 
         fetchWeatherData: async function(lat, lon) {
+            if (!navigator.onLine) return null;
             try {
-                if (!lat || !lon) throw new Error('Latitude and Longitude parameters required');
-                const endpoint = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset&timezone=auto`;
-                return await this.fetchJSON(endpoint);
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,surface_pressure,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
+                return await this.fetchJSON(url);
             } catch (err) {
-                console.error('[APIService] fetchWeatherData error:', err);
-                throw err;
-            }
-        },
-
-        preloadImages: function(urls) {
-            try {
-                if (!Array.isArray(urls)) return;
-                urls.forEach(url => {
-                    if (!url) return;
-                    try {
-                        const img = new Image();
-                        img.src = url;
-                    } catch (err) {
-                        console.warn('[APIService] Preload image failed:', url, err);
-                    }
-                });
-            } catch (err) {
-                console.error('[APIService] preloadImages error:', err);
+                console.error('[APIService] Weather API error:', err);
+                return null;
             }
         }
     };
 
     /**
-     * Universal TV Background Slider Engine (DRY - Shared across all pages)
+     * Universal TV Background Slider Module (DRY Engine)
      */
     window.TVSlider = {
         init: async function() {
@@ -120,76 +217,81 @@
                 if (!slide1 || !slide2) return;
 
                 const isSubpage = window.location.pathname.includes('/pages/');
-                const basePath = isSubpage ? '../images/' : 'images/';
-
-                const localFallbacks = [
-                    basePath + 'main.jpg',
-                    basePath + '2main.jpg',
-                    basePath + 'mial.png'
+                const basePath = isSubpage ? '../' : './';
+                let sliderImages = [
+                    basePath + 'images/main.jpg',
+                    basePath + 'images/2main.jpg'
                 ];
 
-                let bgImages = [];
+                try {
+                    const data = await window.APIService.fetchJSON(basePath + 'data.json');
+                    if (data && data.data && data.data.hotel && data.data.hotel.media && Array.isArray(data.data.hotel.media.slider_images) && data.data.hotel.media.slider_images.length > 0) {
+                        sliderImages = data.data.hotel.media.slider_images;
+                    }
+                } catch (e) {}
 
-                const jsonPaths = ['data.json', '../data.json', './data.json'];
-                for (const path of jsonPaths) {
-                    try {
-                        const res = await window.APIService.fetchJSON(path);
-                        if (res && res.data && res.data.hotel && res.data.hotel.media && Array.isArray(res.data.hotel.media.slider_images) && res.data.hotel.media.slider_images.length > 0) {
-                            bgImages = res.data.hotel.media.slider_images;
-                            break;
-                        }
-                    } catch (e) {}
+                function setSlideBackground(slideEl, url, fallbackPath) {
+                    if (!url) return;
+
+                    const cacheKey = 'img_b64_' + url;
+                    let cached = null;
+                    try { cached = localStorage.getItem(cacheKey); } catch (e) {}
+
+                    if (navigator.onLine) {
+                        const tempImg = new Image();
+                        tempImg.src = url;
+                        tempImg.onload = function() {
+                            slideEl.style.backgroundImage = `url('${url}')`;
+                            try {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = tempImg.naturalWidth;
+                                canvas.height = tempImg.naturalHeight;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(tempImg, 0, 0);
+                                localStorage.setItem(cacheKey, canvas.toDataURL('image/jpeg'));
+                            } catch (e) {}
+                        };
+                        tempImg.onerror = function() {
+                            const fallbackUrl = cached || fallbackPath;
+                            slideEl.style.backgroundImage = `url('${fallbackUrl}')`;
+                        };
+                    } else {
+                        const fallbackUrl = cached || fallbackPath;
+                        slideEl.style.backgroundImage = `url('${fallbackUrl}')`;
+                    }
                 }
 
-                const slideList = (bgImages && bgImages.length > 0) ? bgImages : localFallbacks;
-                let currentSlideIndex = 0;
-                let isSlide1Active = true;
-
-                if (window._globalBgInterval) clearInterval(window._globalBgInterval);
-
-                // If single image, apply smooth Ken-Burns auto zoom-in / zoom-out pulse animation
-                if (slideList.length === 1) {
-                    slide1.style.backgroundImage = `url('${slideList[0]}')`;
+                if (sliderImages.length === 1) {
+                    setSlideBackground(slide1, sliderImages[0], basePath + 'images/main.jpg');
                     slide1.classList.add('active-slide', 'single-zoom-pulse');
-                    slide2.classList.remove('active-slide', 'single-zoom-pulse');
+                    slide2.style.display = 'none';
                     return;
                 }
 
-                // If multiple images, remove pulse animation and run interval slider
-                slide1.classList.remove('single-zoom-pulse');
-                slide2.classList.remove('single-zoom-pulse');
-                slide1.style.backgroundImage = `url('${slideList[0]}')`;
+                let curIndex = 0;
+                let isSlide1Active = true;
+
+                setSlideBackground(slide1, sliderImages[0], basePath + 'images/main.jpg');
+                setSlideBackground(slide2, sliderImages[1 % sliderImages.length], basePath + 'images/2main.jpg');
                 slide1.classList.add('active-slide');
 
-                window._globalBgInterval = setInterval(() => {
+                setInterval(() => {
                     try {
-                        currentSlideIndex = (currentSlideIndex + 1) % slideList.length;
-                        const nextImgUrl = slideList[currentSlideIndex];
-                        const fallbackUrl = localFallbacks[currentSlideIndex % localFallbacks.length];
+                        curIndex = (curIndex + 1) % sliderImages.length;
+                        const nextUrl = sliderImages[curIndex];
 
-                        const activeSlide = isSlide1Active ? slide1 : slide2;
-                        const nextSlide = isSlide1Active ? slide2 : slide1;
-
-                        const img = new Image();
-                        img.onload = function() {
-                            try {
-                                nextSlide.style.backgroundImage = `url('${nextImgUrl}')`;
-                                nextSlide.classList.add('active-slide');
-                                activeSlide.classList.remove('active-slide');
-                                isSlide1Active = !isSlide1Active;
-                            } catch (err) {}
-                        };
-                        img.onerror = function() {
-                            try {
-                                nextSlide.style.backgroundImage = `url('${fallbackUrl}')`;
-                                nextSlide.classList.add('active-slide');
-                                activeSlide.classList.remove('active-slide');
-                                isSlide1Active = !isSlide1Active;
-                            } catch (err) {}
-                        };
-                        img.src = nextImgUrl;
+                        if (isSlide1Active) {
+                            setSlideBackground(slide2, nextUrl, basePath + 'images/main.jpg');
+                            slide2.classList.add('active-slide');
+                            slide1.classList.remove('active-slide');
+                        } else {
+                            setSlideBackground(slide1, nextUrl, basePath + 'images/main.jpg');
+                            slide1.classList.add('active-slide');
+                            slide2.classList.remove('active-slide');
+                        }
+                        isSlide1Active = !isSlide1Active;
                     } catch (err) {
-                        console.error('[TVSlider] slide transition error:', err);
+                        console.error('[TVSlider] Crossfade error:', err);
                     }
                 }, 5000);
             } catch (err) {
@@ -200,9 +302,9 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         try {
-            window.TVSlider.init();
-        } catch (err) {
-            console.error('[TVSlider] DOMContentLoaded error:', err);
-        }
+            if (window.TVSlider && window.TVSlider.init) {
+                window.TVSlider.init();
+            }
+        } catch (e) {}
     });
 })();

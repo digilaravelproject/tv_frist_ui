@@ -71,15 +71,11 @@
                 hotelTitleEl.textContent = d.hotel.hotel_name.toUpperCase();
             }
 
-            // Dynamic Hotel Logo Image Binding strictly from data.json payload
+            // Dynamic Hotel Logo Image Binding strictly from data.json payload (Base64 + Local Storage Caching)
             const logoImg = document.getElementById('hotel-logo-img');
+            const logoUrl = (d && d.hotel && d.hotel.media) ? d.hotel.media.logo_image : '';
             if (logoImg) {
-                if (d && d.hotel && d.hotel.media && d.hotel.media.logo_image) {
-                    logoImg.src = d.hotel.media.logo_image;
-                    logoImg.style.display = 'block';
-                } else {
-                    logoImg.style.display = 'none';
-                }
+                window.APIService.bindImageWithCache(logoImg, logoUrl, 'images/logo.png');
             }
 
             // Extract slider images strictly from data.json slider_images array
@@ -188,6 +184,17 @@
             const action = item.getAttribute('data-action');
 
             if (link) {
+                // If navigation requires internet (weather/flight) and device is offline, block navigation & show No Internet modal on homepage
+                if ((link.includes('weather') || link.includes('flight')) && !navigator.onLine) {
+                    if (window.TVModal && window.TVModal.showOfflineNotice) {
+                        window.TVModal.showOfflineNotice({
+                            title: 'No Internet Connection',
+                            message: 'Live satellite weather feeds require an active internet connection. Please check your TV Wi-Fi or Ethernet settings.',
+                            buttonText: 'OK'
+                        });
+                    }
+                    return;
+                }
                 window.location.href = link;
             } else if (action === 'apps') {
                 toggleOverlay('appsOverlay', true);

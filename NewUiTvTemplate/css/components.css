@@ -136,9 +136,87 @@
 }
 
 .cast-box p {
-    font-size: 1.1vw;
+    font-size: 1.2vw;
     color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2vw;
+}
+
+/* Reusable Glassmorphism Smart TV Offline Modal Component */
+.tv-offline-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(7, 10, 18, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.tv-offline-modal-card {
+    background: linear-gradient(145deg, rgba(22, 30, 48, 0.95), rgba(12, 16, 28, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    padding: 2.5vw 3.5vw;
+    width: 36vw;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vw;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 77, 79, 0.2);
+}
+
+.tv-offline-icon-badge {
+    font-size: 3.8vw;
+    line-height: 1;
+    filter: drop-shadow(0 4px 15px rgba(255, 77, 79, 0.4));
+}
+
+.tv-offline-title {
+    font-size: 1.8vw;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.tv-offline-desc {
+    font-size: 1vw;
+    color: rgba(255, 255, 255, 0.75);
     line-height: 1.5;
+    margin: 0;
+}
+
+.tv-offline-btn {
+    margin-top: 0.8vw;
+    padding: 0.8vw 2.4vw;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    border: 1px solid #00f2fe;
+    color: #000000;
+    font-size: 1vw;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 242, 254, 0.5);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tv-offline-btn:focus, .tv-offline-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 30px rgba(0, 242, 254, 0.9);
 }
 
 .loading-active { display: flex; }

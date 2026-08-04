@@ -35,35 +35,58 @@
     }
 
     async function updateRealtimeWeather(cityName) {
+        const descEl = document.getElementById('weather-quick-desc');
+        const iconEl = document.getElementById('weather-quick-icon');
+        if (!descEl) return;
+
+        if (!navigator.onLine) {
+            descEl.textContent = 'No Internet';
+            if (iconEl) iconEl.textContent = '⚠️';
+            return;
+        }
+
         try {
-            const descEl = document.getElementById('weather-quick-desc');
-            const iconEl = document.getElementById('weather-quick-icon');
-            if (!descEl || !cityName) return;
+            if (!cityName) return;
+            if (!navigator.onLine) {
+                descEl.textContent = 'No Internet';
+                if (iconEl && !iconEl.querySelector('img')) {
+                    iconEl.innerHTML = '<img src="images/icons/weather.png" alt="Weather">';
+                }
+                return;
+            }
 
             const city = cityName.trim();
 
             const coords = await window.APIService.fetchCityCoordinates(city);
-            if (!coords || !coords.lat || !coords.lon) return;
+            if (!coords || !coords.lat || !coords.lon) {
+                descEl.textContent = `${city} • No Internet`;
+                return;
+            }
+
             const weatherData = await window.APIService.fetchWeatherData(coords.lat, coords.lon);
 
             if (weatherData && weatherData.current) {
-                const temp = Math.round(weatherData.current.temperature_2m || 26);
+                const temp = Math.round(weatherData.current.temperature_2m || 0);
                 const code = weatherData.current.weather_code || 0;
                 let statusText = 'Sunny';
-                let emoji = '☀️';
 
-                if (code === 0) { statusText = 'Sunny'; emoji = '☀️'; }
-                else if (code >= 1 && code <= 3) { statusText = 'Partly Cloudy'; emoji = '⛅'; }
-                else if (code >= 45 && code <= 48) { statusText = 'Foggy'; emoji = '🌫️'; }
-                else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 84)) { statusText = 'Rainy'; emoji = '🌧️'; }
-                else if (code >= 95) { statusText = 'Thunderstorm'; emoji = '⛈️'; }
-                else { statusText = 'Rainy'; emoji = '🌧️'; }
+                if (code === 0) { statusText = 'Sunny'; }
+                else if (code >= 1 && code <= 3) { statusText = 'Partly Cloudy'; }
+                else if (code >= 45 && code <= 48) { statusText = 'Foggy'; }
+                else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 84)) { statusText = 'Rainy'; }
+                else if (code >= 95) { statusText = 'Thunderstorm'; }
+                else { statusText = 'Rainy'; }
 
                 descEl.textContent = `${city} • ${temp}°C ${statusText}`;
-                if (iconEl) iconEl.textContent = emoji;
+                if (iconEl && !iconEl.querySelector('img')) {
+                    iconEl.innerHTML = '<img src="images/icons/weather.png" alt="Weather">';
+                }
+            } else {
+                descEl.textContent = `${city} • No Internet`;
             }
         } catch (e) {
-            console.warn('[SmartTVApp] Live weather fetch fallback', e);
+            console.warn('[SmartTVApp] Live weather fetch failed:', e);
+            descEl.textContent = 'No Internet';
         }
     }
 
@@ -91,15 +114,11 @@
                 roomEl.textContent = `ROOM ${d.device.room_no}`;
             }
 
-            // Dynamic Hotel Logo Image Binding strictly from data.json payload
+            // Dynamic Hotel Logo Image Binding strictly from data.json payload (Base64 + Local Storage Caching)
             const logoImgs = document.querySelectorAll('#hotel-logo-img, .hotel-logo-img, .top-brand-logo');
+            const logoUrl = (d && d.hotel && d.hotel.media) ? d.hotel.media.logo_image : '';
             logoImgs.forEach(img => {
-                if (d && d.hotel && d.hotel.media && d.hotel.media.logo_image) {
-                    img.src = d.hotel.media.logo_image;
-                    img.style.display = 'block';
-                } else {
-                    img.style.display = 'none';
-                }
+                window.APIService.bindImageWithCache(img, logoUrl, 'images/logo.png');
             });
 
             // Guest Greeting & Hotel Subtitle
@@ -227,6 +246,17 @@
             const action = item.getAttribute('data-action');
 
             if (link) {
+                // If navigation requires internet (weather/flight) and device is offline, block navigation & show No Internet modal on homepage
+                if ((link.includes('weather') || link.includes('flight')) && !navigator.onLine) {
+                    if (window.TVModal && window.TVModal.showOfflineNotice) {
+                        window.TVModal.showOfflineNotice({
+                            title: 'No Internet Connection',
+                            message: 'Live satellite weather feeds require an active internet connection. Please check your TV Wi-Fi or Ethernet settings.',
+                            buttonText: 'OK'
+                        });
+                    }
+                    return;
+                }
                 window.location.href = link;
             } else if (action === 'apps') {
                 toggleOverlay('appsOverlay', true);
@@ -287,6 +317,17 @@
                 setInterval(updateHeaderClock, 1000);
                 updateHeaderClock();
                 loadAppData();
+
+                window.addEventListener('offline', function() {
+                    const descEl = document.getElementById('weather-quick-desc');
+                    const iconEl = document.getElementById('weather-quick-icon');
+                    if (descEl) descEl.textContent = 'No Internet';
+                    if (iconEl) iconEl.textContent = '⚠️';
+                });
+
+                window.addEventListener('online', function() {
+                    loadAppData();
+                });
 
                 const navItems = document.querySelectorAll('.nav-item, .quick-card');
                 navItems.forEach(item => {

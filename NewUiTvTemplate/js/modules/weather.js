@@ -161,10 +161,16 @@
             setInterval(updateLiveClock, 1000);
             updateLiveClock();
 
+            // Strict Offline Guard: Protect API calls from running when offline
+            if (!navigator.onLine) {
+                console.log('[WeatherModule] Device is offline. Weather API calls skipped.');
+                return;
+            }
+
             let cityName = '';
             let coords = null;
 
-            // Try resolving data.json from multiple path variants
+            // Step 1: Resolve data.json configuration
             const jsonPaths = ['../data.json', 'data.json', './data.json'];
             for (const path of jsonPaths) {
                 try {
@@ -178,13 +184,9 @@
                                 bgImages = config.data.hotel.media.slider_images;
                             }
                             const logoImg = document.getElementById('hotel-logo-img');
+                            const logoUrl = (config.data.hotel.media) ? config.data.hotel.media.logo_image : '';
                             if (logoImg) {
-                                if (config.data.hotel.media && config.data.hotel.media.logo_image) {
-                                    logoImg.src = config.data.hotel.media.logo_image;
-                                    logoImg.style.display = 'block';
-                                } else {
-                                    logoImg.style.display = 'none';
-                                }
+                                window.APIService.bindImageWithCache(logoImg, logoUrl, '../images/logo.png');
                             }
                         }
                         break;
@@ -199,18 +201,19 @@
                 cityEl.textContent = cityName.toUpperCase();
             }
 
+            // Step 2: Fetch live weather data ONLY IF online
             if (cityName) {
                 try {
                     coords = await window.APIService.fetchCityCoordinates(cityName);
                 } catch (e) {}
             }
 
-            if (!coords || !coords.lat || !coords.lon) {
-                throw new Error('Dynamic city geocoding coordinates unavailable for ' + cityName);
+            if (coords && coords.lat && coords.lon) {
+                const data = await window.APIService.fetchWeatherData(coords.lat, coords.lon);
+                if (data && data.current) {
+                    renderWeather(data);
+                }
             }
-
-            const data = await window.APIService.fetchWeatherData(coords.lat, coords.lon);
-            renderWeather(data);
         } catch (err) {
             console.warn('[WeatherModule] initWeatherModule error:', err);
         } finally {
