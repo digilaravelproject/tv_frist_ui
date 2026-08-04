@@ -9,11 +9,13 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/tv-navigation.css">
     <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/components/page-header.css">
     <link rel="stylesheet" href="../css/pages/weather.css">
 
     <script src="../js/bridge.js" defer></script>
     <script src="../js/tv-navigation.js" defer></script>
     <script src="../js/api.js" defer></script>
+    <script src="../js/components/page-header.js" defer></script>
     <script src="../js/modules/weather.js" defer></script>
 </head>
 
@@ -37,25 +39,8 @@
     <!-- Main TV Layout Container (10ft Interface Safe Zone) -->
     <main class="tv-safe-zone">
 
-        <!-- Top Header Navigation Row with Glass BACK Button, Logo, and Clock -->
-        <header class="tv-header-row">
-            <div class="header-left">
-                <button class="tv-glass-back-btn focusable" id="btn-back" tabindex="0"
-                    onclick="window.location.href='../index.html'">
-                    <span class="back-icon">←</span>
-                    <span>BACK</span>
-                </button>
-            </div>
-            <div class="header-center">
-                <img id="hotel-logo-img" src="" alt="Hotel Logo" class="brand-logo-img" style="display: none;">
-            </div>
-            <div class="header-right">
-                <div class="header-clock-badge">
-                    <span class="pulse-dot"></span>
-                    <span id="live-clock">--:-- --</span>
-                </div>
-            </div>
-        </header>
+        <!-- Shared Header Component: BACK + Logo + Clock -->
+        <div id="page-header"></div>
 
         <!-- Main Hero Weather Grid (Primary Card + Metrics Grid) -->
         <section class="hero-weather-section">

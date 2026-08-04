@@ -109,7 +109,16 @@
                 hotelSubEl.textContent = (hName && hCity) ? `${hName}, ${hCity}` : (hName || hCity);
             }
 
-            // 4. Live Weather Sync
+            // 4. Dynamic Screen Cast Device Name Binding (d.device.brand + d.device.model)
+            const castDeviceNameEl = document.getElementById('cast-device-name');
+            if (castDeviceNameEl && d.device) {
+                const brand = d.device.brand || '';
+                const model = (d.device.model || '').replace(/_/g, ' ');
+                const deviceCombined = (brand && model) ? `${brand} ${model}` : (brand || model || 'Smart TV');
+                castDeviceNameEl.textContent = deviceCombined;
+            }
+
+            // 5. Live Weather Sync
             if (d.hotel && d.hotel.city) {
                 updateRealtimeWeather(d.hotel.city);
             }
@@ -290,8 +299,16 @@
                 if (appsClose) appsClose.addEventListener('click', () => toggleOverlay('appsOverlay', false));
                 if (castClose) castClose.addEventListener('click', () => toggleOverlay('castOverlay', false));
 
+                // Block Ctrl + MouseWheel Zooming & Ctrl + Plus/Minus Zooming
+                document.addEventListener('wheel', (e) => {
+                    if (e.ctrlKey) e.preventDefault();
+                }, { passive: false });
+
                 window.addEventListener('keydown', (e) => {
                     try {
+                        if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.keyCode === 187 || e.keyCode === 189)) {
+                            e.preventDefault();
+                        }
                         if (e.keyCode === 27 || e.keyCode === 10009) {
                             toggleOverlay('appsOverlay', false);
                             toggleOverlay('castOverlay', false);

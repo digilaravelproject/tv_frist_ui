@@ -1,0 +1,407 @@
+/* Hotel Information Page — Smart TV Luxury Design
+ * Gallery-first layout: compact info left, large image grid right
+ * All units in vw/vh for TV 16:9 scaling. Zero scrollbars.
+ * Header styles moved to css/components/page-header.css (shared DRY)
+ * ──────────────────────────────────────────────────────────────────── */
+
+/* ─── Page Safe Zone ─────────────────────────────────────────────── */
+.hi-safe-zone {
+    position: relative;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    padding: 1.5vw 3vw 1.5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* #page-header rendered by page-header.js — no extra styles needed here */
+#page-header {
+    flex-shrink: 0;
+}
+
+/* ─── Body: Left Info Panel + Right Gallery ──────────────────────── */
+.hi-body-grid {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 24vw 1fr;
+    gap: 1.4vw;
+    overflow: hidden;
+}
+
+/* ─── Left: Compact Info Panel ───────────────────────────────────── */
+.hi-info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75vw;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Hotel Name Block */
+.hi-name-block {
+    padding: 0.8vw 1.1vw;
+    background: rgba(14, 20, 35, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.hi-hotel-name {
+    font-size: 1.3vw;
+    font-weight: 900;
+    color: #fff;
+    margin: 0 0 0.3vh 0;
+    line-height: 1.2;
+}
+
+.hi-hotel-location {
+    font-size: 0.78vw;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+}
+
+/* Info Card (About / Amenities / Contacts) */
+.hi-info-card {
+    padding: 0.7vw 1vw;
+    background: rgba(14, 20, 35, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.hi-info-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    margin-bottom: 0.45vw;
+    padding-bottom: 0.35vw;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hi-section-label {
+    font-size: 0.85vw;
+    font-weight: 800;
+    color: #00f2fe;
+    letter-spacing: 0.5px;
+}
+
+.hi-info-text {
+    font-size: 0.75vw;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Amenities list */
+.hi-amenities-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3vw;
+}
+
+.hi-amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    font-size: 0.76vw;
+    color: rgba(255, 255, 255, 0.82);
+    font-weight: 600;
+}
+
+.hi-amenity-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    flex-shrink: 0;
+    box-shadow: 0 0 5px rgba(0, 242, 254, 0.6);
+}
+
+/* Contacts */
+.hi-contacts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35vw;
+}
+
+.hi-contact-chip {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5vw;
+}
+
+.hi-contact-icon {
+    font-size: 0.85vw;
+    flex-shrink: 0;
+}
+
+.hi-contact-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.hi-contact-label {
+    font-size: 0.65vw;
+    font-weight: 800;
+    color: #00f2fe;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hi-contact-value {
+    font-size: 0.72vw;
+    color: rgba(255, 255, 255, 0.78);
+    word-break: break-word;
+}
+
+/* ─── Right: Gallery Showcase ────────────────────────────────────── */
+.hi-gallery-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7vw;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.hi-gallery-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6vw;
+    flex-shrink: 0;
+}
+
+.hi-gallery-icon { font-size: 1.1vw; }
+
+.hi-gallery-title {
+    font-size: 1.1vw;
+    font-weight: 800;
+    color: #00f2fe;
+    letter-spacing: 0.5px;
+}
+
+/* 4-column uniform grid — fills remaining height exactly */
+.hi-gallery-grid {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0.6vw;
+}
+
+.hi-gallery-img-wrap {
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(14, 20, 35, 0.6);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    min-height: 0;
+    min-width: 0;
+}
+
+.hi-gallery-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+.hi-gallery-img-wrap:hover img,
+.hi-gallery-img-wrap.focused img {
+    transform: scale(1.06);
+}
+
+.hi-gallery-img-wrap.focusable:focus,
+.hi-gallery-img-wrap.focusable.focused {
+    border-color: #00f2fe !important;
+    box-shadow: 0 0 24px rgba(0, 242, 254, 0.75),
+                0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    outline: none !important;
+    transform: scale(1.03);
+}
+
+/* ─── Gallery Lightbox Slider ────────────────────────────────────── */
+.hi-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.93);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: lb-fadein 0.22s ease;
+}
+
+.hi-lightbox.hidden { display: none !important; }
+
+@keyframes lb-fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Lightbox top bar: counter + close */
+.hi-lb-header {
+    position: absolute;
+    top: 2.5vh;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3vw;
+    z-index: 2;
+}
+
+.hi-lb-counter {
+    font-size: 1vw;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.45);
+    padding: 0.4vh 1vw;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hi-lb-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vw;
+    padding: 0.6vh 1.5vw;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+    font-size: 0.9vw;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    letter-spacing: 0.5px;
+}
+
+.hi-lb-close:hover,
+.hi-lb-close:focus,
+.hi-lb-close.focused {
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    border-color: #00f2fe;
+    color: #000;
+    box-shadow: 0 0 24px rgba(0, 242, 254, 0.8);
+    outline: none;
+}
+
+/* Fixed-size image frame — same dimensions for every image */
+.hi-lb-img-area {
+    width: 78vw;
+    height: 72vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.hi-lb-img-frame {
+    width: 78vw;
+    height: 72vh;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.hi-lb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    user-select: none;
+}
+
+.hi-lb-img.fade-out {
+    opacity: 0;
+    transform: scale(0.97);
+}
+
+/* Prev / Next arrows — fixed to viewport edges */
+.hi-lb-prev,
+.hi-lb-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3.2vw;
+    height: 3.2vw;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1.3vw;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.22s ease;
+    z-index: 100000;
+}
+
+.hi-lb-prev { left: 1.2vw; }
+.hi-lb-next { right: 1.2vw; }
+
+.hi-lb-prev:hover, .hi-lb-prev:focus, .hi-lb-prev.focused,
+.hi-lb-next:hover, .hi-lb-next:focus, .hi-lb-next.focused {
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    border-color: #00f2fe;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.7);
+    outline: none;
+    transform: translateY(-50%) scale(1.12);
+}
+
+/* Dot indicators */
+.hi-lb-dots {
+    position: absolute;
+    bottom: 3vh;
+    display: flex;
+    gap: 0.5vw;
+}
+
+.hi-lb-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.22s ease;
+    cursor: pointer;
+}
+
+.hi-lb-dot.active {
+    background: #00f2fe;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.9);
+    transform: scale(1.4);
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hotel Information — Smart TV</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/tv-navigation.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/components/page-header.css">
+    <link rel="stylesheet" href="../css/pages/hotel_info.css">
+
+    <script src="../js/bridge.js" defer></script>
+    <script src="../js/tv-navigation.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/components/page-header.js" defer></script>
+    <script src="../js/modules/hotel_info.js" defer></script>
+</head>
+
+<body class="tv-viewport">
+
+    <!-- Dynamic Ambient Background -->
+    <div class="tv-bg-wrapper">
+        <div id="bg-slide-1" class="bg-image-slide active-slide"></div>
+        <div id="bg-slide-2" class="bg-image-slide"></div>
+        <div class="bg-overlay-gradient"></div>
+    </div>
+
+    <main class="hi-safe-zone">
+
+        <!-- Shared Header Component: BACK + Logo + Clock -->
+        <div id="page-header"></div>
+
+        <!-- Main Body: Left Info + Right Gallery -->
+        <div class="hi-body-grid">
+
+            <!-- LEFT: Compact Info Panel -->
+            <aside class="hi-info-panel">
+
+                <!-- Hotel Name + Location -->
+                <div class="hi-name-block">
+                    <h1 id="hi-hotel-name" class="hi-hotel-name">—</h1>
+                    <p id="hi-hotel-location" class="hi-hotel-location">📍 —</p>
+                </div>
+
+                <!-- About (compact) -->
+                <div class="hi-info-card">
+                    <div class="hi-info-card-header"><span>🏨</span><span class="hi-section-label">About</span></div>
+                    <p id="hi-description" class="hi-info-text">—</p>
+                </div>
+
+                <!-- Amenities (compact) -->
+                <div class="hi-info-card">
+                    <div class="hi-info-card-header"><span>✨</span><span class="hi-section-label">Amenities</span></div>
+                    <ul id="hi-amenities-list" class="hi-amenities-list"></ul>
+                </div>
+
+                <!-- Emergency Contacts (compact) -->
+                <div class="hi-info-card">
+                    <div class="hi-info-card-header"><span>📞</span><span class="hi-section-label">Contacts</span></div>
+                    <div id="hi-contacts-grid" class="hi-contacts-grid"></div>
+                </div>
+
+            </aside>
+
+            <!-- RIGHT: Full Gallery Showcase -->
+            <section class="hi-gallery-section">
+                <div class="hi-gallery-label">
+                    <span class="hi-gallery-icon">🖼️</span>
+                    <span class="hi-gallery-title">Gallery</span>
+                </div>
+                <div id="hi-gallery-grid" class="hi-gallery-grid"></div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- ── Gallery Lightbox Slider Modal ── -->
+    <div id="hi-lightbox" class="hi-lightbox hidden" role="dialog" aria-modal="true">
+        <!-- Header: counter + close -->
+        <div class="hi-lb-header">
+            <div class="hi-lb-counter" id="hi-lb-counter">1 / 7</div>
+            <button class="hi-lb-close focusable" id="hi-lb-close" tabindex="0">✕ &nbsp;Close</button>
+        </div>
+
+        <!-- Image Area -->
+        <div class="hi-lb-img-area">
+            <!-- Prev Arrow -->
+            <button class="hi-lb-prev focusable" id="hi-lb-prev" tabindex="0" aria-label="Previous">&#8592;</button>
+
+            <!-- Fixed Frame: same size for every image -->
+            <div class="hi-lb-img-frame">
+                <img id="hi-lb-img" class="hi-lb-img" src="" alt="Gallery Image">
+            </div>
+
+            <!-- Next Arrow -->
+            <button class="hi-lb-next focusable" id="hi-lb-next" tabindex="0" aria-label="Next">&#8594;</button>
+        </div>
+
+        <!-- Dot Indicators -->
+        <div class="hi-lb-dots" id="hi-lb-dots"></div>
+    </div>
+
+</body>
+</html>

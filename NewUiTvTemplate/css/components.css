@@ -142,20 +142,61 @@
     gap: 1vw;
 }
 
-.cast-icon-large {
-    font-size: 4vw;
+#castOverlay {
+    justify-content: center !important;
+    align-items: center !important;
 }
 
-.cast-box h2 {
+/* Screen Cast Centered Dialog Card */
+.cast-modal-card {
+    background: linear-gradient(145deg, rgba(22, 30, 48, 0.88), rgba(12, 16, 28, 0.88));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    padding: 3vw 4vw;
+    width: 38vw;
+    max-width: 600px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2vw;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(0, 242, 254, 0.2);
+    animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cast-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.4vw;
+}
+
+.cast-icon-img {
+    width: 4.5vw;
+    height: 4.5vw;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 15px rgba(0, 242, 254, 0.5));
+}
+
+.cast-modal-title {
     font-size: 2vw;
+    font-weight: 800;
     color: var(--accent-cyan);
+    letter-spacing: 0.5px;
 }
 
-.cast-box p {
-    font-size: 1.2vw;
+.cast-modal-desc {
+    font-size: 1.1vw;
     color: var(--text-secondary);
     line-height: 1.6;
-    margin-bottom: 2vw;
+    margin-bottom: 0.8vw;
+}
+
+.cast-modal-desc strong {
+    color: #ffffff;
+    font-weight: 700;
 }
 
 #appsCloseBtn, #castCloseBtn {

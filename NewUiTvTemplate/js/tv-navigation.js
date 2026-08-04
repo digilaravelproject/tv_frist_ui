@@ -17,7 +17,7 @@
         DOWN: [40, 20],          // 40: Arrow Down, 20: Android DPAD_DOWN
         ENTER: [13, 66, 23],     // 13: Enter, 66: Numpad Enter, 23: Android DPAD_CENTER / OK Button
         BACK: [10009, 27, 4, 8], // 10009: Tizen Back, 27: ESC, 4: Android KEYCODE_BACK, 8: Backspace
-        HOME: [36, 3, 172, 461, 18, 170] // 36: Home, 3: Android KEYCODE_HOME, 172/461: TV Home
+        HOME: [36, 3, 172, 461, 170] // 36: Home, 3: Android KEYCODE_HOME, 172/461: TV Home (18=Alt removed — browser modifier key)
     };
 
     function isKey(keyCode, keyGroup) {

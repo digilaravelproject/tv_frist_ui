@@ -64,7 +64,16 @@
                 window.APIService.bindImageWithCache(logoImg, logoUrl, 'images/logo.png');
             }
 
-            // 4. Dynamic Installed Applications Grid
+            // 4. Dynamic Screen Cast Device Name Binding (d.device.brand + d.device.model)
+            const castDeviceNameEl = document.getElementById('cast-device-name');
+            if (castDeviceNameEl && d.device) {
+                const brand = d.device.brand || '';
+                const model = (d.device.model || '').replace(/_/g, ' ');
+                const deviceCombined = (brand && model) ? `${brand} ${model}` : (brand || model || 'Smart TV');
+                castDeviceNameEl.textContent = deviceCombined;
+            }
+
+            // 5. Dynamic Installed Applications Grid
             const appsContainer = document.getElementById('apps-container');
             if (appsContainer && d.active_ott && Array.isArray(d.active_ott)) {
                 appsContainer.innerHTML = '';
