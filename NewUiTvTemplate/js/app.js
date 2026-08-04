@@ -1,30 +1,21 @@
 /**
- * Smart TV Core Application Manager
- * Automatic Background Slider Engine (Cross-fades slider_images & local fallbacks every 5s)
- * Real-time clock, data.json binding, and D-Pad modal routing.
- * Every function is wrapped in try-catch for 100% crash protection.
+ * Smart TV Core Application Manager (index.html)
+ * Real-time header clock, data.json binding, D-Pad modal routing, and offline safeguards.
+ * 100% Wrapped in Try-Catch Guards for Maximum Stability.
  */
-(function() {
+(function () {
     'use strict';
-
-    let bgImages = [
-        '../images/main.jpg',
-        '../images/2main.jpg',
-        '../images/mial.png'
-    ];
-    let currentSlideIndex = 0;
-    let isSlide1Active = true;
-    let bgInterval = null;
 
     function updateHeaderClock() {
         try {
             const clockEl = document.getElementById('live-clock') || document.getElementById('time');
             const dateEl = document.getElementById('date');
-
             const now = new Date();
+
             if (clockEl) {
-                clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) +
-                                      ' | ' + now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase();
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+                const dateStr = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase();
+                clockEl.textContent = `${timeStr} | ${dateStr}`;
             }
             if (dateEl) {
                 dateEl.textContent = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase();
@@ -35,28 +26,17 @@
     }
 
     async function updateRealtimeWeather(cityName) {
-        const descEl = document.getElementById('weather-quick-desc');
-        const iconEl = document.getElementById('weather-quick-icon');
-        if (!descEl) return;
-
-        if (!navigator.onLine) {
-            descEl.textContent = 'No Internet';
-            if (iconEl) iconEl.textContent = '⚠️';
-            return;
-        }
-
         try {
-            if (!cityName) return;
+            const descEl = document.getElementById('weather-quick-desc');
+            const iconEl = document.getElementById('weather-quick-icon');
+            if (!descEl || !cityName) return;
+
             if (!navigator.onLine) {
                 descEl.textContent = 'No Internet';
-                if (iconEl && !iconEl.querySelector('img')) {
-                    iconEl.innerHTML = '<img src="images/icons/weather.png" alt="Weather">';
-                }
                 return;
             }
 
             const city = cityName.trim();
-
             const coords = await window.APIService.fetchCityCoordinates(city);
             if (!coords || !coords.lat || !coords.lon) {
                 descEl.textContent = `${city} • No Internet`;
@@ -64,7 +44,6 @@
             }
 
             const weatherData = await window.APIService.fetchWeatherData(coords.lat, coords.lon);
-
             if (weatherData && weatherData.current) {
                 const temp = Math.round(weatherData.current.temperature_2m || 0);
                 const code = weatherData.current.weather_code || 0;
@@ -84,9 +63,8 @@
             } else {
                 descEl.textContent = `${city} • No Internet`;
             }
-        } catch (e) {
-            console.warn('[SmartTVApp] Live weather fetch failed:', e);
-            descEl.textContent = 'No Internet';
+        } catch (err) {
+            console.warn('[SmartTVApp] updateRealtimeWeather error:', err);
         }
     }
 
@@ -97,37 +75,33 @@
                 bindAppData(data.data);
             }
         } catch (e) {
-            console.warn('[SmartTVApp] data.json load fallback triggered.', e);
-        }
-        try {
-            startBackgroundSlider();
-        } catch (e) {
-            console.error('[SmartTVApp] startBackgroundSlider error:', e);
+            console.warn('[SmartTVApp] loadAppData fallback triggered:', e);
         }
     }
 
     function bindAppData(d) {
         try {
-            // Room Number
+            if (!d) return;
+
+            // 1. Room Number
             const roomEl = document.getElementById('room');
             if (roomEl && d.device && d.device.room_no) {
                 roomEl.textContent = `ROOM ${d.device.room_no}`;
             }
 
-            // Dynamic Hotel Logo Image Binding strictly from data.json payload (Base64 + Local Storage Caching)
+            // 2. Hotel Logo Binding (Base64 LocalStorage Cached)
             const logoImgs = document.querySelectorAll('#hotel-logo-img, .hotel-logo-img, .top-brand-logo');
-            const logoUrl = (d && d.hotel && d.hotel.media) ? d.hotel.media.logo_image : '';
+            const logoUrl = (d.hotel && d.hotel.media) ? d.hotel.media.logo_image : '';
             logoImgs.forEach(img => {
                 window.APIService.bindImageWithCache(img, logoUrl, 'images/logo.png');
             });
 
-            // Guest Greeting & Hotel Subtitle
+            // 3. Guest Greeting & Subtitle
             const greetingEl = document.getElementById('greeting');
             const hotelSubEl = document.getElementById('hotel-subtitle');
             if (greetingEl) {
                 const rawName = (d.guest_info && d.guest_info.name && typeof d.guest_info.name === 'string') ? d.guest_info.name.trim() : '';
-                const guestName = rawName ? rawName.toUpperCase() : 'GUEST';
-                greetingEl.textContent = `WELCOME ${guestName}`;
+                greetingEl.textContent = `WELCOME ${rawName ? rawName.toUpperCase() : 'GUEST'}`;
             }
             if (hotelSubEl && d.hotel) {
                 const hName = d.hotel.hotel_name || '';
@@ -135,18 +109,12 @@
                 hotelSubEl.textContent = (hName && hCity) ? `${hName}, ${hCity}` : (hName || hCity);
             }
 
-            // Live Weather & City Location Data Binding
-            const city = (d.hotel && d.hotel.city) ? d.hotel.city : '';
-            if (city) {
-                updateRealtimeWeather(city);
+            // 4. Live Weather Sync
+            if (d.hotel && d.hotel.city) {
+                updateRealtimeWeather(d.hotel.city);
             }
 
-            // Extract slider images strictly from data.json slider_images array
-            if (d.hotel && d.hotel.media && Array.isArray(d.hotel.media.slider_images) && d.hotel.media.slider_images.length > 0) {
-                bgImages = d.hotel.media.slider_images;
-            }
-
-            // Dynamic Active Apps Modal
+            // 5. Installed Applications Grid Binding
             const appsContainer = document.getElementById('apps-container');
             if (appsContainer && d.active_ott && Array.isArray(d.active_ott)) {
                 appsContainer.innerHTML = '';
@@ -159,17 +127,17 @@
                             <div class="app-icon-wrapper">📱</div>
                             <span class="app-name">${app.name}</span>
                         `;
-                        appCard.addEventListener('click', function() {
+                        appCard.addEventListener('click', () => {
                             try {
                                 const pkgName = app.package_name || app.packageName || app.pkg || app.name;
-                                console.log('[SmartTVApp] Launching native application:', app.name, pkgName);
+                                console.log('[SmartTVApp] Launching native app:', app.name, pkgName);
                                 if (window.flutterBridge && typeof window.flutterBridge.launchApp === 'function') {
                                     window.flutterBridge.launchApp(pkgName);
                                 } else if (window.FlutterBridge && typeof window.FlutterBridge.postMessage === 'function') {
                                     window.FlutterBridge.postMessage(JSON.stringify({ method: 'launchApp', args: [pkgName], id: Date.now() }));
                                 }
                             } catch (err) {
-                                console.error('[SmartTVApp] App click error:', err);
+                                console.error('[SmartTVApp] App launch error:', err);
                             }
                         });
                         appsContainer.appendChild(appCard);
@@ -178,7 +146,8 @@
                     }
                 });
             }
-            // Dynamic Menu Alignment from data.json
+
+            // 6. Dynamic Menu Visibility Alignment from data.json
             applyDynamicMenuVisibility(d);
         } catch (err) {
             console.error('[SmartTVApp] bindAppData error:', err);
@@ -227,33 +196,24 @@
                                     item.style.display = '';
                                 }
                             }
-                        } catch (e) {
-                            console.warn('[SmartTVApp] Item visibility check error:', e);
-                        }
+                        } catch (e) {}
                     });
-                } catch (e) {
-                    console.warn('[SmartTVApp] Menu item processing error:', e);
-                }
+                } catch (e) {}
             });
         } catch (err) {
             console.error('[SmartTVApp] applyDynamicMenuVisibility error:', err);
         }
     }
 
-    function startBackgroundSlider() {
-        if (window.TVSlider && window.TVSlider.init) {
-            window.TVSlider.init();
-        }
-    }
-
     function handleNavClick(item) {
         try {
+            if (!item) return;
             const link = item.getAttribute('data-link');
             const action = item.getAttribute('data-action');
             const menuId = item.getAttribute('data-menu-id');
 
             if (link) {
-                // Coming Soon feature guard for City Guide & Explore Travel
+                // 1. Coming Soon Guard for City Guide & Explore Travel
                 if (link.includes('city') || link.includes('travel') || menuId === 'our_city' || menuId === 'travel') {
                     if (window.TVModal && window.TVModal.showNotice) {
                         const labelEl = item.querySelector('.nav-label');
@@ -268,12 +228,12 @@
                     return;
                 }
 
-                // If navigation requires internet (weather/flight) and device is offline, block navigation & show No Internet modal on homepage
+                // 2. Offline Guard for Live Weather & Flight Status
                 if ((link.includes('weather') || link.includes('flight')) && !navigator.onLine) {
                     if (window.TVModal && window.TVModal.showOfflineNotice) {
                         window.TVModal.showOfflineNotice({
                             title: 'No Internet Connection',
-                            message: 'Live satellite weather feeds require an active internet connection. Please check your TV Wi-Fi or Ethernet settings.',
+                            message: 'Live satellite feeds require an active internet connection. Please check your TV Wi-Fi or Ethernet settings.',
                             buttonText: 'OK'
                         });
                     }
@@ -292,34 +252,6 @@
         }
     }
 
-    function openSubpage(url) {
-        try {
-            const overlay = document.getElementById('subPageOverlay');
-            const frame = document.getElementById('subFrame');
-
-            if (overlay && frame) {
-                frame.src = url;
-                overlay.classList.remove('hidden');
-            }
-        } catch (err) {
-            console.error('[SmartTVApp] openSubpage error:', err);
-        }
-    }
-
-    function closeSubpage() {
-        try {
-            const overlay = document.getElementById('subPageOverlay');
-            const frame = document.getElementById('subFrame');
-
-            if (overlay) {
-                overlay.classList.add('hidden');
-                if (frame) frame.src = 'about:blank';
-            }
-        } catch (err) {
-            console.error('[SmartTVApp] closeSubpage error:', err);
-        }
-    }
-
     function toggleOverlay(id, show) {
         try {
             const el = document.getElementById(id);
@@ -334,26 +266,21 @@
     }
 
     window.SmartTVApp = {
-        init: function() {
+        init: function () {
             try {
                 setInterval(updateHeaderClock, 1000);
                 updateHeaderClock();
                 loadAppData();
 
-                window.addEventListener('offline', function() {
+                window.addEventListener('offline', () => {
                     const descEl = document.getElementById('weather-quick-desc');
-                    const iconEl = document.getElementById('weather-quick-icon');
                     if (descEl) descEl.textContent = 'No Internet';
-                    if (iconEl) iconEl.textContent = '⚠️';
                 });
 
-                window.addEventListener('online', function() {
-                    loadAppData();
-                });
+                window.addEventListener('online', () => loadAppData());
 
-                const navItems = document.querySelectorAll('.nav-item, .quick-card');
-                navItems.forEach(item => {
-                    item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item, .quick-card').forEach(item => {
+                    item.addEventListener('click', function () {
                         handleNavClick(this);
                     });
                 });
@@ -363,10 +290,9 @@
                 if (appsClose) appsClose.addEventListener('click', () => toggleOverlay('appsOverlay', false));
                 if (castClose) castClose.addEventListener('click', () => toggleOverlay('castOverlay', false));
 
-                window.addEventListener('keydown', function(e) {
+                window.addEventListener('keydown', (e) => {
                     try {
                         if (e.keyCode === 27 || e.keyCode === 10009) {
-                            closeSubpage();
                             toggleOverlay('appsOverlay', false);
                             toggleOverlay('castOverlay', false);
                         }
@@ -380,7 +306,7 @@
         }
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
         try {
             window.SmartTVApp.init();
         } catch (err) {
